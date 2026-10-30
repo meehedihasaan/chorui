@@ -1,4 +1,4 @@
-import Link from '@lib/router';
+import Link, { useRouter } from '@lib/router';
 import { AnimatePresence, motion } from 'framer-motion';
 import cn from 'clsx';
 import { useAuth } from '@lib/context/auth-context';
@@ -54,6 +54,7 @@ export function Tweet(tweet: TweetProps): JSX.Element {
   const { id: ownerId, name, username, verified, photoURL } = tweetUserData;
 
   const { user } = useAuth();
+  const { push } = useRouter();
 
   const { open, openModal, closeModal } = useModal();
 
@@ -90,8 +91,13 @@ export function Tweet(tweet: TweetProps): JSX.Element {
       >
         <TweetReplyModal tweet={tweet} closeModal={closeModal} />
       </Modal>
-      <Link href={tweetLink} scroll={!reply}>
-        <a
+      <div>
+        <div
+          role='link'
+          tabIndex={0}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' && e.target === e.currentTarget) push(tweetLink);
+          }}
           className={cn(
             `accent-tab hover-card relative flex flex-col 
              gap-y-4 px-4 py-3 outline-none duration-200`,
@@ -100,7 +106,12 @@ export function Tweet(tweet: TweetProps): JSX.Element {
               : 'border-b border-light-border dark:border-dark-border'
           )}
           draggable={false}
-          onClick={delayScroll(200)}
+          onClick={(e) => {
+            if ((e.target as HTMLElement).closest('a,button,[role=button],input,textarea')) return;
+            if (window.getSelection()?.toString()) return;
+            delayScroll(200)();
+            push(tweetLink);
+          }}
         >
           <div className='grid grid-cols-[auto_1fr] gap-x-3 gap-y-1'>
             <AnimatePresence initial={false}>
@@ -199,8 +210,8 @@ export function Tweet(tweet: TweetProps): JSX.Element {
               </div>
             </div>
           </div>
-        </a>
-      </Link>
+        </div>
+      </div>
     </motion.article>
   );
 }

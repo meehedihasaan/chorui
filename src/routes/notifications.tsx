@@ -6,7 +6,6 @@ import { useAuth } from '@lib/context/auth-context';
 import { markAllNotificationsRead, useNotifications } from '@lib/hooks/useNotifications';
 import { PageShell, pageHead } from '@components/layout/page-shell';
 import { MainHeader } from '@components/home/main-header';
-import { UserAvatar } from '@components/user/user-avatar';
 import { HeroIcon } from '@components/ui/hero-icon';
 import { Loading } from '@components/ui/loading';
 
@@ -77,7 +76,7 @@ function NotificationsPage() {
                 !n.read && 'bg-main-accent/5')}>
               <HeroIcon solid className={cn('h-7 w-7 shrink-0', m.color)} iconName={m.icon} />
               <div className='flex min-w-0 flex-col gap-2'>
-                <UserAvatar src={n.actor.photoURL} alt={n.actor.name} username={n.actor.username} size={32} />
+                <img src={n.actor.photoURL} alt={n.actor.name} width={32} height={32} className='shrink-0 rounded-full object-cover' style={{ width: 32, height: 32 }} />
                 <p><span className='font-bold'>{n.actor.name}</span> {m.text}</p>
                 {n.tweet?.text && <p className='truncate text-light-secondary dark:text-dark-secondary'>{n.tweet.text}</p>}
               </div>

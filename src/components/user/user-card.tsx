@@ -1,4 +1,4 @@
-import Link from '@lib/router';
+import { useRouter } from '@lib/router';
 import { UserAvatar } from '@components/user/user-avatar';
 import { FollowButton } from '@components/ui/follow-button';
 import { UserTooltip } from './user-tooltip';
@@ -15,10 +15,22 @@ type UserCardProps = User & {
 export function UserCard(user: UserCardProps): JSX.Element {
   const { id, bio, name, modal, follow, username, verified, photoURL } = user;
 
+  const { push } = useRouter();
+  const href = `/user/${username}`;
+
   return (
-    <Link href={`/user/${username}`}>
-      <a
-        className='accent-tab hover-animation grid grid-cols-[auto_1fr] gap-3 px-4
+    <div>
+      <div
+        role='link'
+        tabIndex={0}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' && e.target === e.currentTarget) push(href);
+        }}
+        onClick={(e) => {
+          if ((e.target as HTMLElement).closest('a,button')) return;
+          push(href);
+        }}
+        className='accent-tab hover-animation grid cursor-pointer grid-cols-[auto_1fr] gap-3 px-4
                    py-3 hover:bg-light-primary/5 dark:hover:bg-dark-primary/5'
       >
         <UserTooltip avatar {...user} modal={modal}>
@@ -46,7 +58,7 @@ export function UserCard(user: UserCardProps): JSX.Element {
           </div>
           {follow && bio && <p className='whitespace-normal'>{bio}</p>}
         </div>
-      </a>
-    </Link>
+      </div>
+    </div>
   );
 }
