@@ -182,3 +182,8 @@
       #ffffff26 0px 0px 3px 1px;
   }
 }
+
+.reduce-motion *, .reduce-motion *::before, .reduce-motion *::after {
+  animation-duration: 0.01ms !important;
+  transition-duration: 0.01ms !important;
+}

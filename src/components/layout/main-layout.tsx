@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { SWRConfig } from 'swr';
 import { Toaster } from 'react-hot-toast';
 import { fetchJSON } from '@lib/fetch';
@@ -18,6 +19,10 @@ const toastOptions: DefaultToastOptions = {
 };
 
 export function MainLayout({ children }: LayoutProps): JSX.Element {
+  useEffect(() => {
+    document.documentElement.classList.toggle('reduce-motion', localStorage.getItem('chorui-reduce-motion') === '1');
+  }, []);
+
   return (
     <div className='flex w-full justify-center gap-0 lg:gap-4'>
       <WindowContextProvider>
