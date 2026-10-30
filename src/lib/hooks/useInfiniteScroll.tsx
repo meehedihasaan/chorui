@@ -41,8 +41,11 @@ export function useInfiniteScroll<T>(
         ...(!reachedLimit ? [limit(itemsLimit)] : [])
       ]
     ),
-    fetchOptions
-  );
+    fetchOptions as { includeUser: true }
+  ) as {
+    data: (T & { user: User })[] | null;
+    loading: boolean;
+  };
 
   useEffect(() => {
     const checkLimit = itemsSize ? itemsLimit >= itemsSize : false;

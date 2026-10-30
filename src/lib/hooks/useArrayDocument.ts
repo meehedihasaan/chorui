@@ -25,6 +25,18 @@ const client = supabase as any;
 export function useArrayDocument<T>(
   docsIds: string[],
   collectionRef: CollectionRef<T>,
+  options: { includeUser: true; disabled?: boolean }
+): DataWithUser<T>;
+
+export function useArrayDocument<T>(
+  docsIds: string[],
+  collectionRef: CollectionRef<T>,
+  options?: { includeUser?: false; disabled?: boolean }
+): UserArrayDocument<T>;
+
+export function useArrayDocument<T>(
+  docsIds: string[],
+  collectionRef: CollectionRef<T>,
   options?: { includeUser?: boolean; disabled?: boolean }
 ): UserArrayDocument<T> | DataWithUser<T> {
   const { includeUser, disabled } = options ?? {};

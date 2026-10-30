@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useMemo } from 'react';
 import Link from '@lib/router';
-import { useRouter } from '@lib/router';
+import { useParams } from '@tanstack/react-router';
 import { NumberStats } from '@components/tweet/number-stats';
 import type { User } from '@lib/types/user';
 

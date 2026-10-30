@@ -162,7 +162,7 @@ export async function createTweet(
     p_text: text,
     p_images: images ? JSON.parse(JSON.stringify(images)) : null,
     p_parent_id: parentId ?? null
-  });
+  } as never);
 
   if (error) {
     console.error('createTweet failed', error.message);
