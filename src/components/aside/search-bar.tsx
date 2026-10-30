@@ -18,7 +18,7 @@ export function SearchBar(): JSX.Element {
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
-    if (inputValue) void push(`/search?q=${inputValue}`);
+    if (inputValue) void push(`/explore?q=${encodeURIComponent(inputValue)}`);
   };
 
   const clearInputValue = (focus?: boolean) => (): void => {
