@@ -29,6 +29,20 @@ export const Route = createFileRoute("/home")({
 });
 
 function HomePage() {
+  return (
+    <ProtectedLayout>
+      <MainLayout>
+        <HomeLayout>
+          <HomeFeed />
+        </HomeLayout>
+      </MainLayout>
+    </ProtectedLayout>
+  );
+}
+
+// The window provider mounts inside MainLayout, so window-aware UI must be a
+// child of it rather than read the context in the route component itself.
+function HomeFeed() {
   const { isMobile } = useWindow();
 
   const { data, loading, LoadMore } = useInfiniteScroll(
@@ -38,37 +52,27 @@ function HomePage() {
   );
 
   return (
-    <ProtectedLayout>
-      <MainLayout>
-        <HomeLayout>
-          <MainContainer>
-            <MainHeader
-              useMobileSidebar
-              title="Home"
-              className="flex items-center justify-between"
-            >
-              <UpdateUsername />
-            </MainHeader>
-            {!isMobile && <Input />}
-            <section className="mt-0.5 xs:mt-0">
-              {loading ? (
-                <Loading className="mt-5" />
-              ) : !data ? (
-                <Error message="Something went wrong" />
-              ) : (
-                <>
-                  <AnimatePresence mode="popLayout">
-                    {data.map((tweet) => (
-                      <Tweet {...tweet} key={tweet.id} />
-                    ))}
-                  </AnimatePresence>
-                  <LoadMore />
-                </>
-              )}
-            </section>
-          </MainContainer>
-        </HomeLayout>
-      </MainLayout>
-    </ProtectedLayout>
+    <MainContainer>
+      <MainHeader useMobileSidebar title="Home" className="flex items-center justify-between">
+        <UpdateUsername />
+      </MainHeader>
+      {!isMobile && <Input />}
+      <section className="mt-0.5 xs:mt-0">
+        {loading ? (
+          <Loading className="mt-5" />
+        ) : !data ? (
+          <Error message="Something went wrong" />
+        ) : (
+          <>
+            <AnimatePresence mode="popLayout">
+              {data.map((tweet) => (
+                <Tweet {...tweet} key={tweet.id} />
+              ))}
+            </AnimatePresence>
+            <LoadMore />
+          </>
+        )}
+      </section>
+    </MainContainer>
   );
 }
