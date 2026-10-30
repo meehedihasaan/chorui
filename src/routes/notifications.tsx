@@ -9,6 +9,7 @@ import { PageShell, pageHead } from '@components/layout/page-shell';
 import { MainHeader } from '@components/home/main-header';
 import { HeroIcon } from '@components/ui/hero-icon';
 import { Loading } from '@components/ui/loading';
+import { DEFAULT_AVATAR_URL, resolveAvatarUrl } from '@lib/default-avatar';
 
 type Search = { tab?: 'mentions' };
 
@@ -77,7 +78,7 @@ function NotificationsPage() {
                 !n.read && 'bg-main-accent/5')}>
               <HeroIcon solid className={cn('h-7 w-7 shrink-0', m.color)} iconName={m.icon} />
               <div className='flex min-w-0 flex-col gap-2'>
-                <img referrerPolicy='no-referrer' onError={(e) => { e.currentTarget.src = '/assets/twitter-avatar.jpg'; }} src={n.actor.photoURL || '/assets/twitter-avatar.jpg'} alt={n.actor.name} width={32} height={32} className='shrink-0 rounded-full object-cover' style={{ width: 32, height: 32 }} />
+                <img referrerPolicy='no-referrer' onError={(e) => { e.currentTarget.src = DEFAULT_AVATAR_URL; }} src={resolveAvatarUrl(n.actor.photoURL)} alt={n.actor.name} width={32} height={32} className='shrink-0 rounded-full object-cover' style={{ width: 32, height: 32 }} />
                 <p><span className='font-bold'>{n.actor.name}</span> {m.text}</p>
                 {n.tweet?.text && <p className='truncate text-light-secondary dark:text-dark-secondary'>{n.tweet.text}</p>}
               </div>

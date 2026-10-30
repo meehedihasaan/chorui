@@ -9,6 +9,7 @@ import {
 } from '@lib/firebase/utils';
 import { getRandomInt, getRandomId } from '@lib/random';
 import { mapProfile } from '@lib/firebase/db';
+import { resolveAvatarUrl } from '@lib/default-avatar';
 import type { ReactNode } from 'react';
 import type { User } from '@lib/types/user';
 import type { Bookmark } from '@lib/types/bookmark';
@@ -62,7 +63,7 @@ async function ensureProfile(
     id: uid,
     name: displayName,
     username,
-    photo_url: photoURL ?? '/assets/twitter-avatar.jpg'
+    photo_url: resolveAvatarUrl(photoURL)
   });
 
   if (error) {

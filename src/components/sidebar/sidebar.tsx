@@ -55,6 +55,10 @@ export function Sidebar(): JSX.Element {
 
   const navigate = useNavigate();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const hideCompose =
+    pathname === '/post' ||
+    pathname === '/messages' ||
+    pathname.startsWith('/messages/');
 
   const username = user?.username as string;
 
@@ -94,7 +98,7 @@ export function Sidebar(): JSX.Element {
             />
             {!isMobile && <MoreSettings />}
           </nav>
-          {pathname !== '/post' && (
+          {!hideCompose && (
             <Button
               className='accent-tab absolute right-4 -translate-y-[72px] bg-main-accent text-lg font-bold text-white
                          outline-none transition hover:brightness-90 active:brightness-75 xs:static xs:translate-y-0
