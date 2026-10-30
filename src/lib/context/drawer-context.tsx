@@ -1,5 +1,6 @@
 import { createContext, useContext, useState } from 'react';
 import type { ReactNode } from 'react';
+import type React from 'react';
 
 type AccountDrawerContext = {
   open: boolean;
@@ -7,7 +8,13 @@ type AccountDrawerContext = {
   closeDrawer: () => void;
 };
 
-const AccountDrawer = createContext<AccountDrawerContext | null>(null);
+const globalKey = '__chorui_account_drawer_ctx__';
+const g = globalThis as unknown as Record<string, unknown>;
+// Keep one context instance across hot reloads so providers and consumers match.
+const AccountDrawer = (g[globalKey] ??= createContext<AccountDrawerContext | null>(
+  null
+)) as React.Context<AccountDrawerContext | null>;
+const noop = (): void => undefined;
 
 type AccountDrawerProviderProps = {
   children: ReactNode;
@@ -37,10 +44,5 @@ export function AccountDrawerProvider({
 export function useAccountDrawer(): AccountDrawerContext {
   const context = useContext(AccountDrawer);
 
-  if (!context)
-    throw new Error(
-      'useAccountDrawer must be used within an AccountDrawerProvider'
-    );
-
-  return context;
+  return context ?? { open: false, openDrawer: noop, closeDrawer: noop };
 }
