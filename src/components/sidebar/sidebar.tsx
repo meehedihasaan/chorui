@@ -29,32 +29,24 @@ const navLinks: Readonly<NavLink[]> = [
     href: '/explore',
     linkName: 'Explore',
     iconName: 'HashtagIcon',
-    disabled: true,
     canBeHidden: true
   },
   {
     href: '/notifications',
     linkName: 'Notifications',
     iconName: 'BellIcon',
-    disabled: true
+    canBeHidden: true
   },
   {
     href: '/messages',
     linkName: 'Messages',
     iconName: 'EnvelopeIcon',
-    disabled: true
+    canBeHidden: true
   },
   {
     href: '/bookmarks',
     linkName: 'Bookmarks',
     iconName: 'BookmarkIcon',
-    canBeHidden: true
-  },
-  {
-    href: '/lists',
-    linkName: 'Lists',
-    iconName: 'Bars3BottomLeftIcon',
-    disabled: true,
     canBeHidden: true
   }
 ];
@@ -107,6 +99,7 @@ export function Sidebar(): JSX.Element {
               username={username}
               linkName='Profile'
               iconName='UserIcon'
+              canBeHidden
             />
             {!isMobile && <MoreSettings />}
           </nav>
