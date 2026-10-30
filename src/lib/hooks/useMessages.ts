@@ -41,7 +41,7 @@ export function useMessages(conversationId: string | undefined): {
     if (!conversationId) return;
 
     const channel = client
-      .channel(`messages-${conversationId}`)
+      .channel(`messages-${conversationId}-${Math.random().toString(36).slice(2)}`)
       .on(
         'postgres_changes',
         {

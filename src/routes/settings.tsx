@@ -48,7 +48,7 @@ function SettingsPage() {
 
   return (
     <PageShell>
-      <MainHeader title='Settings' />
+      <MainHeader useMobileSidebar title='Settings' />
       <Section title='Your account'>
         <div className='px-4 pb-2 text-light-secondary dark:text-dark-secondary'>
           <p><span className='font-semibold text-light-primary dark:text-dark-primary'>{user?.name}</span> @{user?.username}</p>
