@@ -6,6 +6,8 @@ import { manageRetweet, manageLike } from '@lib/firebase/utils';
 import { ViewTweetStats } from '@components/view/view-tweet-stats';
 import { TweetOption } from './tweet-option';
 import { TweetShare } from './tweet-share';
+import { TweetLikeButton } from './tweet-like-button';
+
 import type { Tweet } from '@lib/types/tweet';
 
 type TweetStatsProps = Pick<
@@ -90,17 +92,10 @@ export function TweetStats({
           viewTweet ? 'justify-around py-2' : 'max-w-md justify-between'
         )}
       >
-        <TweetOption
-          className={cn(
-            'hover:text-accent-pink focus-visible:text-accent-pink',
-            tweetIsLiked && 'text-accent-pink [&>i>svg]:fill-accent-pink'
-          )}
-          iconClassName='group-hover:bg-accent-pink/10 group-active:bg-accent-pink/20
-                         group-focus-visible:bg-accent-pink/10 group-focus-visible:ring-accent-pink/80'
-          tip={tweetIsLiked ? 'Unlike' : 'Like'}
+        <TweetLikeButton
+          liked={tweetIsLiked}
           move={likeMove}
           stats={currentLikes}
-          iconName='HandThumbUpIcon'
           viewTweet={viewTweet}
           onClick={manageLike(
             tweetIsLiked ? 'unlike' : 'like',
@@ -108,6 +103,7 @@ export function TweetStats({
             tweetId
           )}
         />
+
         <TweetOption
           className='hover:text-accent-blue focus-visible:text-accent-blue'
           iconClassName='group-hover:bg-accent-blue/10 group-active:bg-accent-blue/20 
