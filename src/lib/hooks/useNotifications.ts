@@ -86,7 +86,7 @@ export function useNotifications(tab: 'all' | 'mentions'): {
     if (!userId) return;
 
     const channel = client
-      .channel(`notifications-${userId}`)
+      .channel(`notifications-${userId}-${Math.random().toString(36).slice(2)}`)
       .on(
         'postgres_changes',
         {
@@ -132,7 +132,7 @@ export function useUnreadNotifications(): number {
     if (!userId) return;
 
     const channel = client
-      .channel(`notifications-unread-${userId}`)
+      .channel(`notifications-unread-${userId}-${Math.random().toString(36).slice(2)}`)
       .on(
         'postgres_changes',
         {
