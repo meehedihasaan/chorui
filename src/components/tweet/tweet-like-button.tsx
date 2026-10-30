@@ -1,6 +1,6 @@
 import cn from 'clsx';
 import { preventBubbling } from '@lib/utils';
-import { HeroIcon } from '@components/ui/hero-icon';
+import { LikeGlyph } from '@components/ui/like-glyph';
 import { NumberStats } from './number-stats';
 
 type TweetLikeButtonProps = {
@@ -32,11 +32,7 @@ export function TweetLikeButton({
         onClick={preventBubbling(onClick)}
         type='button'
       >
-        <HeroIcon
-          className={viewTweet ? 'h-5 w-5' : 'h-4 w-4'}
-          iconName='HandThumbUpIcon'
-          solid
-        />
+        <LikeGlyph className={viewTweet ? 'h-5 w-5' : 'h-4 w-4'} />
         <span>{liked ? 'Unlike' : 'Like'}</span>
       </button>
       <NumberStats move={move} stats={stats} />
