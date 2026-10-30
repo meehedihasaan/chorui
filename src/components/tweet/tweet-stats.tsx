@@ -6,6 +6,8 @@ import { manageRetweet, manageLike } from '@lib/firebase/utils';
 import { ViewTweetStats } from '@components/view/view-tweet-stats';
 import { TweetOption } from './tweet-option';
 import { TweetShare } from './tweet-share';
+import { TweetLikeButton } from './tweet-like-button';
+
 import type { Tweet } from '@lib/types/tweet';
 
 type TweetStatsProps = Pick<
