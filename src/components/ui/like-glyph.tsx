@@ -4,6 +4,7 @@ type LikeGlyphProps = {
 
 /**
  * Chorui's own flat thumbs-up, drawn for the Like reaction.
+ * A single silhouette: raised thumb, folded fingers, wrist.
  * Uses currentColor so it inherits the Like button's text colour.
  */
 export function LikeGlyph({ className }: LikeGlyphProps): JSX.Element {
@@ -15,12 +16,10 @@ export function LikeGlyph({ className }: LikeGlyphProps): JSX.Element {
       viewBox='0 0 24 24'
       xmlns='http://www.w3.org/2000/svg'
     >
-      {/* wrist cuff */}
-      <rect height='11.2' rx='1.7' width='5.1' x='2.2' y='10.4' />
-      {/* palm and folded fingers */}
-      <rect height='10.5' rx='2.7' width='12.6' x='9' y='11.1' />
-      {/* raised thumb */}
-      <path d='M12.1 2.2c1.85-.45 3.35 1.05 3.35 2.95v4.3c0 1.65-1.15 2.95-2.75 3.05h-1.3c-1.5 0-2.65-1.2-2.65-2.7V6.0c0-1.9 1.3-3.45 3.35-3.8Z' />
+      <path
+        d='M21.6 11.0c0-1.2-1.0-2.2-2.2-2.2h-5.4l0.9-4.3c0.07-0.3 0.1-0.6 0.1-0.9 0-1.9-1.5-3.4-3.4-3.4-0.8 0-1.6 0.3-2.2 0.8L4.8 5.1c-0.6 0.5-0.9 1.3-0.9 2.1v10.0c0 1.2 1.0 2.2 2.2 2.2h9.0c0.9 0 1.7-0.6 2.0-1.4l3.4-7.6c0.1-0.2 0.1-0.5 0.1-0.7z'
+        transform='translate(-0.3 2.2)'
+      />
     </svg>
   );
 }
