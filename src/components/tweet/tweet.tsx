@@ -54,6 +54,7 @@ export function Tweet(tweet: TweetProps): JSX.Element {
   const { id: ownerId, name, username, verified, photoURL } = tweetUserData;
 
   const { user } = useAuth();
+  const { push } = useRouter();
 
   const { open, openModal, closeModal } = useModal();
 

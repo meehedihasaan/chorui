@@ -26,7 +26,7 @@ export function TweetParent({
   const { data, loading } = useDocument(doc(tweetsCollection, parentId), {
     includeUser: true,
     allowNull: true,
-    disabled: isParentAlreadyLoaded
+    disabled: isParentAlreadyLoaded || !parentId
   });
 
   useEffect(() => {
