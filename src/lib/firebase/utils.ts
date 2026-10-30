@@ -17,6 +17,16 @@ export { getCollectionCount };
 const client = supabase as any;
 
 const PROFILE_UPDATED_EVENT = 'app:profile-updated';
+const DATA_CHANGED_EVENT = 'app:data-changed';
+
+function notifyDataChanged(): void {
+  window.dispatchEvent(new Event(DATA_CHANGED_EVENT));
+}
+
+export function onDataChanged(callback: () => void): () => void {
+  window.addEventListener(DATA_CHANGED_EVENT, callback);
+  return () => window.removeEventListener(DATA_CHANGED_EVENT, callback);
+}
 
 export async function getTweetById(tweetId: string): Promise<Tweet | null> {
   const { data } = await client
@@ -147,10 +157,12 @@ export async function manageFollow(
       .delete()
       .eq('follower_id', userId)
       .eq('following_id', targetUserId);
+  notifyDataChanged();
 }
 
 export async function removeTweet(tweetId: string): Promise<void> {
   await client.from('tweets').delete().eq('id', tweetId);
+  notifyDataChanged();
 }
 
 export async function createTweet(
@@ -169,6 +181,7 @@ export async function createTweet(
     return null;
   }
 
+  notifyDataChanged();
   return mapTweet((data as Record<string, unknown>) ?? null);
 }
 
@@ -212,6 +225,7 @@ export async function manageReply(
       p_tweet_id: tweetId,
       p_increment: type === 'increment'
     });
+    notifyDataChanged();
   } catch {
     // do nothing, because parent tweet was already deleted
   }
@@ -242,7 +256,7 @@ export function manageRetweet(
     await supabase.rpc('manage_retweet', {
       p_tweet_id: tweetId,
       p_retweet: type === 'retweet'
-    });
+    }).then(() => notifyDataChanged());
   };
 }
 
@@ -251,7 +265,7 @@ export function manageLike(type: 'like' | 'unlike', userId: string, tweetId: str
     await supabase.rpc('manage_like', {
       p_tweet_id: tweetId,
       p_like: type === 'like'
-    });
+    }).then(() => notifyDataChanged());
   };
 }
 
@@ -266,6 +280,7 @@ export async function manageBookmark(
       createdAt: new Date().toISOString()
     };
     await client.from('bookmarks').insert({ user_id: userId, tweet_id: tweetId });
+    notifyDataChanged();
     return bookmarkData;
   }
 
@@ -274,6 +289,7 @@ export async function manageBookmark(
     .delete()
     .eq('user_id', userId)
     .eq('tweet_id', tweetId);
+  notifyDataChanged();
 }
 
 export async function clearAllBookmarks(userId: string): Promise<void> {

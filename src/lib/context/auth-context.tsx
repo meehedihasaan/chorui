@@ -4,6 +4,7 @@ import { lovable } from '@/integrations/lovable/index';
 import { usersCollection } from '@lib/firebase/collections';
 import {
   checkUsernameAvailability,
+  onDataChanged,
   onProfileUpdated
 } from '@lib/firebase/utils';
 import { getRandomInt, getRandomId } from '@lib/random';
@@ -153,7 +154,10 @@ export function AuthContextProvider({
 
     void fetchBookmarks();
 
-    return onProfileUpdated(() => {
+    const unsubData = onDataChanged(() => void fetchBookmarks());
+
+    const unsubProfile = onProfileUpdated(() => {
+
       void supabase
         .from('profiles')
         .select('*')
@@ -164,6 +168,11 @@ export function AuthContextProvider({
           if (profile) setUser(profile);
         });
     });
+
+    return () => {
+      unsubData();
+      unsubProfile();
+    };
   }, [user?.id]);
 
   const signInWithOAuth = async (

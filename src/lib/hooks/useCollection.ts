@@ -1,5 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useQuery } from '@tanstack/react-query';
+import { useEffect } from 'react';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   fetchCollection,
   populateUsers,
@@ -7,9 +8,11 @@ import {
   mapProfile,
   mapTweet,
   mapStats,
-  mapBookmark
+  mapBookmark,
+  queryKey
 } from '@lib/firebase/db';
 import type { CollectionRef, QueryConstraint, RawRow } from '@lib/firebase/db';
+import { onDataChanged } from '@lib/firebase/utils';
 import type { User } from '@lib/types/user';
 
 type UseCollection<T> = {
@@ -53,6 +56,16 @@ export function useCollection<T>(
   options?: UseCollectionOptions
 ): UseCollection<T> | DataWithUser<T> {
   const { includeUser, allowNull, disabled, preserve } = options ?? {};
+
+  const queryClient = useQueryClient();
+
+  useEffect(() => {
+    const listener = (): void => {
+      void queryClient.invalidateQueries({ queryKey: queryKey(ref) });
+    };
+
+    return onDataChanged(listener);
+  }, [queryClient, ref]);
 
   const { data, isPending } = useQuery({
     queryKey: queryKey(ref),
