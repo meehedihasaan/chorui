@@ -19,23 +19,29 @@ export function TweetLikeButton({
   onClick
 }: TweetLikeButtonProps): JSX.Element {
   return (
-    <div className='flex items-center gap-1.5'>
-      <button
-        aria-label={liked ? 'Unlike' : 'Like'}
+    <button
+      aria-label={liked ? 'Unlike' : 'Like'}
+      className={cn(
+        `group accent-tab flex items-center gap-1.5 p-0 transition-none
+         inner:transition inner:duration-200`,
+        liked
+          ? 'text-like-blue'
+          : 'text-light-secondary hover:text-like-blue dark:text-dark-secondary'
+      )}
+      onClick={preventBubbling(onClick)}
+      type='button'
+    >
+      <i
         className={cn(
-          `accent-tab hover-animation flex shrink-0 items-center gap-1.5 rounded-full
-           px-3 py-1.5 text-sm font-bold active:brightness-90`,
+          'hover-animation relative rounded-full p-2 not-italic',
           liked
-            ? 'bg-light-line-reply text-light-primary dark:bg-dark-line-reply dark:text-dark-primary'
-            : 'bg-like-blue text-like-blue-foreground hover:brightness-95'
+            ? 'bg-like-blue/10'
+            : 'group-hover:bg-like-blue/10 group-active:bg-like-blue/20'
         )}
-        onClick={preventBubbling(onClick)}
-        type='button'
       >
-        <LikeGlyph className={viewTweet ? 'h-5 w-5' : 'h-4 w-4'} />
-        <span>{liked ? 'Unlike' : 'Like'}</span>
-      </button>
+        <LikeGlyph className={viewTweet ? 'h-6 w-6' : 'h-5 w-5'} />
+      </i>
       <NumberStats move={move} stats={stats} />
-    </div>
+    </button>
   );
 }

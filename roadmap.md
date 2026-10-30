@@ -11,5 +11,6 @@
 - [x] 7. Mobile bottom nav: only Home and Messages icons like X
 - [x] 8. Working settings page like X (account/profile/display/logout)
 - [x] 9. Like reaction as a Facebook-style blue button (blue "Like" pill → grey "Unlike")
-- [ ] 10. Custom blue Like reaction: deep ink blue (#1e40af) + hand-drawn thumbs-up mark
-- [ ] 11. Post card: @username shows after the name on the same line
+- [x] 10. Custom blue Like reaction: deep ink blue (#1e40af) + custom thumbs-up mark
+- [x] 11. Post card: @username shows after the name on the same line
+- [ ] 12. Like reaction: remove the button background and the "Like"/"Unlike" label
