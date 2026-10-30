@@ -46,10 +46,11 @@ export function Link({ href, children, onClick, className, ...rest }: LinkProps)
 export { Link as default };
 
 export function useRouter() {
-  const router = useTanstackRouter();
-  const location = useLocation();
-
-  const query = Object.fromEntries(new URLSearchParams(location.search));
+  // Select primitive values: selecting objects here returns reactive proxies
+  // that must not be concatenated with strings.
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const searchStr = useRouterState({ select: (s) => s.location.searchStr });
+  const query = Object.fromEntries(new URLSearchParams(searchStr));
 
   return {
     push: (to: string): void => {
@@ -61,8 +62,8 @@ export function useRouter() {
     back: (): void => {
       router.history.back();
     },
-    asPath: location.pathname + location.search,
-    pathname: location.pathname,
+    asPath: pathname + (searchStr ? `?${searchStr}` : ''),
+    pathname,
     query
   };
 }
