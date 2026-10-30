@@ -44,7 +44,7 @@ export function ActionModal({
         {useIcon && (
           <i className='mx-auto'>
             <CustomIcon
-              className='h-10 w-10 text-accent-blue dark:text-twitter-icon'
+              className='h-10 w-10 text-main-accent dark:text-twitter-icon'
               iconName='TwitterIcon'
             />
           </i>

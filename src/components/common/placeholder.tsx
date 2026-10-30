@@ -11,7 +11,7 @@ export function Placeholder(): JSX.Element {
       />
       <i>
         <CustomIcon
-          className='h-20 w-20 text-[#1DA1F2]'
+          className='h-20 w-20 text-main-accent'
           iconName='TwitterIcon'
         />
       </i>
