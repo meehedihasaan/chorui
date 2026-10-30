@@ -66,6 +66,8 @@
   --color-main-search-background: rgb(var(--main-search-background));
   --color-main-sidebar-background: rgb(var(--main-sidebar-background));
   --color-main-accent: rgb(var(--main-accent));
+  --color-main-accent-foreground: rgb(var(--main-accent-foreground));
+  --color-accent-mono: rgb(var(--accent-mono));
 
   --color-accent-yellow: rgb(var(--accent-yellow));
   --color-accent-blue: rgb(var(--accent-blue));
@@ -92,7 +94,11 @@
     --main-background: var(--dark-background);
     --main-search-background: var(--dark-search-background);
     --main-sidebar-background: var(--dark-sidebar-background);
-    --main-accent: var(--accent-green);
+    --main-accent: var(--accent-mono);
+    --main-accent-foreground: var(--accent-mono-foreground);
+
+    --accent-mono: 0 0 0;
+    --accent-mono-foreground: 255 255 255;
 
     --dark-background: 0 0 0;
     --dim-background: 22 33 44;
