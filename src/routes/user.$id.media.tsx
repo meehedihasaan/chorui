@@ -14,9 +14,9 @@ export const Route = createFileRoute("/user/$id/media")({
   ssr: false,
   head: () => ({
     meta: [
-      { title: "Media / Twitter" },
+      { title: "Media / Chorui" },
       { name: "description", content: "Media tweets by this profile." },
-      { property: "og:title", content: "Media / Twitter" },
+      { property: "og:title", content: "Media / Chorui" },
       { property: "og:description", content: "Media tweets by this profile." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },

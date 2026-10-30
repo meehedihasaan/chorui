@@ -16,9 +16,9 @@ export const Route = createFileRoute("/trends")({
   ssr: false,
   head: () => ({
     meta: [
-      { title: "Trends / Twitter" },
+      { title: "Trends / Chorui" },
       { name: "description", content: "What's trending right now." },
-      { property: "og:title", content: "Trends / Twitter" },
+      { property: "og:title", content: "Trends / Chorui" },
       { property: "og:description", content: "What's trending right now." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },

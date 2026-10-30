@@ -99,7 +99,12 @@ export function getImagesData(
   if (!rawImages || !rawImages.length) return null;
 
   const imagesId = rawImages.map(({ name }) => {
-    const randomId = getRandomId();
+    const randomId =
+      typeof crypto !== "undefined" && "randomUUID" in crypto
+        ? crypto.randomUUID()
+        : getRandomId().toLowerCase().replace(/^(.)/, (_m, c) =>
+            /[0-9a-f]/i.test(c) ? c : "a" + c
+          );
     return {
       id: randomId,
       name: name === 'image.png' ? `${randomId}.png` : null

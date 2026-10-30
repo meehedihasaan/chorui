@@ -9,10 +9,10 @@ export const Route = createFileRoute("/user/$id")({
   ssr: false,
   head: () => ({
     meta: [
-      { title: "Profile / Twitter" },
-      { name: "description", content: "A user profile on Twitter." },
-      { property: "og:title", content: "Profile / Twitter" },
-      { property: "og:description", content: "A user profile on Twitter." },
+      { title: "Profile / Chorui" },
+      { name: "description", content: "A user profile on Chorui." },
+      { property: "og:title", content: "Profile / Chorui" },
+      { property: "og:description", content: "A user profile on Chorui." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],

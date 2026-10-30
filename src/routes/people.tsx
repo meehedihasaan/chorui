@@ -19,9 +19,9 @@ export const Route = createFileRoute("/people")({
   ssr: false,
   head: () => ({
     meta: [
-      { title: "People / Twitter" },
+      { title: "People / Chorui" },
       { name: "description", content: "Discover people to follow." },
-      { property: "og:title", content: "People / Twitter" },
+      { property: "og:title", content: "People / Chorui" },
       { property: "og:description", content: "Discover people to follow." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },

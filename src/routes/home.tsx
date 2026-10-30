@@ -17,9 +17,9 @@ export const Route = createFileRoute("/home")({
   ssr: false,
   head: () => ({
     meta: [
-      { title: "Home / Twitter" },
+      { title: "Home / Chorui" },
       { name: "description", content: "Your home timeline." },
-      { property: "og:title", content: "Home / Twitter" },
+      { property: "og:title", content: "Home / Chorui" },
       { property: "og:description", content: "Your home timeline." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
