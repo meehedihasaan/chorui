@@ -10,13 +10,11 @@ import { SidebarLink } from './sidebar-link';
 import { MoreSettings } from './more-settings';
 import { SidebarProfile } from './sidebar-profile';
 import type { IconName } from '@components/ui/hero-icon';
-import type { CustomIconName } from '@components/ui/custom-icon';
 
 export type NavLink = {
   href: string;
   linkName: string;
   iconName: IconName;
-  customIconName?: CustomIconName;
   disabled?: boolean;
   canBeHidden?: boolean;
 };
@@ -40,8 +38,7 @@ const navLinks: Readonly<NavLink[]> = [
   {
     href: '/messages',
     linkName: 'Messages',
-    iconName: 'EnvelopeIcon',
-    customIconName: 'MessageIcon'
+    iconName: 'ChatBubbleOvalLeftIcon'
   },
   {
     href: '/bookmarks',
