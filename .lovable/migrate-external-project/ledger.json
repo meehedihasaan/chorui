@@ -1,0 +1,16 @@
+{
+  "source": "code archive (twitter-clone-main.zip)",
+  "stack": "Next.js 12 pages router + Firebase (Firestore, Auth, Storage, Cloud Functions) + Tailwind v3",
+  "capabilities": [
+    {"capability": "application code", "source": "src/ (pages, components, lib)", "outcome": "migrate", "status": "pending", "next_action": "Port to TanStack Start + Tailwind v4 in Lovable project"},
+    {"capability": "database (Firestore: users, tweets, users/{id}/bookmarks, users/{id}/stats)", "source": "Firestore collections", "outcome": "migrate", "status": "pending", "next_action": "Recreate schema in Lovable Cloud Postgres with RLS"},
+    {"capability": "auth (Firebase Auth, Google sign-in)", "source": "firebase/auth signInWithPopup", "outcome": "migrate", "status": "pending", "next_action": "Replace with Lovable Cloud auth (email/password + managed Google)"},
+    {"capability": "storage (Firebase Storage images/{userId})", "source": "firebase/storage uploadBytesResumable", "outcome": "migrate", "status": "pending", "next_action": "Lovable Cloud storage bucket for avatars/covers/tweet images"},
+    {"capability": "cloud function notify-email (nodemailer Gmail to personal inbox)", "source": "functions/src/notify-email.ts", "outcome": "not migrated", "status": "pending", "next_action": "Personal-only Gmail notification; needs SMTP credentials; can be re-added via Lovable email if user wants"},
+    {"capability": "cloud function normalize-stats (tweet delete cleanup)", "source": "functions/src/normalize-stats.ts", "outcome": "migrate", "status": "pending", "next_action": "Reimplement tweet deletion cleanup server-side"},
+    {"capability": "external Twitter trends API (TWITTER_BEARER_TOKEN, /api/trends)", "source": "Twitter API v1 trends endpoints", "outcome": "replace", "status": "pending", "next_action": "Serve curated trends data from app server route; API token not migrated (deprecated API)"},
+    {"capability": "records (Firestore data export)", "source": "none attached", "outcome": "pending", "status": "pending", "next_action": "After preview ask user for CSV/JSON exports of users and tweets"},
+    {"capability": "auth identities export", "source": "none attached", "outcome": "pending", "status": "pending", "next_action": "Ask for users export (emails + original user IDs) after preview"},
+    {"capability": "cutover", "source": "twitter-clone-ccrsxx.vercel.app", "outcome": "n/a", "status": "pending", "next_action": "App will live at Lovable URLs; no Vercel cutover needed"}
+  ]
+}
