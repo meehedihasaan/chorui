@@ -1,5 +1,5 @@
 import { MobileSidebar } from "@components/sidebar/mobile-sidebar";
-import { CustomIcon } from "@components/ui/custom-icon";
+import { ChoruiLogo } from "@components/ui/chorui-logo";
 import { createFileRoute } from "@tanstack/react-router";
 import { AnimatePresence } from "framer-motion";
 import { useWindow } from "@lib/context/window-context";
@@ -81,7 +81,7 @@ function HomeFeed() {
         <div className="grid w-full grid-cols-[1fr_auto_1fr] items-center xs:flex xs:justify-between">
           <div className="xs:hidden"><MobileSidebar /></div>
           <h2 className="hidden text-xl font-bold xs:block">Home</h2>
-          <CustomIcon className="h-7 w-7 text-main-accent xs:hidden" iconName="TwitterIcon" />
+          <ChoruiLogo className="h-7 w-7 xs:hidden" />
           <div className="flex justify-end"><UpdateUsername /></div>
         </div>
         <FeedTabs />

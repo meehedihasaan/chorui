@@ -3,6 +3,7 @@ import { toast } from 'react-hot-toast';
 import { useAuth } from '@lib/context/auth-context';
 import { NextImage } from '@components/ui/next-image';
 import { CustomIcon } from '@components/ui/custom-icon';
+import { ChoruiLogo } from '@components/ui/chorui-logo';
 import { Button } from '@components/ui/button';
 
 export function LoginMain(): JSX.Element {
@@ -48,15 +49,12 @@ export function LoginMain(): JSX.Element {
           className='absolute inset-0 h-full w-full'
         />
         <i className='absolute'>
-          <CustomIcon className='h-96 w-96 text-white' iconName='TwitterIcon' />
+          <ChoruiLogo className='h-96 w-96' />
         </i>
       </div>
       <div className='flex flex-col items-center justify-between gap-6 p-8 lg:items-start lg:justify-center'>
         <i className='mb-0 self-center lg:mb-10 lg:self-auto'>
-          <CustomIcon
-            className='-mt-4 h-6 w-6 text-main-accent lg:h-12 lg:w-12 dark:lg:text-twitter-icon'
-            iconName='TwitterIcon'
-          />
+          <ChoruiLogo className='-mt-4 h-6 w-6 lg:h-12 lg:w-12' />
         </i>
         <div className='flex max-w-xs flex-col gap-4 font-twitter-chirp-extended lg:max-w-none lg:gap-16'>
           <h1
@@ -73,7 +71,7 @@ export function LoginMain(): JSX.Element {
               <CustomIcon iconName='GoogleIcon' /> Sign up with Google
             </Button>
             <Button className={googleButtonClass} onClick={signInWithLovable}>
-              <CustomIcon iconName='TwitterIcon' className='h-5 w-5 text-main-accent' />
+              <ChoruiLogo className='h-5 w-5' />
               Continue with Lovable
             </Button>
             <div className='grid w-full grid-cols-[1fr_auto_1fr] items-center gap-2'>

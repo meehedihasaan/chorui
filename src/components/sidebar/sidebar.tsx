@@ -3,6 +3,7 @@ import { useAuth } from '@lib/context/auth-context';
 import { useWindow } from '@lib/context/window-context';
 import { useNavigate, useRouterState } from '@tanstack/react-router';
 import { CustomIcon } from '@components/ui/custom-icon';
+import { ChoruiLogo } from '@components/ui/chorui-logo';
 import { Button } from '@components/ui/button';
 import { SidebarLink } from './sidebar-link';
 import { MoreSettings } from './more-settings';
@@ -82,7 +83,7 @@ export function Sidebar(): JSX.Element {
                            focus-visible:bg-main-accent/10 focus-visible:ring-main-accent/80!
                            dark:text-twitter-icon dark:hover:bg-dark-primary/10'
               >
-                <CustomIcon className='h-7 w-7' iconName='TwitterIcon' />
+                <ChoruiLogo className='h-7 w-7' />
               </a>
             </Link>
           </h1>
