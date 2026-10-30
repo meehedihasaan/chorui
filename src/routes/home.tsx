@@ -71,7 +71,7 @@ function HomeFeed() {
           ]
         : [])
     ],
-    { includeUser: true, allowNull: true, preserve: true, allowEmpty: followingTab }
+    { includeUser: true, allowNull: true, preserve: true }
   );
 
   return (
