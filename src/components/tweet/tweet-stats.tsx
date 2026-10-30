@@ -91,9 +91,9 @@ export function TweetStats({
         )}
       >
         <TweetOption
-          className='hover:text-accent-blue focus-visible:text-accent-blue'
-          iconClassName='group-hover:bg-accent-blue/10 group-active:bg-accent-blue/20 
-                         group-focus-visible:bg-accent-blue/10 group-focus-visible:ring-accent-blue/80'
+          className='hover:text-main-accent focus-visible:text-main-accent'
+          iconClassName='group-hover:bg-main-accent/10 group-active:bg-main-accent/20 
+                         group-focus-visible:bg-main-accent/10 group-focus-visible:ring-main-accent/80'
           tip='Reply'
           move={replyMove}
           stats={currentReplies}
@@ -141,9 +141,9 @@ export function TweetStats({
         <TweetShare userId={userId} tweetId={tweetId} viewTweet={viewTweet} />
         {isOwner && (
           <TweetOption
-            className='hover:text-accent-blue focus-visible:text-accent-blue'
-            iconClassName='group-hover:bg-accent-blue/10 group-active:bg-accent-blue/20 
-                           group-focus-visible:bg-accent-blue/10 group-focus-visible:ring-accent-blue/80'
+            className='hover:text-main-accent focus-visible:text-main-accent'
+            iconClassName='group-hover:bg-main-accent/10 group-active:bg-main-accent/20 
+                           group-focus-visible:bg-main-accent/10 group-focus-visible:ring-main-accent/80'
             tip='Analytics'
             iconName='ChartPieIcon'
             disabled

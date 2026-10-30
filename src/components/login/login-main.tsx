@@ -41,7 +41,7 @@ export function LoginMain(): JSX.Element {
       <div className='relative hidden items-center justify-center lg:flex'>
         <NextImage
           imgClassName='object-cover'
-          blurClassName='bg-accent-blue'
+          blurClassName='bg-main-accent'
           src='/assets/twitter-banner.png'
           alt='Chorui banner'
           useSkeleton
@@ -54,7 +54,7 @@ export function LoginMain(): JSX.Element {
       <div className='flex flex-col items-center justify-between gap-6 p-8 lg:items-start lg:justify-center'>
         <i className='mb-0 self-center lg:mb-10 lg:self-auto'>
           <CustomIcon
-            className='-mt-4 h-6 w-6 text-accent-blue lg:h-12 lg:w-12 dark:lg:text-twitter-icon'
+            className='-mt-4 h-6 w-6 text-main-accent lg:h-12 lg:w-12 dark:lg:text-twitter-icon'
             iconName='TwitterIcon'
           />
         </i>
@@ -73,7 +73,7 @@ export function LoginMain(): JSX.Element {
               <CustomIcon iconName='GoogleIcon' /> Sign up with Google
             </Button>
             <Button className={googleButtonClass} onClick={signInWithLovable}>
-              <CustomIcon iconName='TwitterIcon' className='h-5 w-5 text-accent-blue' />
+              <CustomIcon iconName='TwitterIcon' className='h-5 w-5 text-main-accent' />
               Continue with Lovable
             </Button>
             <div className='grid w-full grid-cols-[1fr_auto_1fr] items-center gap-2'>
@@ -82,8 +82,8 @@ export function LoginMain(): JSX.Element {
               <i className='border-b border-light-border dark:border-dark-border' />
             </div>
             <Button
-              className='bg-accent-blue text-white transition hover:brightness-90
-                         focus-visible:ring-accent-blue/80! focus-visible:brightness-90 active:brightness-75'
+              className='bg-main-accent text-white transition hover:brightness-90
+                         focus-visible:ring-main-accent/80! focus-visible:brightness-90 active:brightness-75'
               onClick={() => setShowEmailForm(!showEmailForm)}
             >
               {showEmailForm ? 'Hide email sign-up' : 'Sign up with email'}
@@ -113,14 +113,14 @@ export function LoginMain(): JSX.Element {
                 <div className='grid grid-cols-2 gap-2'>
                   <Button
                     type='submit'
-                    className='bg-accent-blue text-white transition hover:brightness-90
-                               focus-visible:ring-accent-blue/80! focus-visible:brightness-90 active:brightness-75'
+                    className='bg-main-accent text-white transition hover:brightness-90
+                               focus-visible:ring-main-accent/80! focus-visible:brightness-90 active:brightness-75'
                   >
                     {isSignUp ? 'Create account' : 'Sign in'}
                   </Button>
                   <Button
                     type='button'
-                    className='border border-light-line-reply font-bold text-accent-blue hover:bg-accent-blue/10
+                    className='border border-light-line-reply font-bold text-main-accent hover:bg-main-accent/10
                                dark:border-light-secondary'
                     onClick={() => setIsSignUp(!isSignUp)}
                   >
@@ -132,7 +132,7 @@ export function LoginMain(): JSX.Element {
 
             <p
               className='inner:custom-underline inner:custom-underline text-center text-xs
-                         text-light-secondary inner:text-accent-blue dark:text-dark-secondary'
+                         text-light-secondary inner:text-main-accent dark:text-dark-secondary'
             >
               By signing up, you agree to the{' '}
               <a href='https://twitter.com/tos' target='_blank' rel='noreferrer'>
@@ -160,8 +160,8 @@ export function LoginMain(): JSX.Element {
           <div className='flex flex-col gap-3'>
             <p className='font-bold'>Already have an account? </p>
             <Button
-              className='border border-light-line-reply font-bold text-accent-blue hover:bg-accent-blue/10
-                         focus-visible:bg-accent-blue/10 focus-visible:ring-accent-blue/80! active:bg-accent-blue/20
+              className='border border-light-line-reply font-bold text-main-accent hover:bg-main-accent/10
+                         focus-visible:bg-main-accent/10 focus-visible:ring-main-accent/80! active:bg-main-accent/20
                          dark:border-light-secondary'
               onClick={signInWithGoogle}
             >
