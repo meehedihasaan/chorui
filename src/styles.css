@@ -5,140 +5,180 @@
 @custom-variant dark (&:is(.dark *));
 
 /*
- * Design system definition.
- *
- * The @theme inline block maps CSS custom properties to Tailwind utility
- * classes (e.g. --color-primary -> bg-primary, text-primary).
- *
- * The :root and .dark blocks define the actual color values using oklch.
- * All colors MUST use oklch format.
- *
- * To add a new semantic color:
- * 1. Add the variable to :root (light value) and .dark (dark value)
- * 2. Register it in @theme inline as --color-<name>: var(--<name>)
+ * Design system ported from the source Twitter clone (Tailwind v3 config +
+ * globals.scss) into Tailwind v4 CSS-first tokens.
  */
 
-@theme inline {
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
-  --radius-2xl: calc(var(--radius) + 8px);
-  --radius-3xl: calc(var(--radius) + 12px);
-  --radius-4xl: calc(var(--radius) + 16px);
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-card: var(--card);
-  --color-card-foreground: var(--card-foreground);
-  --color-popover: var(--popover);
-  --color-popover-foreground: var(--popover-foreground);
-  --color-primary: var(--primary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-secondary: var(--secondary);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-muted: var(--muted);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-accent: var(--accent);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-destructive: var(--destructive);
-  --color-destructive-foreground: var(--destructive-foreground);
-  --color-border: var(--border);
-  --color-input: var(--input);
-  --color-ring: var(--ring);
-  --color-ring-offset-background: var(--background);
-  --color-chart-1: var(--chart-1);
-  --color-chart-2: var(--chart-2);
-  --color-chart-3: var(--chart-3);
-  --color-chart-4: var(--chart-4);
-  --color-chart-5: var(--chart-5);
-  --color-sidebar: var(--sidebar);
-  --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-  --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-  --color-sidebar-border: var(--sidebar-border);
-  --color-sidebar-ring: var(--sidebar-ring);
+@font-face {
+  font-family: TwitterChirpExtendedHeavy;
+  src: url(/fonts/chirp-extended-heavy-web.woff2) format("woff2");
+  src: url(/fonts/chirp-extended-heavy-web.woff) format("woff");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
 }
 
-:root {
-  --radius: 0.625rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.129 0.042 264.695);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.129 0.042 264.695);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.129 0.042 264.695);
-  --primary: oklch(0.208 0.042 265.755);
-  --primary-foreground: oklch(0.984 0.003 247.858);
-  --secondary: oklch(0.968 0.007 247.896);
-  --secondary-foreground: oklch(0.208 0.042 265.755);
-  --muted: oklch(0.968 0.007 247.896);
-  --muted-foreground: oklch(0.554 0.046 257.417);
-  --accent: oklch(0.968 0.007 247.896);
-  --accent-foreground: oklch(0.208 0.042 265.755);
-  --destructive: oklch(0.577 0.245 27.325);
-  --destructive-foreground: oklch(0.984 0.003 247.858);
-  --border: oklch(0.929 0.013 255.508);
-  --input: oklch(0.929 0.013 255.508);
-  --ring: oklch(0.704 0.04 256.788);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
-  --sidebar: oklch(0.984 0.003 247.858);
-  --sidebar-foreground: oklch(0.129 0.042 264.695);
-  --sidebar-primary: oklch(0.208 0.042 265.755);
-  --sidebar-primary-foreground: oklch(0.984 0.003 247.858);
-  --sidebar-accent: oklch(0.968 0.007 247.896);
-  --sidebar-accent-foreground: oklch(0.208 0.042 265.755);
-  --sidebar-border: oklch(0.929 0.013 255.508);
-  --sidebar-ring: oklch(0.704 0.04 256.788);
+@font-face {
+  font-family: TwitterChirp;
+  src: url(/fonts/chirp-regular-web.woff2) format("woff2");
+  src: url(/fonts/chirp-regular-web.woff) format("woff");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
 }
 
-.dark {
-  --background: oklch(0.129 0.042 264.695);
-  --foreground: oklch(0.984 0.003 247.858);
-  --card: oklch(0.208 0.042 265.755);
-  --card-foreground: oklch(0.984 0.003 247.858);
-  --popover: oklch(0.208 0.042 265.755);
-  --popover-foreground: oklch(0.984 0.003 247.858);
-  --primary: oklch(0.929 0.013 255.508);
-  --primary-foreground: oklch(0.208 0.042 265.755);
-  --secondary: oklch(0.279 0.041 260.031);
-  --secondary-foreground: oklch(0.984 0.003 247.858);
-  --muted: oklch(0.279 0.041 260.031);
-  --muted-foreground: oklch(0.704 0.04 256.788);
-  --accent: oklch(0.279 0.041 260.031);
-  --accent-foreground: oklch(0.984 0.003 247.858);
-  --destructive: oklch(0.704 0.191 22.216);
-  --destructive-foreground: oklch(0.984 0.003 247.858);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.551 0.027 264.364);
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.208 0.042 265.755);
-  --sidebar-foreground: oklch(0.984 0.003 247.858);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.984 0.003 247.858);
-  --sidebar-accent: oklch(0.279 0.041 260.031);
-  --sidebar-accent-foreground: oklch(0.984 0.003 247.858);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.551 0.027 264.364);
+@font-face {
+  font-family: TwitterChirp;
+  src: url(/fonts/chirp-medium-web.woff2) format("woff2");
+  src: url(/fonts/chirp-medium-web.woff) format("woff");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: TwitterChirp;
+  src: url(/fonts/chirp-bold-web.woff2) format("woff2");
+  src: url(/fonts/chirp-bold-web.woff) format("woff");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: TwitterChirp;
+  src: url(/fonts/chirp-heavy-web.woff2) format("woff2");
+  src: url(/fonts/chirp-heavy-web.woff) format("woff");
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+@theme {
+  --breakpoint-xs: 500px;
+
+  --font-twitter-chirp: TwitterChirp, sans-serif;
+  --font-twitter-chirp-extended: TwitterChirpExtendedHeavy, sans-serif;
+
+  --color-main-primary: rgb(var(--main-primary));
+  --color-main-secondary: rgb(var(--main-secondary));
+  --color-main-background: rgb(var(--main-background));
+  --color-main-search-background: rgb(var(--main-search-background));
+  --color-main-sidebar-background: rgb(var(--main-sidebar-background));
+  --color-main-accent: rgb(var(--main-accent));
+
+  --color-accent-yellow: rgb(var(--accent-yellow));
+  --color-accent-blue: rgb(var(--accent-blue));
+  --color-accent-pink: rgb(var(--accent-pink));
+  --color-accent-purple: rgb(var(--accent-purple));
+  --color-accent-orange: rgb(var(--accent-orange));
+  --color-accent-green: rgb(var(--accent-green));
+
+  --color-accent-red: #f4212e;
+  --color-dark-primary: #e7e9ea;
+  --color-dark-secondary: #71767b;
+  --color-light-primary: #0f1419;
+  --color-light-secondary: #536471;
+  --color-dark-border: #2f3336;
+  --color-light-border: #eff3f4;
+  --color-dark-line-reply: #333639;
+  --color-light-line-reply: #cfd9de;
+  --color-twitter-icon: #d6d9db;
+  --color-image-preview-hover: #272c30;
 }
 
 @layer base {
-  * {
-    border-color: var(--color-border);
+  :root {
+    --main-background: var(--dark-background);
+    --main-search-background: var(--dark-search-background);
+    --main-sidebar-background: var(--dark-sidebar-background);
+    --main-accent: var(--accent-blue);
+
+    --dark-background: 0 0 0;
+    --dim-background: 22 33 44;
+    --light-background: 255 255 255;
+
+    --dark-search-background: 32 35 39;
+    --dim-search-background: 39 51 64;
+    --light-search-background: 239 243 244;
+
+    --dark-sidebar-background: 22 24 28;
+    --dim-sidebar-background: 30 39 50;
+    --light-sidebar-background: 247 249 249;
+
+    --accent-yellow: 255 213 0;
+    --accent-blue: 29 155 240;
+    --accent-pink: 249 26 130;
+    --accent-purple: 120 87 255;
+    --accent-orange: 255 122 0;
+    --accent-green: 0 184 122;
+  }
+
+  a,
+  input,
+  button,
+  textarea {
+    -webkit-tap-highlight-color: transparent;
   }
 
   body {
-    background-color: var(--color-background);
-    color: var(--color-foreground);
+    @apply hover-animation bg-main-background font-twitter-chirp text-light-primary dark:text-dark-primary;
+  }
+}
+
+@utility hover-animation {
+  transition-colors 0.2s ease;
+}
+
+@utility custom-button {
+  @apply hover-animation rounded-full p-3 disabled:cursor-not-allowed disabled:opacity-50;
+}
+
+@utility custom-underline {
+  @apply hover-animation underline decoration-transparent outline-none [text-decoration-thickness:1px]
+    hover:decoration-inherit focus-visible:decoration-inherit;
+}
+
+@utility main-tab {
+  @apply outline-none focus-visible:ring-2 focus-visible:ring-[#878a8c] focus-visible:transition-shadow
+    focus-visible:duration-200 dark:focus-visible:ring-white;
+}
+
+@utility accent-tab {
+  @apply main-tab focus-visible:ring-main-accent/80!;
+}
+
+@utility accent-bg-tab {
+  @apply focus-visible:bg-main-accent/10;
+}
+
+@utility dark-bg-tab {
+  @apply focus-visible:bg-light-primary/10 dark:focus-visible:bg-dark-primary/10;
+}
+
+@utility blur-picture {
+  @apply hover-animation accent-tab rounded-full transition hover:brightness-75 active:brightness-100;
+}
+
+@utility trim-alt {
+  @apply overflow-hidden text-ellipsis break-all [display:-webkit-box] [-webkit-line-clamp:1] [-webkit-box-orient:vertical];
+}
+
+@utility hover-card {
+  @apply hover:bg-black/[0.03] focus-visible:bg-black/[0.03] dark:hover:bg-white/[0.03]
+    dark:focus-visible:bg-white/[0.03];
+}
+
+@utility menu-container {
+  @apply z-10 rounded-md bg-main-background outline-none;
+  box-shadow:
+    #65778633 0px 0px 15px,
+    #65778626 0px 0px 3px 1px;
+
+  &.dark,
+  :is(.dark *) & {
+    box-shadow:
+      #ffffff33 0px 0px 15px,
+      #ffffff26 0px 0px 3px 1px;
   }
 }

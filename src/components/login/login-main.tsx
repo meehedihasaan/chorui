@@ -83,7 +83,7 @@ export function LoginMain(): JSX.Element {
             </div>
             <Button
               className='bg-accent-blue text-white transition hover:brightness-90
-                         focus-visible:!ring-accent-blue/80 focus-visible:brightness-90 active:brightness-75'
+                         focus-visible:ring-accent-blue/80! focus-visible:brightness-90 active:brightness-75'
               onClick={() => setShowEmailForm(!showEmailForm)}
             >
               {showEmailForm ? 'Hide email sign-up' : 'Sign up with email'}
@@ -114,7 +114,7 @@ export function LoginMain(): JSX.Element {
                   <Button
                     type='submit'
                     className='bg-accent-blue text-white transition hover:brightness-90
-                               focus-visible:!ring-accent-blue/80 focus-visible:brightness-90 active:brightness-75'
+                               focus-visible:ring-accent-blue/80! focus-visible:brightness-90 active:brightness-75'
                   >
                     {isSignUp ? 'Create account' : 'Sign in'}
                   </Button>
@@ -161,7 +161,7 @@ export function LoginMain(): JSX.Element {
             <p className='font-bold'>Already have an account? </p>
             <Button
               className='border border-light-line-reply font-bold text-accent-blue hover:bg-accent-blue/10
-                         focus-visible:bg-accent-blue/10 focus-visible:!ring-accent-blue/80 active:bg-accent-blue/20
+                         focus-visible:bg-accent-blue/10 focus-visible:ring-accent-blue/80! active:bg-accent-blue/20
                          dark:border-light-secondary'
               onClick={signInWithGoogle}
             >

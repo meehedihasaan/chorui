@@ -187,7 +187,7 @@ export function TweetActions({
               className={cn(
                 `main-tab group group absolute top-2 right-2 p-2 
                  hover:bg-accent-blue/10 focus-visible:bg-accent-blue/10
-                 focus-visible:!ring-accent-blue/80 active:bg-accent-blue/20`,
+                 focus-visible:ring-accent-blue/80! active:bg-accent-blue/20`,
                 open && 'bg-accent-blue/10 [&>div>svg]:text-accent-blue'
               )}
             >

@@ -41,7 +41,7 @@ export function InputField({
           errorMessage
             ? 'ring-accent-red'
             : `ring-light-line-reply focus-within:ring-2 
-                 focus-within:!ring-main-accent dark:ring-dark-border`
+                 focus-within:ring-main-accent! dark:ring-dark-border`
         )}
       >
         {useTextArea ? (

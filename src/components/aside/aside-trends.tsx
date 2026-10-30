@@ -56,7 +56,7 @@ export function AsideTrends({ inTrendsPage }: AsideTrendsProps): JSX.Element {
                   <Button
                     className='hover-animation group relative cursor-not-allowed p-2
                                hover:bg-accent-blue/10 focus-visible:bg-accent-blue/20 
-                               focus-visible:!ring-accent-blue/80'
+                               focus-visible:ring-accent-blue/80!'
                     onClick={preventBubbling()}
                   >
                     <HeroIcon

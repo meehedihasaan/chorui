@@ -35,7 +35,7 @@ export function UserHomeAvatar({
           <NextImage
             useSkeleton
             className='hover-animation relative h-full w-full bg-main-background
-                       inner:!m-1 inner:rounded-full inner:transition inner:duration-200'
+                       inner:m-1! inner:rounded-full inner:transition inner:duration-200'
             imgClassName='rounded-full'
             src={profileData.src}
             alt={profileData.alt}
