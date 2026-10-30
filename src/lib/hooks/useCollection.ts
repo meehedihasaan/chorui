@@ -8,8 +8,7 @@ import {
   mapProfile,
   mapTweet,
   mapStats,
-  mapBookmark,
-  queryKey
+  mapBookmark
 } from '@lib/firebase/db';
 import type { CollectionRef, QueryConstraint, RawRow } from '@lib/firebase/db';
 import { onDataChanged } from '@lib/firebase/utils';
