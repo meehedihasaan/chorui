@@ -1,5 +1,5 @@
 import { Dialog } from '@headlessui/react';
-import { CustomIcon } from '@components/ui/custom-icon';
+import { ChoruiLogo } from '@components/ui/chorui-logo';
 import { Button } from '@components/ui/button';
 import type { ReactNode, FormEvent } from 'react';
 
@@ -44,7 +44,7 @@ export function UsernameModal({
       <div className='flex flex-col gap-6'>
         <div className='flex flex-col gap-4'>
           <i className='mx-auto'>
-            <CustomIcon className='h-10 w-10' iconName='TwitterIcon' />
+            <ChoruiLogo className='h-10 w-10' />
           </i>
           <div className='flex flex-col gap-2'>
             <Dialog.Title className='text-2xl font-bold xs:text-3xl sm:text-4xl'>

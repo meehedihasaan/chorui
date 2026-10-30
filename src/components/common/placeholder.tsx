@@ -1,4 +1,4 @@
-import { CustomIcon } from '@components/ui/custom-icon';
+import { ChoruiLogo } from '@components/ui/chorui-logo';
 import { SEO } from './seo';
 
 export function Placeholder(): JSX.Element {
@@ -10,10 +10,7 @@ export function Placeholder(): JSX.Element {
         image='/home.png'
       />
       <i>
-        <CustomIcon
-          className='h-20 w-20 text-main-accent'
-          iconName='TwitterIcon'
-        />
+        <ChoruiLogo className='h-20 w-20' />
       </i>
     </main>
   );
