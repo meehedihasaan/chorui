@@ -2,9 +2,14 @@
  * Next.js router compatibility shim built on TanStack Router.
  * Exposes the source app's `Link` (default export) and `useRouter` APIs.
  */
-import { isValidElement, type MouseEvent, type ReactNode } from 'react';
 import {
-  useLocation,
+  cloneElement,
+  isValidElement,
+  type MouseEvent,
+  type ReactElement,
+  type ReactNode
+} from 'react';
+import {
   useRouter as useTanstackRouter,
   useRouterState
 } from '@tanstack/react-router';
@@ -38,6 +43,31 @@ export function Link({ href, children, onClick, className, ...rest }: LinkProps)
     event.preventDefault();
     router.history.push(href);
   };
+
+  // Drop Next.js-only props that would leak into the DOM.
+  delete rest.scroll;
+  delete replace_key(rest);
+  function replace_key<T extends object>(obj: T): string {
+    return 'replace' in obj ? 'replace' : 'legacyBehavior';
+  }
+
+  // The source app sometimes wraps its own <a> inside <Link>; render it as a
+  // single anchor instead of nesting (invalid HTML / hydration errors).
+  if (
+    isValidElement(children) &&
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (children as ReactElement<any>).type === 'a'
+  ) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const child = children as ReactElement<any>;
+    return cloneElement(child, {
+      href,
+      onClick: (event: MouseEvent<HTMLAnchorElement>) => {
+        child.props.onClick?.(event);
+        handleClick(event);
+      }
+    });
+  }
 
   return (
     <a href={href} className={className} onClick={handleClick} {...rest}>
