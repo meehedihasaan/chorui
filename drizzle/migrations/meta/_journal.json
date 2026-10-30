@@ -8,6 +8,13 @@
       "when": 1793367484118,
       "tag": "0000_create_twitter_schema",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1793367506316,
+      "tag": "0001_storage_image_policies",
+      "breakpoints": true
     }
   ]
 }
