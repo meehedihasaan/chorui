@@ -1,6 +1,6 @@
 # Roadmap
 
-- [ ] Restore blue verified badges and original post-action feedback; reactions first, comments second.
+- [x] Restore blue verified badges and original post-action feedback; reactions first, comments second.
 
 - [x] 1. Fix profile picture (media route rejects non-hex image IDs → 404 avatars)
 - [x] 2. Rename app to Chorui (all titles, branding, seed avatars/banners paths)
