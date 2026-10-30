@@ -3,6 +3,7 @@ import Link from '@lib/router';
 import cn from 'clsx';
 import { preventBubbling } from '@lib/utils';
 import { HeroIcon } from '@components/ui/hero-icon';
+import { useUnreadNotifications } from '@lib/hooks/useNotifications';
 import type { NavLink } from './sidebar';
 
 type SidebarLinkProps = NavLink & {
@@ -18,6 +19,8 @@ export function SidebarLink({
   canBeHidden
 }: SidebarLinkProps): JSX.Element {
   const { asPath } = useRouter();
+  const unread = useUnreadNotifications();
+  const showBadge = href === '/notifications' && unread > 0;
   const isActive = username ? asPath.includes(username) : asPath === href;
 
   return (
@@ -39,6 +42,12 @@ export function SidebarLink({
             isActive && 'font-bold'
           )}
         >
+          <span className='relative flex'>
+          {showBadge && (
+            <span className='absolute -right-1.5 -top-1.5 z-10 flex h-5 min-w-5 items-center justify-center rounded-full bg-main-accent px-1 text-xs font-bold text-white'>
+              {unread > 9 ? '9+' : unread}
+            </span>
+          )}
           <HeroIcon
             className={cn(
               'h-7 w-7',
@@ -49,6 +58,7 @@ export function SidebarLink({
             iconName={iconName}
             solid={isActive}
           />
+          </span>
           <p className='hidden xl:block'>{linkName}</p>
         </div>
       </a>

@@ -28,14 +28,12 @@ const navLinks: Readonly<NavLink[]> = [
   {
     href: '/explore',
     linkName: 'Explore',
-    iconName: 'HashtagIcon',
-    canBeHidden: true
+    iconName: 'HashtagIcon'
   },
   {
     href: '/notifications',
     linkName: 'Notifications',
-    iconName: 'BellIcon',
-    canBeHidden: true
+    iconName: 'BellIcon'
   },
   {
     href: '/messages',
@@ -73,8 +71,8 @@ export function Sidebar(): JSX.Element {
         <Input modal closeModal={closeModal} />
       </Modal>
       <div
-        className='fixed bottom-0 z-10 flex w-full flex-col justify-between border-t border-light-border 
-                   bg-main-background py-0 dark:border-dark-border xs:top-0 xs:h-full xs:w-auto xs:border-0 
+        className='fixed bottom-0 z-20 flex w-full flex-col justify-between border-t border-light-border 
+                   bg-main-background py-0 pb-[env(safe-area-inset-bottom)] dark:border-dark-border xs:top-0 xs:h-full xs:w-auto xs:border-0 
                    xs:bg-transparent xs:px-2 xs:py-3 xs:pt-2 md:px-4 xl:w-72'
       >
         <section className='flex flex-col justify-center gap-2 xs:items-center xl:items-stretch'>
