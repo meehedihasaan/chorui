@@ -27,7 +27,8 @@ const navLinks: Readonly<NavLink[]> = [
   {
     href: '/explore',
     linkName: 'Explore',
-    iconName: 'HashtagIcon'
+    iconName: 'HashtagIcon',
+    canBeHidden: true
   },
   {
     href: '/notifications',
@@ -94,7 +95,6 @@ export function Sidebar(): JSX.Element {
               username={username}
               linkName='Profile'
               iconName='UserIcon'
-              canBeHidden
             />
             {!isMobile && <MoreSettings />}
           </nav>
