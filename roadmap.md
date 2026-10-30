@@ -14,4 +14,4 @@
 - [x] 10. Custom blue Like reaction: deep ink blue (#1e40af) + custom thumbs-up mark
 - [x] 11. Post card: @username shows after the name on the same line
 - [x] 12. Like reaction: remove the button background and the "Like"/"Unlike" label
-- [ ] 13. Bring back the previous heart ("love") reaction mark
+- [x] 13. Bring back the previous heart ("love") reaction mark — red #e0245e
