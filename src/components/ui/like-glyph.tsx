@@ -1,34 +1,33 @@
+import cn from 'clsx';
+import likeMark from '@/assets/like-mark.png';
+
 type LikeGlyphProps = {
   className?: string;
 };
 
 /**
- * Chorui's own flat thumbs-up, drawn for the Like reaction.
- * Built from overlapping rounded shapes so it stays chunky and readable
- * at reaction-row sizes. Uses currentColor to inherit the button's text colour.
+ * Chorui's own thumbs-up mark, used for the Like reaction.
+ * The artwork is painted with currentColor through a CSS mask, so it stays
+ * white on the blue Like button and dark on the grey Unlike button.
  */
 export function LikeGlyph({ className }: LikeGlyphProps): JSX.Element {
+  const mask = `url(${likeMark})`;
+
   return (
-    <svg
+    <span
       aria-hidden
-      className={className ?? 'h-5 w-5'}
-      fill='currentColor'
-      viewBox='0 0 24 24'
-      xmlns='http://www.w3.org/2000/svg'
-    >
-      {/* fist */}
-      <rect height='11.9' rx='3.2' width='13' x='7.6' y='9.6' />
-      {/* raised thumb, leaning slightly outward */}
-      <rect
-        height='10.6'
-        rx='2.6'
-        transform='rotate(-8 11.8 7.4)'
-        width='5.2'
-        x='9.2'
-        y='2.2'
-      />
-      {/* knuckle where the thumb meets the fingers */}
-      <circle cx='14.7' cy='10.4' r='2.1' />
-    </svg>
+      className={cn('inline-block shrink-0', className ?? 'h-5 w-5')}
+      style={{
+        backgroundColor: 'currentColor',
+        maskImage: mask,
+        maskRepeat: 'no-repeat',
+        maskPosition: 'center',
+        maskSize: 'contain',
+        WebkitMaskImage: mask,
+        WebkitMaskRepeat: 'no-repeat',
+        WebkitMaskPosition: 'center',
+        WebkitMaskSize: 'contain'
+      }}
+    />
   );
 }
