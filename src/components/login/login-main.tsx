@@ -80,7 +80,7 @@ export function LoginMain(): JSX.Element {
               <i className='border-b border-light-border dark:border-dark-border' />
             </div>
             <Button
-              className='bg-main-accent text-white transition hover:brightness-90
+              className='bg-main-accent text-main-accent-foreground transition hover:brightness-90
                          focus-visible:ring-main-accent/80! focus-visible:brightness-90 active:brightness-75'
               onClick={() => setShowEmailForm(!showEmailForm)}
             >
@@ -111,7 +111,7 @@ export function LoginMain(): JSX.Element {
                 <div className='grid grid-cols-2 gap-2'>
                   <Button
                     type='submit'
-                    className='bg-main-accent text-white transition hover:brightness-90
+                    className='bg-main-accent text-main-accent-foreground transition hover:brightness-90
                                focus-visible:ring-main-accent/80! focus-visible:brightness-90 active:brightness-75'
                   >
                     {isSignUp ? 'Create account' : 'Sign in'}

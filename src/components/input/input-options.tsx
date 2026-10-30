@@ -136,7 +136,7 @@ export function InputOptions({
         </motion.div>
         <Button
           type='submit'
-          className='accent-tab bg-main-accent px-4 py-1.5 font-bold text-white
+          className='accent-tab bg-main-accent px-4 py-1.5 font-bold text-main-accent-foreground
                      enabled:hover:bg-main-accent/90
                      enabled:active:bg-main-accent/75'
           disabled={!isValidTweet}

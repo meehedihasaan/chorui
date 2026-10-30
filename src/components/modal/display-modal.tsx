@@ -17,6 +17,7 @@ const themes: Readonly<[Theme, string][]> = [
 ];
 
 const accentsColor: Readonly<Accent[]> = [
+  'mono',
   'blue',
   'yellow',
   'pink',
@@ -44,7 +45,7 @@ export function DisplayModal({ closeModal }: DisplayModalProps): JSX.Element {
             <div className='flex gap-1'>
               <UserName verified name='Chorui' />
               <p className='text-light-secondary dark:text-dark-secondary'>
-                @twitter
+                @chorui
               </p>
               <div className='flex gap-1 text-light-secondary dark:text-dark-secondary'>
                 <i>·</i>
@@ -52,10 +53,10 @@ export function DisplayModal({ closeModal }: DisplayModalProps): JSX.Element {
               </div>
             </div>
             <p className='whitespace-pre-line break-words'>
-              At the heart of Chorui are short messages called Tweets — just
+              At the heart of Chorui are short messages called posts — just
               like this one — which can include photos, videos, links, text,
               hashtags, and mentions like{' '}
-              <span className='text-main-accent'>@twitter</span>.
+              <span className='text-main-accent'>@chorui</span>.
             </p>
           </div>
         </div>
@@ -88,7 +89,7 @@ export function DisplayModal({ closeModal }: DisplayModalProps): JSX.Element {
       </div>
       <Button
         className='bg-main-accent px-4 py-1.5 font-bold
-                   text-white hover:bg-main-accent/90 active:bg-main-accent/75'
+                   text-main-accent-foreground hover:bg-main-accent/90 active:bg-main-accent/75'
         onClick={closeModal}
       >
         Done

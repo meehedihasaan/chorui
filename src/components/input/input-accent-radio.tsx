@@ -10,6 +10,8 @@ type InputAccentRadioProps = {
 type InputAccentData = Record<Accent, string>;
 
 const InputColors: Readonly<InputAccentData> = {
+  mono:
+    'border border-light-line-reply bg-accent-mono hover:ring-accent-mono/10 active:ring-accent-mono/20',
   yellow:
     'bg-accent-yellow hover:ring-accent-yellow/10 active:ring-accent-yellow/20',
   blue: 'bg-accent-blue hover:ring-accent-blue/10 active:ring-accent-blue/20',
@@ -46,7 +48,7 @@ export function InputAccentRadio({ type }: InputAccentRadioProps): JSX.Element {
         checked={isChecked}
         onChange={changeAccent}
       />
-      <i className='text-white peer-checked:inner:opacity-100'>
+      <i className='text-main-accent-foreground peer-checked:inner:opacity-100'>
         <HeroIcon
           className='h-6 w-6 opacity-0 transition-opacity duration-200'
           iconName='CheckIcon'

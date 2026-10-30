@@ -29,11 +29,11 @@ function setInitialTheme(): Theme {
 }
 
 function setInitialAccent(): Accent {
-  if (typeof window === 'undefined') return 'green';
+  if (typeof window === 'undefined') return 'mono';
 
   const savedAccent = localStorage.getItem('accent') as Accent | null;
 
-  return savedAccent ?? 'green';
+  return savedAccent ?? 'mono';
 }
 
 export function ThemeContextProvider({
@@ -90,6 +90,13 @@ export function ThemeContextProvider({
       const root = document.documentElement;
 
       root.style.setProperty('--main-accent', `var(--accent-${accent})`);
+      root.style.setProperty(
+        '--main-accent-foreground',
+        accent === 'mono'
+          ? 'var(--accent-mono-foreground)'
+          : 'rgb(255 255 255)'
+      );
+
 
       if (user) {
         localStorage.setItem('accent', accent);
