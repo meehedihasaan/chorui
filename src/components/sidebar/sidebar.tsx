@@ -40,7 +40,7 @@ const navLinks: Readonly<NavLink[]> = [
     href: '/messages',
     linkName: 'Messages',
     iconName: 'ChatBubbleOvalLeftIcon',
-    iconClassName: 'h-8 w-8 xs:h-7 xs:w-7'
+    iconClassName: 'h-[30px] w-[30px] xs:h-7 xs:w-7'
   },
   {
     href: '/bookmarks',
