@@ -3,6 +3,7 @@ import Link from '@lib/router';
 import cn from 'clsx';
 import { preventBubbling } from '@lib/utils';
 import { HeroIcon } from '@components/ui/hero-icon';
+import { CustomIcon } from '@components/ui/custom-icon';
 import { useUnreadNotifications } from '@lib/hooks/useNotifications';
 import type { NavLink } from './sidebar';
 
@@ -14,6 +15,7 @@ export function SidebarLink({
   href,
   username,
   iconName,
+  customIconName,
   linkName,
   disabled,
   canBeHidden
@@ -48,16 +50,24 @@ export function SidebarLink({
               {unread > 9 ? '9+' : unread}
             </span>
           )}
-          <HeroIcon
-            className={cn(
-              'h-7 w-7',
-              isActive &&
-                ['Explore', 'Lists'].includes(linkName) &&
-                'stroke-white'
-            )}
-            iconName={iconName}
-            solid={isActive}
-          />
+          {customIconName ? (
+            <CustomIcon
+              className='h-7 w-7'
+              iconName={customIconName}
+              solid={isActive}
+            />
+          ) : (
+            <HeroIcon
+              className={cn(
+                'h-7 w-7',
+                isActive &&
+                  ['Explore', 'Lists'].includes(linkName) &&
+                  'stroke-white'
+              )}
+              iconName={iconName}
+              solid={isActive}
+            />
+          )}
           </span>
           <p className='hidden xl:block'>{linkName}</p>
         </div>
