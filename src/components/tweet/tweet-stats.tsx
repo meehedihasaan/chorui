@@ -91,9 +91,27 @@ export function TweetStats({
         )}
       >
         <TweetOption
-          className='hover:text-main-accent focus-visible:text-main-accent'
-          iconClassName='group-hover:bg-main-accent/10 group-active:bg-main-accent/20 
-                         group-focus-visible:bg-main-accent/10 group-focus-visible:ring-main-accent/80'
+          className={cn(
+            'hover:text-accent-pink focus-visible:text-accent-pink',
+            tweetIsLiked && 'text-accent-pink [&>i>svg]:fill-accent-pink'
+          )}
+          iconClassName='group-hover:bg-accent-pink/10 group-active:bg-accent-pink/20
+                         group-focus-visible:bg-accent-pink/10 group-focus-visible:ring-accent-pink/80'
+          tip={tweetIsLiked ? 'Unlike' : 'Like'}
+          move={likeMove}
+          stats={currentLikes}
+          iconName='HeartIcon'
+          viewTweet={viewTweet}
+          onClick={manageLike(
+            tweetIsLiked ? 'unlike' : 'like',
+            userId,
+            tweetId
+          )}
+        />
+        <TweetOption
+          className='hover:text-accent-blue focus-visible:text-accent-blue'
+          iconClassName='group-hover:bg-accent-blue/10 group-active:bg-accent-blue/20 
+                         group-focus-visible:bg-accent-blue/10 group-focus-visible:ring-accent-blue/80'
           tip='Reply'
           move={replyMove}
           stats={currentReplies}
@@ -120,30 +138,12 @@ export function TweetStats({
             tweetId
           )}
         />
-        <TweetOption
-          className={cn(
-            'hover:text-accent-pink focus-visible:text-accent-pink',
-            tweetIsLiked && 'text-accent-pink [&>i>svg]:fill-accent-pink'
-          )}
-          iconClassName='group-hover:bg-accent-pink/10 group-active:bg-accent-pink/20
-                         group-focus-visible:bg-accent-pink/10 group-focus-visible:ring-accent-pink/80'
-          tip={tweetIsLiked ? 'Unlike' : 'Like'}
-          move={likeMove}
-          stats={currentLikes}
-          iconName='HeartIcon'
-          viewTweet={viewTweet}
-          onClick={manageLike(
-            tweetIsLiked ? 'unlike' : 'like',
-            userId,
-            tweetId
-          )}
-        />
         <TweetShare userId={userId} tweetId={tweetId} viewTweet={viewTweet} />
         {isOwner && (
           <TweetOption
-            className='hover:text-main-accent focus-visible:text-main-accent'
-            iconClassName='group-hover:bg-main-accent/10 group-active:bg-main-accent/20 
-                           group-focus-visible:bg-main-accent/10 group-focus-visible:ring-main-accent/80'
+            className='hover:text-accent-blue focus-visible:text-accent-blue'
+            iconClassName='group-hover:bg-accent-blue/10 group-active:bg-accent-blue/20 
+                           group-focus-visible:bg-accent-blue/10 group-focus-visible:ring-accent-blue/80'
             tip='Analytics'
             iconName='ChartPieIcon'
             disabled
