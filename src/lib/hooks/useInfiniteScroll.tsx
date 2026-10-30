@@ -15,7 +15,7 @@ type InfiniteScroll<T> = {
 };
 
 type InfiniteScrollWithUser<T> = {
-  data: (T & { user: User | null })[] | null;
+  data: (T & { user: User })[] | null;
   loading: boolean;
   LoadMore: () => JSX.Element;
 };
