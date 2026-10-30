@@ -10,12 +10,12 @@ export function HeaderSearch(): JSX.Element {
 
   return (
     <button
-      className='custom-button flex h-10 w-10 items-center justify-center rounded-full
+      className='custom-button flex h-10 w-10 shrink-0 items-center justify-center rounded-full
                  text-main-accent transition hover:bg-main-accent/10 active:bg-main-accent/20'
       aria-label='Search Chorui'
       onClick={() => void push('/explore')}
     >
-      <HeroIcon className='h-7 w-7' iconName='MagnifyingGlassIcon' />
+      <HeroIcon className='h-7 w-7 shrink-0' iconName='MagnifyingGlassIcon' />
     </button>
   );
 }
