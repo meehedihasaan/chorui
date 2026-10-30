@@ -29,6 +29,13 @@
       "when": 1793367754582,
       "tag": "0003_get_suggested_users",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1793371201743,
+      "tag": "0004_notifications_and_messages",
+      "breakpoints": true
     }
   ]
 }
