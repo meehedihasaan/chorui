@@ -38,7 +38,7 @@ export function Suggestions(): JSX.Element {
       {suggestionsPending ? (
         <Loading className='flex h-52 items-center justify-center p-4' />
       ) : suggestionsData ? (
-        <motion.div className='inner:px-4 inner:py-3' {...variants}>
+        <motion.div className='[&>*]:px-4 [&>*]:py-3' {...variants}>
           <h2 className='text-xl font-bold'>Who to follow</h2>
           {suggestionsData.map((userData) => (
             <UserCard {...userData} key={userData.id} />

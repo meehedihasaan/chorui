@@ -39,7 +39,7 @@ export function AsideTrends({ inTrendsPage }: AsideTrendsProps): JSX.Element {
         <Loading />
       ) : trends ? (
         <motion.div
-          className={cn('inner:px-4 inner:py-3', inTrendsPage && 'mt-0.5')}
+          className={cn('[&>*]:px-4 [&>*]:py-3', inTrendsPage && 'mt-0.5')}
           {...variants}
         >
           {!inTrendsPage && (
