@@ -1,0 +1,34 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1793367484118,
+      "tag": "0000_create_twitter_schema",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1793367506316,
+      "tag": "0001_storage_image_policies",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1793367547343,
+      "tag": "0002_seed_demo_feed",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1793367754582,
+      "tag": "0003_get_suggested_users",
+      "breakpoints": true
+    }
+  ]
+}

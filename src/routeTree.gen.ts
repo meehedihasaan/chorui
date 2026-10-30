@@ -10,33 +10,238 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as BookmarksRouteImport } from './routes/bookmarks'
+import { Route as HomeRouteImport } from './routes/home'
+import { Route as PeopleRouteImport } from './routes/people'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
+import { Route as TrendsRouteImport } from './routes/trends'
+import { Route as TweetIdRouteImport } from './routes/tweet.$id'
+import { Route as UserIdRouteImport } from './routes/user.$id'
+import { Route as UserIdIndexRouteImport } from './routes/user.$id.index'
+import { Route as UserIdFollowersRouteImport } from './routes/user.$id.followers'
+import { Route as UserIdFollowingRouteImport } from './routes/user.$id.following'
+import { Route as UserIdLikesRouteImport } from './routes/user.$id.likes'
+import { Route as UserIdMediaRouteImport } from './routes/user.$id.media'
+import { Route as UserIdWith_repliesRouteImport } from './routes/user.$id.with_replies'
+import { Route as ApiPublicTrendsAvailableRouteImport } from './routes/api/public/trends.available'
+import { Route as ApiPublicMediaUserIdIdRouteImport } from './routes/api/public/media.$userId.$id'
+import { Route as ApiPublicTrendsPlaceIdRouteImport } from './routes/api/public/trends.place.$id'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BookmarksRoute = BookmarksRouteImport.update({
+  id: '/bookmarks',
+  path: '/bookmarks',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HomeRoute = HomeRouteImport.update({
+  id: '/home',
+  path: '/home',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PeopleRoute = PeopleRouteImport.update({
+  id: '/people',
+  path: '/people',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TrendsRoute = TrendsRouteImport.update({
+  id: '/trends',
+  path: '/trends',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TweetIdRoute = TweetIdRouteImport.update({
+  id: '/tweet/$id',
+  path: '/tweet/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const UserIdRoute = UserIdRouteImport.update({
+  id: '/user/$id',
+  path: '/user/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const UserIdIndexRoute = UserIdIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => UserIdRoute,
+} as any)
+const UserIdFollowersRoute = UserIdFollowersRouteImport.update({
+  id: '/followers',
+  path: '/followers',
+  getParentRoute: () => UserIdRoute,
+} as any)
+const UserIdFollowingRoute = UserIdFollowingRouteImport.update({
+  id: '/following',
+  path: '/following',
+  getParentRoute: () => UserIdRoute,
+} as any)
+const UserIdLikesRoute = UserIdLikesRouteImport.update({
+  id: '/likes',
+  path: '/likes',
+  getParentRoute: () => UserIdRoute,
+} as any)
+const UserIdMediaRoute = UserIdMediaRouteImport.update({
+  id: '/media',
+  path: '/media',
+  getParentRoute: () => UserIdRoute,
+} as any)
+const UserIdWith_repliesRoute = UserIdWith_repliesRouteImport.update({
+  id: '/with_replies',
+  path: '/with_replies',
+  getParentRoute: () => UserIdRoute,
+} as any)
+const ApiPublicTrendsAvailableRoute =
+  ApiPublicTrendsAvailableRouteImport.update({
+    id: '/api/public/trends/available',
+    path: '/api/public/trends/available',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ApiPublicMediaUserIdIdRoute = ApiPublicMediaUserIdIdRouteImport.update({
+  id: '/api/public/media/$userId/$id',
+  path: '/api/public/media/$userId/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPublicTrendsPlaceIdRoute = ApiPublicTrendsPlaceIdRouteImport.update({
+  id: '/api/public/trends/place/$id',
+  path: '/api/public/trends/place/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/bookmarks': typeof BookmarksRoute
+  '/home': typeof HomeRoute
+  '/people': typeof PeopleRoute
+  '/reset-password': typeof ResetPasswordRoute
+  '/trends': typeof TrendsRoute
+  '/tweet/$id': typeof TweetIdRoute
+  '/user/$id': typeof UserIdRouteWithChildren
+  '/user/$id/followers': typeof UserIdFollowersRoute
+  '/user/$id/following': typeof UserIdFollowingRoute
+  '/user/$id/likes': typeof UserIdLikesRoute
+  '/user/$id/media': typeof UserIdMediaRoute
+  '/user/$id/with_replies': typeof UserIdWith_repliesRoute
+  '/user/$id/': typeof UserIdIndexRoute
+  '/api/public/trends/available': typeof ApiPublicTrendsAvailableRoute
+  '/api/public/media/$userId/$id': typeof ApiPublicMediaUserIdIdRoute
+  '/api/public/trends/place/$id': typeof ApiPublicTrendsPlaceIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/bookmarks': typeof BookmarksRoute
+  '/home': typeof HomeRoute
+  '/people': typeof PeopleRoute
+  '/reset-password': typeof ResetPasswordRoute
+  '/trends': typeof TrendsRoute
+  '/tweet/$id': typeof TweetIdRoute
+  '/user/$id/followers': typeof UserIdFollowersRoute
+  '/user/$id/following': typeof UserIdFollowingRoute
+  '/user/$id/likes': typeof UserIdLikesRoute
+  '/user/$id/media': typeof UserIdMediaRoute
+  '/user/$id/with_replies': typeof UserIdWith_repliesRoute
+  '/user/$id': typeof UserIdIndexRoute
+  '/api/public/trends/available': typeof ApiPublicTrendsAvailableRoute
+  '/api/public/media/$userId/$id': typeof ApiPublicMediaUserIdIdRoute
+  '/api/public/trends/place/$id': typeof ApiPublicTrendsPlaceIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/bookmarks': typeof BookmarksRoute
+  '/home': typeof HomeRoute
+  '/people': typeof PeopleRoute
+  '/reset-password': typeof ResetPasswordRoute
+  '/trends': typeof TrendsRoute
+  '/tweet/$id': typeof TweetIdRoute
+  '/user/$id': typeof UserIdRouteWithChildren
+  '/user/$id/followers': typeof UserIdFollowersRoute
+  '/user/$id/following': typeof UserIdFollowingRoute
+  '/user/$id/likes': typeof UserIdLikesRoute
+  '/user/$id/media': typeof UserIdMediaRoute
+  '/user/$id/with_replies': typeof UserIdWith_repliesRoute
+  '/user/$id/': typeof UserIdIndexRoute
+  '/api/public/trends/available': typeof ApiPublicTrendsAvailableRoute
+  '/api/public/media/$userId/$id': typeof ApiPublicMediaUserIdIdRoute
+  '/api/public/trends/place/$id': typeof ApiPublicTrendsPlaceIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/bookmarks'
+    | '/home'
+    | '/people'
+    | '/reset-password'
+    | '/trends'
+    | '/tweet/$id'
+    | '/user/$id'
+    | '/user/$id/followers'
+    | '/user/$id/following'
+    | '/user/$id/likes'
+    | '/user/$id/media'
+    | '/user/$id/with_replies'
+    | '/user/$id/'
+    | '/api/public/trends/available'
+    | '/api/public/media/$userId/$id'
+    | '/api/public/trends/place/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/bookmarks'
+    | '/home'
+    | '/people'
+    | '/reset-password'
+    | '/trends'
+    | '/tweet/$id'
+    | '/user/$id/followers'
+    | '/user/$id/following'
+    | '/user/$id/likes'
+    | '/user/$id/media'
+    | '/user/$id/with_replies'
+    | '/user/$id'
+    | '/api/public/trends/available'
+    | '/api/public/media/$userId/$id'
+    | '/api/public/trends/place/$id'
+  id:
+    | '__root__'
+    | '/'
+    | '/bookmarks'
+    | '/home'
+    | '/people'
+    | '/reset-password'
+    | '/trends'
+    | '/tweet/$id'
+    | '/user/$id'
+    | '/user/$id/followers'
+    | '/user/$id/following'
+    | '/user/$id/likes'
+    | '/user/$id/media'
+    | '/user/$id/with_replies'
+    | '/user/$id/'
+    | '/api/public/trends/available'
+    | '/api/public/media/$userId/$id'
+    | '/api/public/trends/place/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  BookmarksRoute: typeof BookmarksRoute
+  HomeRoute: typeof HomeRoute
+  PeopleRoute: typeof PeopleRoute
+  ResetPasswordRoute: typeof ResetPasswordRoute
+  TrendsRoute: typeof TrendsRoute
+  TweetIdRoute: typeof TweetIdRoute
+  UserIdRoute: typeof UserIdRouteWithChildren
+  ApiPublicTrendsAvailableRoute: typeof ApiPublicTrendsAvailableRoute
+  ApiPublicMediaUserIdIdRoute: typeof ApiPublicMediaUserIdIdRoute
+  ApiPublicTrendsPlaceIdRoute: typeof ApiPublicTrendsPlaceIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +253,154 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/bookmarks': {
+      id: '/bookmarks'
+      path: '/bookmarks'
+      fullPath: '/bookmarks'
+      preLoaderRoute: typeof BookmarksRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/home': {
+      id: '/home'
+      path: '/home'
+      fullPath: '/home'
+      preLoaderRoute: typeof HomeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/people': {
+      id: '/people'
+      path: '/people'
+      fullPath: '/people'
+      preLoaderRoute: typeof PeopleRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/trends': {
+      id: '/trends'
+      path: '/trends'
+      fullPath: '/trends'
+      preLoaderRoute: typeof TrendsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/tweet/$id': {
+      id: '/tweet/$id'
+      path: '/tweet/$id'
+      fullPath: '/tweet/$id'
+      preLoaderRoute: typeof TweetIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/user/$id': {
+      id: '/user/$id'
+      path: '/user/$id'
+      fullPath: '/user/$id'
+      preLoaderRoute: typeof UserIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/user/$id/': {
+      id: '/user/$id/'
+      path: '/'
+      fullPath: '/user/$id/'
+      preLoaderRoute: typeof UserIdIndexRouteImport
+      parentRoute: typeof UserIdRoute
+    }
+    '/user/$id/followers': {
+      id: '/user/$id/followers'
+      path: '/followers'
+      fullPath: '/user/$id/followers'
+      preLoaderRoute: typeof UserIdFollowersRouteImport
+      parentRoute: typeof UserIdRoute
+    }
+    '/user/$id/following': {
+      id: '/user/$id/following'
+      path: '/following'
+      fullPath: '/user/$id/following'
+      preLoaderRoute: typeof UserIdFollowingRouteImport
+      parentRoute: typeof UserIdRoute
+    }
+    '/user/$id/likes': {
+      id: '/user/$id/likes'
+      path: '/likes'
+      fullPath: '/user/$id/likes'
+      preLoaderRoute: typeof UserIdLikesRouteImport
+      parentRoute: typeof UserIdRoute
+    }
+    '/user/$id/media': {
+      id: '/user/$id/media'
+      path: '/media'
+      fullPath: '/user/$id/media'
+      preLoaderRoute: typeof UserIdMediaRouteImport
+      parentRoute: typeof UserIdRoute
+    }
+    '/user/$id/with_replies': {
+      id: '/user/$id/with_replies'
+      path: '/with_replies'
+      fullPath: '/user/$id/with_replies'
+      preLoaderRoute: typeof UserIdWith_repliesRouteImport
+      parentRoute: typeof UserIdRoute
+    }
+    '/api/public/trends/available': {
+      id: '/api/public/trends/available'
+      path: '/api/public/trends/available'
+      fullPath: '/api/public/trends/available'
+      preLoaderRoute: typeof ApiPublicTrendsAvailableRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/media/$userId/$id': {
+      id: '/api/public/media/$userId/$id'
+      path: '/api/public/media/$userId/$id'
+      fullPath: '/api/public/media/$userId/$id'
+      preLoaderRoute: typeof ApiPublicMediaUserIdIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/trends/place/$id': {
+      id: '/api/public/trends/place/$id'
+      path: '/api/public/trends/place/$id'
+      fullPath: '/api/public/trends/place/$id'
+      preLoaderRoute: typeof ApiPublicTrendsPlaceIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
+interface UserIdRouteChildren {
+  UserIdFollowersRoute: typeof UserIdFollowersRoute
+  UserIdFollowingRoute: typeof UserIdFollowingRoute
+  UserIdLikesRoute: typeof UserIdLikesRoute
+  UserIdMediaRoute: typeof UserIdMediaRoute
+  UserIdWith_repliesRoute: typeof UserIdWith_repliesRoute
+  UserIdIndexRoute: typeof UserIdIndexRoute
+}
+
+const UserIdRouteChildren: UserIdRouteChildren = {
+  UserIdFollowersRoute: UserIdFollowersRoute,
+  UserIdFollowingRoute: UserIdFollowingRoute,
+  UserIdLikesRoute: UserIdLikesRoute,
+  UserIdMediaRoute: UserIdMediaRoute,
+  UserIdWith_repliesRoute: UserIdWith_repliesRoute,
+  UserIdIndexRoute: UserIdIndexRoute,
+}
+
+const UserIdRouteWithChildren =
+  UserIdRoute._addFileChildren(UserIdRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  BookmarksRoute: BookmarksRoute,
+  HomeRoute: HomeRoute,
+  PeopleRoute: PeopleRoute,
+  ResetPasswordRoute: ResetPasswordRoute,
+  TrendsRoute: TrendsRoute,
+  TweetIdRoute: TweetIdRoute,
+  UserIdRoute: UserIdRouteWithChildren,
+  ApiPublicTrendsAvailableRoute: ApiPublicTrendsAvailableRoute,
+  ApiPublicMediaUserIdIdRoute: ApiPublicMediaUserIdIdRoute,
+  ApiPublicTrendsPlaceIdRoute: ApiPublicTrendsPlaceIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
