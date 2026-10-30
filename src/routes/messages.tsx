@@ -20,7 +20,7 @@ function ConversationList() {
   const { data, loading } = useConversations();
   return (
     <PageShell>
-      <MainHeader title='Messages' />
+      <MainHeader useMobileSidebar title='Messages' />
       <section>
         {loading ? <Loading className='mt-5' /> : !data?.length ? (
           <div className='px-8 py-10'>
