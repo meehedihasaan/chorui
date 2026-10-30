@@ -16,11 +16,11 @@ export const Route = createFileRoute("/user/$id/with_replies")({
   head: () => ({
     meta: [
       { title: "With replies / Chorui" },
-      { name: "description", content: "Tweets and replies by this profile." },
+      { name: "description", content: "Posts and replies by this profile." },
       { property: "og:title", content: "With replies / Chorui" },
       {
         property: "og:description",
-        content: "Tweets and replies by this profile."
+        content: "Posts and replies by this profile."
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -59,8 +59,8 @@ function UserWithRepliesPage() {
           <Loading className="mt-5" />
         ) : !data ? (
           <StatsEmpty
-            title={`@${username as string} hasn't tweeted`}
-            description="When they do, their Tweets will show up here."
+            title={`@${username as string} hasn't posted`}
+            description="When they do, their Posts will show up here."
           />
         ) : (
           <AnimatePresence mode="popLayout">

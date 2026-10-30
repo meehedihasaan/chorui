@@ -113,7 +113,7 @@ export function Sidebar(): JSX.Element {
               className='block h-6 w-6 xl:hidden'
               iconName='FeatherIcon'
             />
-            <p className='hidden xl:block'>Tweet</p>
+            <p className='hidden xl:block'>Post</p>
           </Button>
         </section>
         {!isMobile && <SidebarProfile />}

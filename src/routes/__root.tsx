@@ -84,12 +84,12 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       {
         name: "description",
         content:
-          "A Chorui: share tweets, reply, retweet, like, bookmark and follow people.",
+          "A Chorui: share posts, reply, repost, like, bookmark and follow people.",
       },
       { property: "og:title", content: "Chorui — It's what's happening" },
       {
         property: "og:description",
-        content: "Share tweets, reply, retweet, like, bookmark and follow people.",
+        content: "Share posts, reply, repost, like, bookmark and follow people.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },

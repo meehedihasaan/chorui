@@ -22,10 +22,10 @@ export const Route = createFileRoute("/tweet/$id")({
   ssr: false,
   head: () => ({
     meta: [
-      { title: "Tweet / Chorui" },
-      { name: "description", content: "A tweet thread." },
-      { property: "og:title", content: "Tweet / Chorui" },
-      { property: "og:description", content: "A tweet thread." },
+      { title: "Post / Chorui" },
+      { name: "description", content: "A post thread." },
+      { property: "og:title", content: "Post / Chorui" },
+      { property: "og:description", content: "A post thread." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
@@ -65,7 +65,7 @@ function TweetIdPage() {
           <MainContainer className="!pb-[1280px]">
             <MainHeader
               useActionButton
-              title={parentId ? "Thread" : "Tweet"}
+              title={parentId ? "Thread" : "Post"}
               action={back}
             />
             <section>
@@ -73,7 +73,7 @@ function TweetIdPage() {
                 <Loading className="mt-5" />
               ) : !tweetData ? (
                 <>
-                  <Error message="Tweet not found" />
+                  <Error message="Post not found" />
                 </>
               ) : (
                 <>
