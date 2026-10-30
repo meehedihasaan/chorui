@@ -141,7 +141,7 @@ export function Tweet(tweet: TweetProps): JSX.Element {
             </div>
             <div className='flex min-w-0 flex-col'>
               <div className='flex justify-between gap-2 text-light-secondary dark:text-dark-secondary'>
-                <div className='flex gap-1 truncate xs:overflow-visible xs:whitespace-normal'>
+                <div className='flex min-w-0 flex-col'>
                   <UserTooltip modal={modal} {...tweetUserData}>
                     <UserName
                       name={name}
@@ -150,12 +150,14 @@ export function Tweet(tweet: TweetProps): JSX.Element {
                       className='text-light-primary dark:text-dark-primary'
                     />
                   </UserTooltip>
-                  <UserTooltip modal={modal} {...tweetUserData}>
-                    <UserUsername username={username} />
-                  </UserTooltip>
-                  <TweetDate tweetLink={tweetLink} createdAt={createdAt} />
+                  <div className='truncate text-sm'>
+                    <UserTooltip modal={modal} {...tweetUserData}>
+                      <UserUsername username={username} />
+                    </UserTooltip>
+                  </div>
                 </div>
-                <div className='px-4'>
+                <div className='flex shrink-0 items-start gap-1 text-sm'>
+                  <TweetDate tweetLink={tweetLink} createdAt={createdAt} />
                   {!modal && (
                     <TweetActions
                       isOwner={isOwner}
@@ -206,6 +208,18 @@ export function Tweet(tweet: TweetProps): JSX.Element {
                     userRetweets={userRetweets}
                     openModal={!parent ? openModal : undefined}
                   />
+                )}
+                {!modal && !parentTweet && user && (
+                  <button
+                    type='button'
+                    onClick={openModal}
+                    className='flex w-full items-center gap-2 rounded-lg border border-light-border px-3 py-2
+                               text-left text-sm text-light-secondary transition-colors hover:bg-light-primary/5
+                               dark:border-dark-border dark:text-dark-secondary dark:hover:bg-dark-primary/5'
+                  >
+                    <UserAvatar src={user.photoURL} alt={user.name} size={22} />
+                    Write your comment...
+                  </button>
                 )}
               </div>
             </div>

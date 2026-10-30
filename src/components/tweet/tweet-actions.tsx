@@ -195,7 +195,7 @@ export function TweetActions({
                 <HeroIcon
                   className='h-5 w-5 text-light-secondary group-hover:text-accent-blue
                              group-focus-visible:text-accent-blue dark:text-dark-secondary/80'
-                  iconName='EllipsisHorizontalIcon'
+                  iconName='EllipsisVerticalIcon'
                 />
                 {!open && <ToolTip tip='More' />}
               </div>
