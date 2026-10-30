@@ -99,7 +99,7 @@ export function MobileSidebarModal({
           closeModal={logOutCloseModal}
         />
       </Modal>
-      <section className='flex flex-col px-4 pt-4'>
+      <section className='flex flex-col px-4 pt-4 pb-4'>
         <div className='flex items-start justify-between'>
           <UserAvatar username={username} src={photoURL} alt={name} size={44} />
           <Link href='/settings'>
@@ -127,13 +127,13 @@ export function MobileSidebarModal({
             </Link>
           ))}
         </div>
-        <nav className='mt-6 flex flex-col gap-1' onClick={closeModal}>
+        <nav className='mt-4 flex flex-col gap-1' onClick={closeModal}>
           <MobileSidebarLink href={userLink} iconName='UserIcon' linkName='Profile' />
           {topNavLinks.map((linkData) => (
             <MobileSidebarLink {...linkData} key={linkData.href} />
           ))}
         </nav>
-        <i className='my-3 h-px bg-light-border dark:bg-dark-border' />
+        <i className='my-2 h-px bg-light-border dark:bg-dark-border' />
         <nav className='flex flex-col gap-1'>
           {bottomNavLinks.map((linkData) => (
             <MobileSidebarLink {...linkData} key={linkData.href} />
