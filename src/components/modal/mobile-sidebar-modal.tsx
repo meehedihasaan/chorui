@@ -99,7 +99,7 @@ export function MobileSidebarModal({
           closeModal={logOutCloseModal}
         />
       </Modal>
-      <section className='flex flex-col px-4 pt-4'>
+      <section className='flex h-full flex-col px-4 pt-4 pb-4'>
         <div className='flex items-start justify-between'>
           <UserAvatar username={username} src={photoURL} alt={name} size={44} />
           <Link href='/settings'>
@@ -127,19 +127,19 @@ export function MobileSidebarModal({
             </Link>
           ))}
         </div>
-        <nav className='mt-6 flex flex-col gap-1' onClick={closeModal}>
+        <nav className='mt-4 flex min-h-0 flex-1 flex-col gap-1 overflow-y-auto' onClick={closeModal}>
           <MobileSidebarLink href={userLink} iconName='UserIcon' linkName='Profile' />
           {topNavLinks.map((linkData) => (
             <MobileSidebarLink {...linkData} key={linkData.href} />
           ))}
         </nav>
-        <i className='my-3 h-px bg-light-border dark:bg-dark-border' />
+        <i className='my-2 h-px bg-light-border dark:bg-dark-border' />
         <nav className='flex flex-col gap-1'>
           {bottomNavLinks.map((linkData) => (
             <MobileSidebarLink {...linkData} key={linkData.href} />
           ))}
           <Button
-            className='accent-tab flex items-center gap-6 rounded-md p-3 text-xl font-bold transition
+            className='accent-tab flex items-center gap-6 rounded-md px-3 py-2 text-xl font-bold transition
                        hover:bg-light-primary/10 dark:hover:bg-dark-primary/10'
             onClick={displayOpenModal}
           >
@@ -147,7 +147,7 @@ export function MobileSidebarModal({
             Display
           </Button>
           <Button
-            className='accent-tab flex items-center gap-6 rounded-md p-3 text-xl font-bold transition
+            className='accent-tab flex items-center gap-6 rounded-md px-3 py-2 text-xl font-bold transition
                        hover:bg-light-primary/10 dark:hover:bg-dark-primary/10'
             onClick={logOutOpenModal}
           >

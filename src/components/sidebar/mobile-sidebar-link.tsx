@@ -22,7 +22,7 @@ export function MobileSidebarLink({
           `custom-button accent-tab accent-bg-tab flex items-center rounded-md font-bold 
            transition hover:bg-light-primary/10 focus-visible:ring-2 first:focus-visible:ring-[#878a8c]
            dark:hover:bg-dark-primary/10 dark:focus-visible:ring-white`,
-          'gap-6 p-3 text-xl',
+          'gap-6 px-3 py-2 text-xl',
           disabled && 'cursor-not-allowed'
         )}
         onClick={disabled ? preventBubbling() : undefined}
