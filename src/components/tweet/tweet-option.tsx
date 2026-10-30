@@ -1,6 +1,7 @@
 import cn from 'clsx';
 import { preventBubbling } from '@lib/utils';
 import { HeroIcon } from '@components/ui/hero-icon';
+import { Button } from '@components/ui/button';
 import { ToolTip } from '@components/ui/tooltip';
 import { NumberStats } from './number-stats';
 import type { IconName } from '@components/ui/hero-icon';
@@ -29,7 +30,8 @@ export function TweetOption({
   onClick
 }: TweetOption): JSX.Element {
   return (
-    <button
+    <Button
+      aria-label={tip}
       className={cn(
         `group flex items-center gap-1.5 p-0 transition-none
          disabled:cursor-not-allowed inner:transition inner:duration-200`,
@@ -53,6 +55,6 @@ export function TweetOption({
       {!viewTweet && (
         <NumberStats move={move as number} stats={stats as number} />
       )}
-    </button>
+    </Button>
   );
 }
