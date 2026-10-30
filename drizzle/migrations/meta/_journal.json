@@ -15,6 +15,13 @@
       "when": 1793367506316,
       "tag": "0001_storage_image_policies",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1793367547343,
+      "tag": "0002_seed_demo_feed",
+      "breakpoints": true
     }
   ]
 }
