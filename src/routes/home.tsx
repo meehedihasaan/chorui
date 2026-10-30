@@ -79,7 +79,7 @@ function HomeFeed() {
   return (
     <MainContainer>
       <MainHeader useMobileSidebar className="flex flex-col border-b border-light-border pb-0 dark:border-dark-border">
-        <div className="grid w-full grid-cols-[auto_auto_1fr] items-center gap-3 xs:flex xs:justify-between">
+        <div className="grid w-full grid-cols-[1fr_auto_1fr] items-center gap-3 xs:flex xs:justify-between">
           <div className="xs:hidden"><MobileSidebar /></div>
           <h2 className="hidden text-xl font-bold xs:block">Home</h2>
           <ChoruiLogo className="h-7 w-7 xs:hidden" />
