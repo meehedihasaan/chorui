@@ -3,7 +3,11 @@
  * Exposes the source app's `Link` (default export) and `useRouter` APIs.
  */
 import { isValidElement, type MouseEvent, type ReactNode } from 'react';
-import { useLocation, useRouter as useTanstackRouter } from '@tanstack/react-router';
+import {
+  useLocation,
+  useRouter as useTanstackRouter,
+  useRouterState
+} from '@tanstack/react-router';
 
 type LinkProps = {
   href: string;
@@ -46,6 +50,7 @@ export function Link({ href, children, onClick, className, ...rest }: LinkProps)
 export { Link as default };
 
 export function useRouter() {
+  const router = useTanstackRouter();
   // Select primitive values: selecting objects here returns reactive proxies
   // that must not be concatenated with strings.
   const pathname = useRouterState({ select: (s) => s.location.pathname });
