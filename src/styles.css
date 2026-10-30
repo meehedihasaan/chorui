@@ -76,9 +76,8 @@
   --color-accent-orange: rgb(var(--accent-orange));
   --color-accent-green: rgb(var(--accent-green));
 
-  /* The Like reaction's blue, in the style of the classic Facebook button. */
-  --color-like-blue: #1e40af;
-  --color-like-blue-foreground: #ffffff;
+  /* The Love reaction's red. */
+  --color-like-red: #e0245e;
 
   --color-accent-red: #f4212e;
   --color-dark-primary: #e7e9ea;
