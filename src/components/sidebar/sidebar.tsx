@@ -39,7 +39,9 @@ const navLinks: Readonly<NavLink[]> = [
   {
     href: '/messages',
     linkName: 'Messages',
-    iconName: 'ChatBubbleOvalLeftIcon'
+    iconName: 'ChatBubbleOvalLeftIcon',
+    // the bubble glyph draws shorter than the bell; 29px equalises their heights
+    iconClassName: 'h-[29px] w-[29px]'
   },
   {
     href: '/bookmarks',
