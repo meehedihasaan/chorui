@@ -15,7 +15,11 @@ import { UsernameModal } from '@components/modal/username-modal';
 import { InputField } from '@components/input/input-field';
 import type { FormEvent, ChangeEvent } from 'react';
 
-export function UpdateUsername(): JSX.Element {
+export function UpdateUsername({
+  hideTrigger
+}: {
+  hideTrigger?: boolean;
+}): JSX.Element {
   const [alreadySet, setAlreadySet] = useState(false);
   const [available, setAvailable] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -121,15 +125,17 @@ export function UpdateUsername(): JSX.Element {
           />
         </UsernameModal>
       </Modal>
-      <Button
-        className='dark-bg-tab group relative p-2 hover:bg-light-primary/10
-                   active:bg-light-primary/20 dark:hover:bg-dark-primary/10 
-                   dark:active:bg-dark-primary/20'
-        onClick={openModal}
-      >
-        <HeroIcon className='h-5 w-5' iconName='SparklesIcon' />
-        <ToolTip tip='Top posts' />
-      </Button>
+      {!hideTrigger && (
+        <Button
+          className='dark-bg-tab group relative p-2 hover:bg-light-primary/10
+                     active:bg-light-primary/20 dark:hover:bg-dark-primary/10 
+                     dark:active:bg-dark-primary/20'
+          onClick={openModal}
+        >
+          <HeroIcon className='h-5 w-5' iconName='SparklesIcon' />
+          <ToolTip tip='Set your username' />
+        </Button>
+      )}
     </>
   );
 }
