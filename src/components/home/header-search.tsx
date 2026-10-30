@@ -1,24 +1,45 @@
-import { useNavigate } from '@lib/router';
-import { Button } from '@components/ui/button';
+import { useState } from 'react';
+import { useRouter } from '@lib/router';
 import { HeroIcon } from '@components/ui/hero-icon';
-import { ToolTip } from '@components/ui/tooltip';
+import type { ChangeEvent, FormEvent } from 'react';
 
 /**
- * The search button shown in the mobile header's right section. It opens the
- * Explore page, whose header carries the search box.
+ * The compact search box shown in the mobile header's right section on Home.
+ * Submitting opens the Explore page with the query applied.
  */
 export function HeaderSearch(): JSX.Element {
-  const navigate = useNavigate();
+  const [inputValue, setInputValue] = useState('');
+
+  const { push } = useRouter();
+
+  const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
+    e.preventDefault();
+    const q = inputValue.trim();
+    if (q) void push(`/explore?q=${encodeURIComponent(q)}`);
+  };
 
   return (
-    <Button
-      className='dark-bg-tab group relative p-2 hover:bg-light-primary/10
-                 active:bg-light-primary/20 dark:hover:bg-dark-primary/10
-                 dark:active:bg-dark-primary/20'
-      onClick={() => void navigate({ to: '/explore' })}
+    <form
+      className='flex w-full items-center gap-2 rounded-full
+                 bg-main-search-background px-3 py-1.5'
+      onSubmit={handleSubmit}
+      role='search'
     >
-      <HeroIcon className='h-5 w-5' iconName='MagnifyingGlassIcon' />
-      <ToolTip tip='Search' />
-    </Button>
+      <HeroIcon
+        className='h-4 w-4 shrink-0 text-light-secondary dark:text-dark-secondary'
+        iconName='MagnifyingGlassIcon'
+      />
+      <input
+        className='w-full min-w-0 bg-transparent text-sm outline-none
+                   placeholder:text-light-secondary dark:placeholder:text-dark-secondary'
+        type='search'
+        placeholder='Search'
+        aria-label='Search Chorui'
+        value={inputValue}
+        onChange={({ target: { value } }: ChangeEvent<HTMLInputElement>) =>
+          setInputValue(value)
+        }
+      />
+    </form>
   );
 }
