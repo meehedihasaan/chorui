@@ -8,6 +8,8 @@ import { markAllNotificationsRead, useNotifications } from '@lib/hooks/useNotifi
 import { PageShell, pageHead } from '@components/layout/page-shell';
 import { MainHeader } from '@components/home/main-header';
 import { HeroIcon } from '@components/ui/hero-icon';
+import { LikeGlyph } from '@components/ui/like-glyph';
+
 import { Loading } from '@components/ui/loading';
 import { DEFAULT_AVATAR_URL, resolveAvatarUrl } from '@lib/default-avatar';
 
@@ -23,7 +25,7 @@ export const Route = createFileRoute('/notifications')({
 });
 
 const meta = {
-  like: { icon: 'HandThumbUpIcon', color: 'text-accent-pink', text: 'liked your post' },
+  like: { icon: 'HandThumbUpIcon', color: 'text-like-blue', text: 'liked your post' },
   retweet: { icon: 'ArrowPathRoundedSquareIcon', color: 'text-accent-green', text: 'reposted your post' },
   reply: { icon: 'ChatBubbleOvalLeftIcon', color: 'text-main-accent', text: 'replied to your post' },
   mention: { icon: 'AtSymbolIcon', color: 'text-main-accent', text: 'mentioned you' },
@@ -76,7 +78,12 @@ function NotificationsPage() {
             <Link key={n.id} to={href}
               className={cn('flex gap-3 border-b border-light-border px-4 py-3 hover:bg-light-primary/5 dark:border-dark-border dark:hover:bg-dark-primary/5',
                 !n.read && 'bg-main-accent/5')}>
-              <HeroIcon solid className={cn('h-7 w-7 shrink-0', m.color)} iconName={m.icon} />
+              {n.type === 'like' ? (
+                <LikeGlyph className={cn('h-7 w-7 shrink-0', m.color)} />
+              ) : (
+                <HeroIcon solid className={cn('h-7 w-7 shrink-0', m.color)} iconName={m.icon} />
+              )}
+
               <div className='flex min-w-0 flex-col gap-2'>
                 <img referrerPolicy='no-referrer' onError={(e) => { e.currentTarget.src = DEFAULT_AVATAR_URL; }} src={resolveAvatarUrl(n.actor.photoURL)} alt={n.actor.name} width={32} height={32} className='shrink-0 rounded-full object-cover' style={{ width: 32, height: 32 }} />
                 <p><span className='font-bold'>{n.actor.name}</span> {m.text}</p>
