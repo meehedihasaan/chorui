@@ -24,6 +24,7 @@ import { Route as UserIdLikesRouteImport } from './routes/user.$id.likes'
 import { Route as UserIdMediaRouteImport } from './routes/user.$id.media'
 import { Route as UserIdWith_repliesRouteImport } from './routes/user.$id.with_replies'
 import { Route as ApiPublicTrendsAvailableRouteImport } from './routes/api/public/trends.available'
+import { Route as ApiPublicMediaUserIdIdRouteImport } from './routes/api/public/media.$userId.$id'
 import { Route as ApiPublicTrendsPlaceIdRouteImport } from './routes/api/public/trends.place.$id'
 
 const IndexRoute = IndexRouteImport.update({
@@ -102,6 +103,11 @@ const ApiPublicTrendsAvailableRoute =
     path: '/api/public/trends/available',
     getParentRoute: () => rootRouteImport,
   } as any)
+const ApiPublicMediaUserIdIdRoute = ApiPublicMediaUserIdIdRouteImport.update({
+  id: '/api/public/media/$userId/$id',
+  path: '/api/public/media/$userId/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiPublicTrendsPlaceIdRoute = ApiPublicTrendsPlaceIdRouteImport.update({
   id: '/api/public/trends/place/$id',
   path: '/api/public/trends/place/$id',
@@ -124,6 +130,7 @@ export interface FileRoutesByFullPath {
   '/user/$id/with_replies': typeof UserIdWith_repliesRoute
   '/user/$id/': typeof UserIdIndexRoute
   '/api/public/trends/available': typeof ApiPublicTrendsAvailableRoute
+  '/api/public/media/$userId/$id': typeof ApiPublicMediaUserIdIdRoute
   '/api/public/trends/place/$id': typeof ApiPublicTrendsPlaceIdRoute
 }
 export interface FileRoutesByTo {
@@ -141,6 +148,7 @@ export interface FileRoutesByTo {
   '/user/$id/with_replies': typeof UserIdWith_repliesRoute
   '/user/$id': typeof UserIdIndexRoute
   '/api/public/trends/available': typeof ApiPublicTrendsAvailableRoute
+  '/api/public/media/$userId/$id': typeof ApiPublicMediaUserIdIdRoute
   '/api/public/trends/place/$id': typeof ApiPublicTrendsPlaceIdRoute
 }
 export interface FileRoutesById {
@@ -160,6 +168,7 @@ export interface FileRoutesById {
   '/user/$id/with_replies': typeof UserIdWith_repliesRoute
   '/user/$id/': typeof UserIdIndexRoute
   '/api/public/trends/available': typeof ApiPublicTrendsAvailableRoute
+  '/api/public/media/$userId/$id': typeof ApiPublicMediaUserIdIdRoute
   '/api/public/trends/place/$id': typeof ApiPublicTrendsPlaceIdRoute
 }
 export interface FileRouteTypes {
@@ -180,6 +189,7 @@ export interface FileRouteTypes {
     | '/user/$id/with_replies'
     | '/user/$id/'
     | '/api/public/trends/available'
+    | '/api/public/media/$userId/$id'
     | '/api/public/trends/place/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -197,6 +207,7 @@ export interface FileRouteTypes {
     | '/user/$id/with_replies'
     | '/user/$id'
     | '/api/public/trends/available'
+    | '/api/public/media/$userId/$id'
     | '/api/public/trends/place/$id'
   id:
     | '__root__'
@@ -215,6 +226,7 @@ export interface FileRouteTypes {
     | '/user/$id/with_replies'
     | '/user/$id/'
     | '/api/public/trends/available'
+    | '/api/public/media/$userId/$id'
     | '/api/public/trends/place/$id'
   fileRoutesById: FileRoutesById
 }
@@ -228,6 +240,7 @@ export interface RootRouteChildren {
   TweetIdRoute: typeof TweetIdRoute
   UserIdRoute: typeof UserIdRouteWithChildren
   ApiPublicTrendsAvailableRoute: typeof ApiPublicTrendsAvailableRoute
+  ApiPublicMediaUserIdIdRoute: typeof ApiPublicMediaUserIdIdRoute
   ApiPublicTrendsPlaceIdRoute: typeof ApiPublicTrendsPlaceIdRoute
 }
 
@@ -338,6 +351,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicTrendsAvailableRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/media/$userId/$id': {
+      id: '/api/public/media/$userId/$id'
+      path: '/api/public/media/$userId/$id'
+      fullPath: '/api/public/media/$userId/$id'
+      preLoaderRoute: typeof ApiPublicMediaUserIdIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/trends/place/$id': {
       id: '/api/public/trends/place/$id'
       path: '/api/public/trends/place/$id'
@@ -379,6 +399,7 @@ const rootRouteChildren: RootRouteChildren = {
   TweetIdRoute: TweetIdRoute,
   UserIdRoute: UserIdRouteWithChildren,
   ApiPublicTrendsAvailableRoute: ApiPublicTrendsAvailableRoute,
+  ApiPublicMediaUserIdIdRoute: ApiPublicMediaUserIdIdRoute,
   ApiPublicTrendsPlaceIdRoute: ApiPublicTrendsPlaceIdRoute,
 }
 export const routeTree = rootRouteImport
