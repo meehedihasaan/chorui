@@ -1,3 +1,4 @@
+import { isNotificationEnabled } from '@lib/settings-prefs';
 import { createFileRoute, Link, useNavigate } from '@tanstack/react-router';
 import { useEffect } from 'react';
 import cn from 'clsx';
@@ -67,7 +68,7 @@ function NotificationsPage() {
             <p className='text-2xl font-extrabold'>Nothing to see here — yet</p>
             <p className='text-light-secondary dark:text-dark-secondary'>Likes, reposts, replies and follows will show up here.</p>
           </div>
-        ) : data.filter((n) => n.actor).map((n) => {
+        ) : data.filter((n) => n.actor && isNotificationEnabled(n.type)).map((n) => {
           const m = meta[n.type];
           const href = n.tweet ? `/tweet/${n.tweet.id}` : `/user/${n.actor.username}`;
           return (
