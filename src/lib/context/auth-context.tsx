@@ -205,14 +205,16 @@ export function AuthContextProvider({
 
   const signUpWithEmail = async (email: string, password: string): Promise<void> => {
     try {
-      const { error: signUpError } = await supabase.auth.signUp({
+      const { error: signUpError, data } = await supabase.auth.signUp({
         email,
         password,
         options: { emailRedirectTo: window.location.origin }
       });
 
       if (signUpError) setError(signUpError);
-      else setError(new Error('Check your email to confirm your account.'));
+      // With email confirmation enabled the session is null until the user
+      // confirms; with auto-confirm a session comes back immediately.
+      else if (!data.session) setError(new Error('Check your email to confirm your account.'));
     } catch (signUpError) {
       setError(signUpError as Error);
     }
