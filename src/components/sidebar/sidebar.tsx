@@ -15,6 +15,7 @@ export type NavLink = {
   href: string;
   linkName: string;
   iconName: IconName;
+  iconClassName?: string;
   disabled?: boolean;
   canBeHidden?: boolean;
 };
@@ -38,7 +39,8 @@ const navLinks: Readonly<NavLink[]> = [
   {
     href: '/messages',
     linkName: 'Messages',
-    iconName: 'ChatBubbleOvalLeftIcon'
+    iconName: 'ChatBubbleOvalLeftIcon',
+    iconClassName: 'h-[30px] w-[30px] xs:h-7 xs:w-7'
   },
   {
     href: '/bookmarks',
