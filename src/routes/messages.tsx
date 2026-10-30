@@ -2,7 +2,6 @@ import { createFileRoute, Link, Outlet, useMatch } from '@tanstack/react-router'
 import { useConversations } from '@lib/hooks/useConversations';
 import { PageShell, pageHead } from '@components/layout/page-shell';
 import { MainHeader } from '@components/home/main-header';
-import { UserAvatar } from '@components/user/user-avatar';
 import { Loading } from '@components/ui/loading';
 
 export const Route = createFileRoute('/messages')({
@@ -33,7 +32,7 @@ function ConversationList() {
         ) : data.map((c) => (
           <Link key={c.conversation_id} to='/messages/$id' params={{ id: c.conversation_id }}
             className='flex items-center gap-3 px-4 py-3 hover:bg-light-primary/5 dark:hover:bg-dark-primary/5'>
-            <UserAvatar src={c.other_photo_url ?? '/assets/twitter-avatar.jpg'} alt={c.other_name} size={48} />
+            <img src={c.other_photo_url ?? '/assets/twitter-avatar.jpg'} alt={c.other_name} width=48 height=48 className='shrink-0 rounded-full object-cover' style={{ width: 48, height: 48 }} />
             <div className='min-w-0 flex-1'>
               <p className='truncate'>
                 <span className='font-bold'>{c.other_name}</span>{' '}
