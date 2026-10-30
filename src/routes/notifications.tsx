@@ -23,7 +23,7 @@ export const Route = createFileRoute('/notifications')({
 });
 
 const meta = {
-  like: { icon: 'HeartIcon', color: 'text-accent-pink', text: 'liked your post' },
+  like: { icon: 'HandThumbUpIcon', color: 'text-accent-pink', text: 'liked your post' },
   retweet: { icon: 'ArrowPathRoundedSquareIcon', color: 'text-accent-green', text: 'reposted your post' },
   reply: { icon: 'ChatBubbleOvalLeftIcon', color: 'text-main-accent', text: 'replied to your post' },
   mention: { icon: 'AtSymbolIcon', color: 'text-main-accent', text: 'mentioned you' },
