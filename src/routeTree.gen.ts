@@ -11,10 +11,15 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as BookmarksRouteImport } from './routes/bookmarks'
+import { Route as ExploreRouteImport } from './routes/explore'
 import { Route as HomeRouteImport } from './routes/home'
+import { Route as MessagesRouteImport } from './routes/messages'
+import { Route as NotificationsRouteImport } from './routes/notifications'
 import { Route as PeopleRouteImport } from './routes/people'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
+import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as TrendsRouteImport } from './routes/trends'
+import { Route as MessagesIdRouteImport } from './routes/messages.$id'
 import { Route as TweetIdRouteImport } from './routes/tweet.$id'
 import { Route as UserIdRouteImport } from './routes/user.$id'
 import { Route as UserIdIndexRouteImport } from './routes/user.$id.index'
@@ -37,9 +42,24 @@ const BookmarksRoute = BookmarksRouteImport.update({
   path: '/bookmarks',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ExploreRoute = ExploreRouteImport.update({
+  id: '/explore',
+  path: '/explore',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const HomeRoute = HomeRouteImport.update({
   id: '/home',
   path: '/home',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MessagesRoute = MessagesRouteImport.update({
+  id: '/messages',
+  path: '/messages',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const NotificationsRoute = NotificationsRouteImport.update({
+  id: '/notifications',
+  path: '/notifications',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PeopleRoute = PeopleRouteImport.update({
@@ -52,10 +72,20 @@ const ResetPasswordRoute = ResetPasswordRouteImport.update({
   path: '/reset-password',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SettingsRoute = SettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const TrendsRoute = TrendsRouteImport.update({
   id: '/trends',
   path: '/trends',
   getParentRoute: () => rootRouteImport,
+} as any)
+const MessagesIdRoute = MessagesIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => MessagesRoute,
 } as any)
 const TweetIdRoute = TweetIdRouteImport.update({
   id: '/tweet/$id',
@@ -117,10 +147,15 @@ const ApiPublicTrendsPlaceIdRoute = ApiPublicTrendsPlaceIdRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/bookmarks': typeof BookmarksRoute
+  '/explore': typeof ExploreRoute
   '/home': typeof HomeRoute
+  '/messages': typeof MessagesRouteWithChildren
+  '/notifications': typeof NotificationsRoute
   '/people': typeof PeopleRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/settings': typeof SettingsRoute
   '/trends': typeof TrendsRoute
+  '/messages/$id': typeof MessagesIdRoute
   '/tweet/$id': typeof TweetIdRoute
   '/user/$id': typeof UserIdRouteWithChildren
   '/user/$id/followers': typeof UserIdFollowersRoute
@@ -136,10 +171,15 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/bookmarks': typeof BookmarksRoute
+  '/explore': typeof ExploreRoute
   '/home': typeof HomeRoute
+  '/messages': typeof MessagesRouteWithChildren
+  '/notifications': typeof NotificationsRoute
   '/people': typeof PeopleRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/settings': typeof SettingsRoute
   '/trends': typeof TrendsRoute
+  '/messages/$id': typeof MessagesIdRoute
   '/tweet/$id': typeof TweetIdRoute
   '/user/$id/followers': typeof UserIdFollowersRoute
   '/user/$id/following': typeof UserIdFollowingRoute
@@ -155,10 +195,15 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/bookmarks': typeof BookmarksRoute
+  '/explore': typeof ExploreRoute
   '/home': typeof HomeRoute
+  '/messages': typeof MessagesRouteWithChildren
+  '/notifications': typeof NotificationsRoute
   '/people': typeof PeopleRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/settings': typeof SettingsRoute
   '/trends': typeof TrendsRoute
+  '/messages/$id': typeof MessagesIdRoute
   '/tweet/$id': typeof TweetIdRoute
   '/user/$id': typeof UserIdRouteWithChildren
   '/user/$id/followers': typeof UserIdFollowersRoute
@@ -176,10 +221,15 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/bookmarks'
+    | '/explore'
     | '/home'
+    | '/messages'
+    | '/notifications'
     | '/people'
     | '/reset-password'
+    | '/settings'
     | '/trends'
+    | '/messages/$id'
     | '/tweet/$id'
     | '/user/$id'
     | '/user/$id/followers'
@@ -195,10 +245,15 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/bookmarks'
+    | '/explore'
     | '/home'
+    | '/messages'
+    | '/notifications'
     | '/people'
     | '/reset-password'
+    | '/settings'
     | '/trends'
+    | '/messages/$id'
     | '/tweet/$id'
     | '/user/$id/followers'
     | '/user/$id/following'
@@ -213,10 +268,15 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/bookmarks'
+    | '/explore'
     | '/home'
+    | '/messages'
+    | '/notifications'
     | '/people'
     | '/reset-password'
+    | '/settings'
     | '/trends'
+    | '/messages/$id'
     | '/tweet/$id'
     | '/user/$id'
     | '/user/$id/followers'
@@ -233,9 +293,13 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   BookmarksRoute: typeof BookmarksRoute
+  ExploreRoute: typeof ExploreRoute
   HomeRoute: typeof HomeRoute
+  MessagesRoute: typeof MessagesRouteWithChildren
+  NotificationsRoute: typeof NotificationsRoute
   PeopleRoute: typeof PeopleRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
+  SettingsRoute: typeof SettingsRoute
   TrendsRoute: typeof TrendsRoute
   TweetIdRoute: typeof TweetIdRoute
   UserIdRoute: typeof UserIdRouteWithChildren
@@ -260,11 +324,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BookmarksRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/explore': {
+      id: '/explore'
+      path: '/explore'
+      fullPath: '/explore'
+      preLoaderRoute: typeof ExploreRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/home': {
       id: '/home'
       path: '/home'
       fullPath: '/home'
       preLoaderRoute: typeof HomeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/messages': {
+      id: '/messages'
+      path: '/messages'
+      fullPath: '/messages'
+      preLoaderRoute: typeof MessagesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/notifications': {
+      id: '/notifications'
+      path: '/notifications'
+      fullPath: '/notifications'
+      preLoaderRoute: typeof NotificationsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/people': {
@@ -281,12 +366,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ResetPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/settings': {
+      id: '/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof SettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/trends': {
       id: '/trends'
       path: '/trends'
       fullPath: '/trends'
       preLoaderRoute: typeof TrendsRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/messages/$id': {
+      id: '/messages/$id'
+      path: '/$id'
+      fullPath: '/messages/$id'
+      preLoaderRoute: typeof MessagesIdRouteImport
+      parentRoute: typeof MessagesRoute
     }
     '/tweet/$id': {
       id: '/tweet/$id'
@@ -368,6 +467,18 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface MessagesRouteChildren {
+  MessagesIdRoute: typeof MessagesIdRoute
+}
+
+const MessagesRouteChildren: MessagesRouteChildren = {
+  MessagesIdRoute: MessagesIdRoute,
+}
+
+const MessagesRouteWithChildren = MessagesRoute._addFileChildren(
+  MessagesRouteChildren,
+)
+
 interface UserIdRouteChildren {
   UserIdFollowersRoute: typeof UserIdFollowersRoute
   UserIdFollowingRoute: typeof UserIdFollowingRoute
@@ -392,9 +503,13 @@ const UserIdRouteWithChildren =
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   BookmarksRoute: BookmarksRoute,
+  ExploreRoute: ExploreRoute,
   HomeRoute: HomeRoute,
+  MessagesRoute: MessagesRouteWithChildren,
+  NotificationsRoute: NotificationsRoute,
   PeopleRoute: PeopleRoute,
   ResetPasswordRoute: ResetPasswordRoute,
+  SettingsRoute: SettingsRoute,
   TrendsRoute: TrendsRoute,
   TweetIdRoute: TweetIdRoute,
   UserIdRoute: UserIdRouteWithChildren,
