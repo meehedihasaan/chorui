@@ -1,8 +1,8 @@
-import { useState, useEffect } from 'react';
-import { getDoc, doc, onSnapshot } from '@lib/firebase/db';
-import { usersCollection } from '@lib/firebase/collections';
-import { useCacheRef } from './useCacheRef';
-import type { DocumentReference } from '@lib/firebase/db';
+/* eslint-disable react-hooks/exhaustive-deps */
+import { useQuery } from '@tanstack/react-query';
+import { supabase } from '@/integrations/supabase/client';
+import { mapProfile, mapTweet, mapStats, mapBookmark } from '@lib/firebase/db';
+import type { DocumentRef, RawRowAlias } from './db-types';
 import type { User } from '@lib/types/user';
 
 type UseDocument<T> = {
@@ -10,69 +10,71 @@ type UseDocument<T> = {
   loading: boolean;
 };
 
-type DataWithRef<T> = T & { createdBy: string };
-type DataWithUser<T> = UseDocument<T & { user: User }>;
+type DataWithUser<T> = UseDocument<T & { user: User | null }>;
+
+export type UseDocumentOptions = {
+  includeUser?: boolean;
+  allowNull?: boolean;
+  disabled?: boolean;
+};
+
+const MAPPERS: Record<string, (row: RawRowAlias) => unknown> = {
+  profiles: mapProfile,
+  tweets: mapTweet,
+  user_stats: mapStats,
+  bookmarks: mapBookmark
+};
 
 export function useDocument<T>(
-  docRef: DocumentReference<T>,
+  docRef: DocumentRef<T>,
   options: { includeUser: true; allowNull?: boolean; disabled?: boolean }
 ): DataWithUser<T>;
 
 export function useDocument<T>(
-  docRef: DocumentReference<T>,
-  options?: { includeUser?: false; allowNull?: boolean; disabled?: boolean }
+  docRef: DocumentRef<T>,
+  options?: UseDocumentOptions
 ): UseDocument<T>;
 
 export function useDocument<T>(
-  docRef: DocumentReference<T>,
-  options?: { includeUser?: boolean; allowNull?: boolean; disabled?: boolean }
+  docRef: DocumentRef<T>,
+  options?: UseDocumentOptions
 ): UseDocument<T> | DataWithUser<T> {
-  const [data, setData] = useState<T | null>(null);
-  const [loading, setLoading] = useState(true);
-
-  const cachedDocRef = useCacheRef(docRef);
-
   const { includeUser, allowNull, disabled } = options ?? {};
 
-  useEffect(() => {
-    if (disabled) {
-      setData(null);
-      setLoading(false);
-      return;
-    }
+  const { data, isPending } = useQuery({
+    queryKey: ['doc', docRef.table, docRef.id],
+    queryFn: async () => {
+      const { data: row, error } = await supabase
+        .from(docRef.table)
+        .select('*')
+        .eq('id', docRef.id)
+        .maybeSingle();
 
-    setData(null);
-    setLoading(true);
-
-    const populateUser = async (currentData: DataWithRef<T>): Promise<void> => {
-      const userData = await getDoc(
-        doc(usersCollection, currentData.createdBy)
-      );
-      const dataWithUser = { ...currentData, user: userData.data() };
-
-      setData(dataWithUser);
-      setLoading(false);
-    };
-
-    const unsubscribe = onSnapshot(docRef, (snapshot) => {
-      const data = snapshot.data({ serverTimestamps: 'estimate' });
-
-      if (allowNull && !data) {
-        setData(null);
-        setLoading(false);
-        return;
+      if (error) {
+        console.error('get failed', docRef.table, error.message);
+        return null;
       }
 
-      if (includeUser) void populateUser(data as DataWithRef<T>);
-      else {
-        setData(data as T);
-        setLoading(false);
-      }
-    });
+      const mapped = MAPPERS[docRef.table]?.(row as RawRowAlias) as (T & { createdBy: string }) | null;
 
-    return unsubscribe;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [cachedDocRef]);
+      if (!mapped || !includeUser) return mapped;
 
-  return { data, loading };
+      const { data: userRow } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', mapped.createdBy)
+        .maybeSingle();
+
+      return { ...mapped, user: mapProfile(userRow as RawRowAlias) };
+    },
+    enabled: !disabled,
+    staleTime: 10_000
+  });
+
+  const loading = !disabled && isPending && !data;
+
+  if (includeUser)
+    return { data: (data ?? null) as (T & { user: User | null }) | null, loading } as DataWithUser<T>;
+
+  return { data: (data ?? null) as T | null, loading };
 }

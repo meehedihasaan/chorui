@@ -1,8 +1,15 @@
-import { useState, useEffect } from 'react';
-import { getDoc, doc, onSnapshot } from '@lib/firebase/db';
-import { usersCollection } from '@lib/firebase/collections';
-import { useCacheQuery } from './useCacheQuery';
-import type { Query } from '@lib/firebase/db';
+/* eslint-disable react-hooks/exhaustive-deps */
+import { useQuery } from '@tanstack/react-query';
+import {
+  fetchCollection,
+  populateUsers,
+  queryKey,
+  mapProfile,
+  mapTweet,
+  mapStats,
+  mapBookmark
+} from '@lib/firebase/db';
+import type { CollectionRef, RawRowAlias } from './db-types';
 import type { User } from '@lib/types/user';
 
 type UseCollection<T> = {
@@ -10,8 +17,7 @@ type UseCollection<T> = {
   loading: boolean;
 };
 
-type DataWithRef<T> = (T & { createdBy: string })[];
-type DataWithUser<T> = UseCollection<T & { user: User }>;
+type DataWithUser<T> = UseCollection<T & { user: User | null }>;
 
 export type UseCollectionOptions = {
   includeUser?: boolean;
@@ -20,8 +26,15 @@ export type UseCollectionOptions = {
   preserve?: boolean;
 };
 
+const MAPPERS: Record<string, (row: RawRowAlias) => unknown> = {
+  profiles: mapProfile,
+  tweets: mapTweet,
+  user_stats: mapStats,
+  bookmarks: mapBookmark
+};
+
 export function useCollection<T>(
-  query: Query<T>,
+  ref: CollectionRef<T>,
   options: {
     includeUser: true;
     allowNull?: boolean;
@@ -31,66 +44,41 @@ export function useCollection<T>(
 ): DataWithUser<T>;
 
 export function useCollection<T>(
-  query: Query<T>,
+  ref: CollectionRef<T>,
   options?: UseCollectionOptions
 ): UseCollection<T>;
 
 export function useCollection<T>(
-  query: Query<T>,
+  ref: CollectionRef<T>,
   options?: UseCollectionOptions
 ): UseCollection<T> | DataWithUser<T> {
-  const [data, setData] = useState<T[] | null>(null);
-  const [loading, setLoading] = useState(true);
-
-  const cachedQuery = useCacheQuery(query);
-
   const { includeUser, allowNull, disabled, preserve } = options ?? {};
 
-  useEffect(() => {
-    if (disabled) {
-      setLoading(false);
-      return;
-    }
+  const { data, isPending } = useQuery({
+    queryKey: queryKey(ref),
+    queryFn: async () => {
+      const rows = await fetchCollection<T>(ref, MAPPERS[ref.table] as (row: RawRowAlias) => T | null);
 
-    if (!preserve && data) {
-      setData(null);
-      setLoading(true);
-    }
+      if (!rows) return null;
 
-    const populateUser = async (currentData: DataWithRef<T>): Promise<void> => {
-      const dataWithUser = await Promise.all(
-        currentData.map(async (currentData) => {
-          const user = (
-            await getDoc(doc(usersCollection, currentData.createdBy))
-          ).data();
-          return { ...currentData, user };
-        })
-      );
-      setData(dataWithUser);
-      setLoading(false);
-    };
+      if (includeUser)
+        return (await populateUsers(rows as (T & { createdBy: string })[])) as (T & {
+          user: User | null;
+        })[];
 
-    const unsubscribe = onSnapshot(cachedQuery, (snapshot) => {
-      const data = snapshot.docs.map((doc) =>
-        doc.data({ serverTimestamps: 'estimate' })
-      );
+      return rows;
+    },
+    enabled: !disabled,
+    placeholderData: preserve ? (previous) => previous : undefined,
+    staleTime: 10_000
+  });
 
-      if (allowNull && !data.length) {
-        setData(null);
-        setLoading(false);
-        return;
-      }
+  const loading = !disabled && isPending && !data;
 
-      if (includeUser) void populateUser(data as DataWithRef<T>);
-      else {
-        setData(data);
-        setLoading(false);
-      }
-    });
+  const result = data ?? (allowNull ? null : []);
 
-    return unsubscribe;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [cachedQuery, disabled]);
+  if (includeUser)
+    return { data: result as (T & { user: User | null })[] | null, loading } as DataWithUser<T>;
 
-  return { data, loading };
+  return { data: result as T[] | null, loading };
 }

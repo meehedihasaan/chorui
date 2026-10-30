@@ -1,7 +1,8 @@
-import { useState, useEffect, useMemo } from 'react';
-import { doc, getDoc } from '@lib/firebase/db';
-import { usersCollection } from '@lib/firebase/collections';
-import type { CollectionReference } from '@lib/firebase/db';
+/* eslint-disable react-hooks/exhaustive-deps */
+import { useQuery } from '@tanstack/react-query';
+import { supabase } from '@/integrations/supabase/client';
+import { mapProfile, mapTweet, mapStats, mapBookmark } from '@lib/firebase/db';
+import type { CollectionRef, RawRowAlias } from './db-types';
 import type { User } from '@lib/types/user';
 
 type UserArrayDocument<T> = {
@@ -9,81 +10,75 @@ type UserArrayDocument<T> = {
   loading: boolean;
 };
 
-type DataWithRef<T> = (T & { createdBy: string })[];
-type DataWithUser<T> = UserArrayDocument<T & { user: User }>;
+type DataWithUser<T> = UserArrayDocument<T & { user: User | null }>;
 
 export function useArrayDocument<T>(
   docsIds: string[],
-  collectionRef: CollectionReference<T>,
-  options?: { includeUser?: true; disabled?: boolean }
-): DataWithUser<T>;
-
-export function useArrayDocument<T>(
-  docsIds: string[],
-  collectionRef: CollectionReference<T>,
-  options?: { includeUser?: false; disabled?: boolean }
-): UserArrayDocument<T>;
-
-export function useArrayDocument<T>(
-  docsId: string[],
-  collection: CollectionReference<T>,
+  collectionRef: CollectionRef<T>,
   options?: { includeUser?: boolean; disabled?: boolean }
 ): UserArrayDocument<T> | DataWithUser<T> {
-  const [data, setData] = useState<T[] | null>(null);
-  const [loading, setLoading] = useState(true);
-
-  const cachedDocsId = useMemo(() => docsId, [docsId]);
-
   const { includeUser, disabled } = options ?? {};
 
-  useEffect(() => {
-    if (disabled) return;
+  const idsKey = docsIds.join(',');
 
-    if (includeUser && !data) setLoading(true);
+  const { data, isPending } = useQuery({
+    queryKey: ['arrayDocs', collectionRef.table, idsKey],
+    queryFn: async () => {
+      if (!docsIds.length) return null;
 
-    const populateUser = async (currentData: DataWithRef<T>): Promise<void> => {
-      const dataWithUser = await Promise.all(
-        currentData.map(async (currentData) => {
-          const user = (
-            await getDoc(doc(usersCollection, currentData.createdBy))
-          ).data();
-          return { ...currentData, user };
-        })
-      );
-      setData(dataWithUser);
-      setLoading(false);
-    };
+      const { data: rows, error } = await supabase
+        .from(collectionRef.table)
+        .select('*')
+        .in('id', docsIds);
 
-    const fetchData = async (): Promise<void> => {
-      try {
-        const docsSnapshot = await Promise.all(
-          cachedDocsId.map((id) => getDoc(doc(collection, id)))
-        );
-
-        const docs = docsSnapshot
-          .filter((doc) => doc.exists())
-          .map((doc) => doc.data({ serverTimestamps: 'estimate' }));
-
-        if (!docs.length) {
-          setData(null);
-          setLoading(false);
-          return;
-        }
-
-        if (includeUser) void populateUser(docs as DataWithRef<T>);
-        else {
-          setData(docs as T[]);
-          setLoading(false);
-        }
-      } catch {
-        setData(null);
-        setLoading(false);
+      if (error) {
+        console.error('array fetch failed', error.message);
+        return null;
       }
-    };
 
-    void fetchData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [cachedDocsId]);
+      const mapped = MAPPERS[collectionRef.table];
+      const rowsById = new Map(
+        ((rows as RawRowAlias[]) ?? [])
+          .map((row) => mapped(row as RawRowAlias))
+          .filter(Boolean)
+          .map((row) => [(row as { id: string }).id, row])
+      );
 
-  return { data, loading };
+      const ordered = docsIds
+        .map((id) => rowsById.get(id))
+        .filter(Boolean) as (T & { createdBy: string })[];
+
+      if (!ordered.length) return null;
+
+      if (!includeUser) return ordered;
+
+      const ownerIds = [...new Set(ordered.map(({ createdBy }) => createdBy))];
+
+      const { data: userRows } = await supabase
+        .from('profiles')
+        .select('*')
+        .in('id', ownerIds);
+
+      const usersById = new Map(
+        ((userRows as RawRowAlias[]) ?? [])
+          .map((row) => mapProfile(row))
+          .filter(Boolean)
+          .map((user) => [(user as User).id, user])
+      );
+
+      return ordered.map((item) => ({
+        ...item,
+        user: usersById.get(item.createdBy) as User
+      }));
+    },
+    enabled: !disabled,
+    staleTime: 10_000
+  });
+
+  const loading = !disabled && isPending && !data;
+
+  if (includeUser)
+    return { data: (data ?? null) as (T & { user: User | null })[] | null, loading } as DataWithUser<T>;
+
+  return { data: (data ?? null) as T[] | null, loading };
 }
