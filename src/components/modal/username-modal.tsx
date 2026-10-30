@@ -57,7 +57,7 @@ export function UsernameModal({
         </div>
         {children}
       </div>
-      <div className='flex flex-col gap-3 [&>*]:py-2 inner:font-bold'>
+      <div className='flex flex-col gap-3 [&>*]:py-2 [&>*]:font-bold'>
         <Button
           className='bg-light-primary text-white transition focus-visible:bg-light-primary/90
                      enabled:hover:bg-light-primary/90 enabled:active:bg-light-primary/80 
