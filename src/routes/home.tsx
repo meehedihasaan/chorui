@@ -79,19 +79,22 @@ function HomeFeed() {
   return (
     <MainContainer>
       <MainHeader useMobileSidebar className="flex flex-col border-b border-light-border pb-0 dark:border-dark-border">
-        <div className="grid w-full grid-cols-[1fr_auto_1fr] items-center gap-3 xs:flex xs:justify-between">
-          <div className="xs:hidden"><MobileSidebar /></div>
+        <div className="flex w-full items-center justify-between gap-3">
+          <div className="flex items-center gap-2 xs:hidden">
+            <ChoruiLogo className="h-8 w-8" />
+            <span className="text-2xl font-extrabold tracking-tight">Chorui</span>
+          </div>
           <h2 className="hidden text-xl font-bold xs:block">Home</h2>
-          <ChoruiLogo className="h-7 w-7 xs:hidden" />
-          <div className="flex justify-end">
+          <div className="flex items-center justify-end gap-1">
             <HeaderSearch />
             <UpdateUsername hideTrigger />
+            <div className="xs:hidden"><MobileSidebar /></div>
           </div>
         </div>
         <FeedTabs />
       </MainHeader>
       {!isMobile && <Input />}
-      <section className="mt-0.5 xs:mt-0">
+      <section className="flex flex-col gap-2 bg-main-sidebar-background px-2 py-2">
         {loading ? (
           <Loading className="mt-5" />
         ) : !data ? (
