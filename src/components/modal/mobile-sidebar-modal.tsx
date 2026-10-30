@@ -139,7 +139,7 @@ export function MobileSidebarModal({
             <MobileSidebarLink {...linkData} key={linkData.href} />
           ))}
           <Button
-            className='accent-tab flex items-center gap-6 rounded-md p-3 text-xl font-bold transition
+            className='accent-tab flex items-center gap-6 rounded-md px-3 py-2 text-xl font-bold transition
                        hover:bg-light-primary/10 dark:hover:bg-dark-primary/10'
             onClick={displayOpenModal}
           >
@@ -147,7 +147,7 @@ export function MobileSidebarModal({
             Display
           </Button>
           <Button
-            className='accent-tab flex items-center gap-6 rounded-md p-3 text-xl font-bold transition
+            className='accent-tab flex items-center gap-6 rounded-md px-3 py-2 text-xl font-bold transition
                        hover:bg-light-primary/10 dark:hover:bg-dark-primary/10'
             onClick={logOutOpenModal}
           >
