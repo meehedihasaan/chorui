@@ -46,10 +46,7 @@ export function Link({ href, children, onClick, className, ...rest }: LinkProps)
 
   // Drop Next.js-only props that would leak into the DOM.
   delete rest.scroll;
-  delete replace_key(rest);
-  function replace_key<T extends object>(obj: T): string {
-    return 'replace' in obj ? 'replace' : 'legacyBehavior';
-  }
+  delete rest.replace;
 
   // The source app sometimes wraps its own <a> inside <Link>; render it as a
   // single anchor instead of nesting (invalid HTML / hydration errors).
