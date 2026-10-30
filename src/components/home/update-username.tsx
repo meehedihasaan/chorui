@@ -54,7 +54,7 @@ export function UpdateUsername(): JSX.Element {
         setErrorMessage(error);
       } else void checkAvailability(inputValue);
     }
-  }, [inputValue]);
+  }, [inputValue, visited]);
 
   useEffect(() => {
     if (!user?.updatedAt) openModal();
