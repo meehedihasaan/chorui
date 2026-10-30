@@ -28,7 +28,8 @@ export const Route = createFileRoute("/")({
 
 function Index() {
   return (
-    <div className="grid min-h-screen grid-rows-[1fr,auto] bg-main-background text-light-primary dark:text-dark-primary">
+    <AuthLayout>
+      <div className="grid min-h-screen grid-rows-[1fr,auto] bg-main-background text-light-primary dark:text-dark-primary">
       <LoginMain />
       <LoginFooter />
       <Toaster
