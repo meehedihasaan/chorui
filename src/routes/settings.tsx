@@ -33,12 +33,12 @@ function SettingsPage() {
 
   const changePassword = async (e: FormEvent) => {
     e.preventDefault();
-    if (pw.length < 8) return toast.error('Password must be at least 8 characters');
-    if (pw !== pw2) return toast.error('Passwords do not match');
+    if (pw.length < 8) { toast.error('Password must be at least 8 characters'); return; }
+    if (pw !== pw2) { toast.error('Passwords do not match'); return; }
     setSaving(true);
     const { error } = await supabase.auth.updateUser({ password: pw });
     setSaving(false);
-    if (error) return toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
     setPw(''); setPw2('');
     toast.success('Password updated');
   };
