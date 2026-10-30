@@ -248,17 +248,17 @@ export async function manageBookmark(
       id: tweetId,
       createdAt: new Date().toISOString()
     };
-    await supabase.from('bookmarks').insert({
-      user_id: userId,
-      tweet_id: tweetId,
-      createdAt: undefined as never
-    }).then(() => bookmarkData);
+    await supabase
+      .from('bookmarks')
+      .insert({ user_id: userId, tweet_id: tweetId });
+    return bookmarkData;
   } else {
     await supabase
       .from('bookmarks')
       .delete()
       .eq('user_id', userId)
       .eq('tweet_id', tweetId);
+    return undefined;
   }
 }
 

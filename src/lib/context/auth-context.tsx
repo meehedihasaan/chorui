@@ -1,31 +1,17 @@
 import { useState, useEffect, useContext, createContext, useMemo } from 'react';
+import { supabase } from '@/integrations/supabase/client';
+import { lovable } from '@/integrations/lovable/index';
+import { usersCollection } from '@lib/firebase/collections';
 import {
-  signInWithPopup,
-  GoogleAuthProvider,
-  onAuthStateChanged,
-  signOut as signOutFirebase
-} from 'firebase/auth';
-import {
-  doc,
-  getDoc,
-  setDoc,
-  onSnapshot,
-  serverTimestamp
-} from '@lib/firebase/db';
-import { auth } from '@lib/firebase/app';
-import {
-  usersCollection,
-  userStatsCollection,
-  userBookmarksCollection
-} from '@lib/firebase/collections';
-import { getRandomId, getRandomInt } from '@lib/random';
-import { checkUsernameAvailability } from '@lib/firebase/utils';
+  checkUsernameAvailability,
+  onProfileUpdated
+} from '@lib/firebase/utils';
+import { getRandomInt, getRandomId } from '@lib/random';
+import { mapProfile } from '@lib/firebase/db';
 import type { ReactNode } from 'react';
-import type { User as AuthUser } from 'firebase/auth';
-import type { WithFieldValue } from '@lib/firebase/db';
 import type { User } from '@lib/types/user';
 import type { Bookmark } from '@lib/types/bookmark';
-import type { Stats } from '@lib/types/stats';
+import type { RawRowAlias } from '@lib/hooks/db-types';
 
 type AuthContext = {
   user: User | null;
@@ -36,6 +22,9 @@ type AuthContext = {
   userBookmarks: Bookmark[] | null;
   signOut: () => Promise<void>;
   signInWithGoogle: () => Promise<void>;
+  signInWithLovable: () => Promise<void>;
+  signInWithEmail: (email: string, password: string) => Promise<void>;
+  signUpWithEmail: (email: string, password: string) => Promise<void>;
 };
 
 export const AuthContext = createContext<AuthContext | null>(null);
@@ -43,6 +32,65 @@ export const AuthContext = createContext<AuthContext | null>(null);
 type AuthContextProviderProps = {
   children: ReactNode;
 };
+
+async function generateAvailableUsername(baseName: string): Promise<string> {
+  const normalizeName = baseName.replace(/\s/g, '').toLowerCase() || 'user';
+  const randomInt = getRandomInt(1, 10_000);
+  const randomUsername = `${normalizeName.slice(0, 20)}${randomInt}`;
+  const isUsernameAvailable = await checkUsernameAvailability(randomUsername);
+  return isUsernameAvailable ? randomUsername : generateAvailableUsername(baseName);
+}
+
+async function ensureProfile(
+  uid: string,
+  fallbackName: string,
+  photoURL: string | null
+): Promise<User | null> {
+  const { data } = await supabase
+    .from('profiles')
+    .select('*')
+    .eq('id', uid)
+    .maybeSingle();
+
+  if (data) return mapProfile(data as RawRowAlias);
+
+  const username = await generateAvailableUsername(fallbackName || 'user');
+  const displayName = fallbackName || username;
+
+  const { error } = await supabase.from('profiles').insert({
+    id: uid,
+    bio: null,
+    name: displayName,
+    theme: null,
+    accent: null,
+    website: null,
+    location: null,
+    photoURL: undefined as never,
+    photo_url: photoURL ?? '/assets/twitter-avatar.jpg',
+    username,
+    verified: false,
+    following: [],
+    followers: [],
+    totalTweets: undefined as never,
+    total_tweets: 0,
+    total_photos: 0,
+    pinnedTweet: undefined as never,
+    cover_photo_url: null
+  });
+
+  if (error) {
+    console.error('profile creation failed', error.message);
+    return null;
+  }
+
+  const { data: created } = await supabase
+    .from('profiles')
+    .select('*')
+    .eq('id', uid)
+    .maybeSingle();
+
+  return mapProfile(created as RawRowAlias);
+}
 
 export function AuthContextProvider({
   children
@@ -52,86 +100,50 @@ export function AuthContextProvider({
   const [error, setError] = useState<Error | null>(null);
   const [loading, setLoading] = useState(true);
 
+  const manageUser = async (uid: string, fallbackName: string, photoURL: string | null): Promise<void> => {
+    const profile = await ensureProfile(uid, fallbackName, photoURL);
+
+    if (profile) setUser(profile);
+
+    setLoading(false);
+  };
+
   useEffect(() => {
-    const manageUser = async (authUser: AuthUser): Promise<void> => {
-      const { uid, displayName, photoURL } = authUser;
+    void supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session?.user) {
+        void manageUser(
+          session.user.id,
+          (session.user.user_metadata?.name as string) ??
+            (session.user.email?.split('@')[0] as string) ??
+            'user',
+          (session.user.user_metadata?.avatar_url as string) ?? null
+        );
+      } else setLoading(false);
+    });
 
-      const userSnapshot = await getDoc(doc(usersCollection, uid));
-
-      if (!userSnapshot.exists()) {
-        let available = false;
-        let randomUsername = '';
-
-        while (!available) {
-          const normalizeName = displayName?.replace(/\s/g, '').toLowerCase();
-          const randomInt = getRandomInt(1, 10_000);
-
-          randomUsername = `${normalizeName as string}${randomInt}`;
-
-          const isUsernameAvailable = await checkUsernameAvailability(
-            randomUsername
-          );
-
-          if (isUsernameAvailable) available = true;
-        }
-
-        const userData: WithFieldValue<User> = {
-          id: uid,
-          bio: null,
-          name: displayName as string,
-          theme: null,
-          accent: null,
-          website: null,
-          location: null,
-          photoURL: photoURL ?? '/assets/twitter-avatar.jpg',
-          username: randomUsername,
-          verified: false,
-          following: [],
-          followers: [],
-          createdAt: serverTimestamp(),
-          updatedAt: null,
-          totalTweets: 0,
-          totalPhotos: 0,
-          pinnedTweet: null,
-          coverPhotoURL: null
-        };
-
-        const userStatsData: WithFieldValue<Stats> = {
-          likes: [],
-          tweets: [],
-          updatedAt: null
-        };
-
-        try {
-          await Promise.all([
-            setDoc(doc(usersCollection, uid), userData),
-            setDoc(doc(userStatsCollection(uid), 'stats'), userStatsData)
-          ]);
-
-          const newUser = (await getDoc(doc(usersCollection, uid))).data();
-          setUser(newUser as User);
-        } catch (error) {
-          setError(error as Error);
-        }
-      } else {
-        const userData = userSnapshot.data();
-        setUser(userData);
-      }
-
-      setLoading(false);
-    };
-
-    const handleUserAuth = (authUser: AuthUser | null): void => {
-      setLoading(true);
-
-      if (authUser) void manageUser(authUser);
-      else {
+    const {
+      data: { subscription }
+    } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === 'SIGNED_OUT') {
         setUser(null);
+        setUserBookmarks(null);
         setLoading(false);
+      } else if (
+        (event === 'SIGNED_IN' || event === 'USER_UPDATED') &&
+        session?.user
+      ) {
+        setLoading(true);
+        void manageUser(
+          session.user.id,
+          (session.user.user_metadata?.name as string) ??
+            (session.user.email?.split('@')[0] as string) ??
+            'user',
+          (session.user.user_metadata?.avatar_url as string) ?? null
+        );
       }
-    };
+    });
 
-    onAuthStateChanged(auth, handleUserAuth);
+    return () => subscription.unsubscribe();
   }, []);
 
   useEffect(() => {
@@ -139,39 +151,92 @@ export function AuthContextProvider({
 
     const { id } = user;
 
-    const unsubscribeUser = onSnapshot(doc(usersCollection, id), (doc) => {
-      setUser(doc.data() as User);
-    });
+    const fetchBookmarks = async (): Promise<void> => {
+      const { data } = await supabase
+        .from('bookmarks')
+        .select('*')
+        .eq('user_id', id);
 
-    const unsubscribeBookmarks = onSnapshot(
-      userBookmarksCollection(id),
-      (snapshot) => {
-        const bookmarks = snapshot.docs.map((doc) => doc.data());
-        setUserBookmarks(bookmarks);
-      }
-    );
-
-    return () => {
-      unsubscribeUser();
-      unsubscribeBookmarks();
+      setUserBookmarks(
+        ((data as RawRowAlias[]) ?? []).map((row) => ({
+          id: row.tweet_id as string,
+          createdAt: (row.created_at as string) ?? ''
+        }))
+      );
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+
+    void fetchBookmarks();
+
+    return onProfileUpdated(() => {
+      void supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', id)
+        .maybeSingle()
+        .then(({ data }) => {
+          const profile = mapProfile(data as RawRowAlias);
+          if (profile) setUser(profile);
+        });
+    });
   }, [user?.id]);
 
-  const signInWithGoogle = async (): Promise<void> => {
+  const signInWithOAuth = async (
+    provider: 'google' | 'lovable'
+  ): Promise<void> => {
     try {
-      const provider = new GoogleAuthProvider();
-      await signInWithPopup(auth, provider);
-    } catch (error) {
-      setError(error as Error);
+      const result = await lovable.auth.signInWithOAuth(provider, {
+        redirect_uri: window.location.origin
+      });
+
+      if (result.error) setError(new Error(result.error.message ?? 'Sign in failed'));
+
+      if (result.redirected) return;
+    } catch (oauthError) {
+      setError(oauthError as Error);
+    }
+  };
+
+  const signInWithGoogle = async (): Promise<void> => {
+    await signInWithOAuth('google');
+  };
+
+  const signInWithLovable = async (): Promise<void> => {
+    await signInWithOAuth('lovable');
+  };
+
+  const signInWithEmail = async (email: string, password: string): Promise<void> => {
+    try {
+      const { error: signInError } = await supabase.auth.signInWithPassword({
+        email,
+        password
+      });
+
+      if (signInError) setError(signInError);
+    } catch (signInError) {
+      setError(signInError as Error);
+    }
+  };
+
+  const signUpWithEmail = async (email: string, password: string): Promise<void> => {
+    try {
+      const { error: signUpError } = await supabase.auth.signUp({
+        email,
+        password,
+        options: { emailRedirectTo: window.location.origin }
+      });
+
+      if (signUpError) setError(signUpError);
+      else setError(new Error('Check your email to confirm your account.'));
+    } catch (signUpError) {
+      setError(signUpError as Error);
     }
   };
 
   const signOut = async (): Promise<void> => {
     try {
-      await signOutFirebase(auth);
-    } catch (error) {
-      setError(error as Error);
+      await supabase.auth.signOut();
+    } catch (signOutError) {
+      setError(signOutError as Error);
     }
   };
 
@@ -186,7 +251,10 @@ export function AuthContextProvider({
     randomSeed,
     userBookmarks,
     signOut,
-    signInWithGoogle
+    signInWithGoogle,
+    signInWithLovable,
+    signInWithEmail,
+    signUpWithEmail
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
@@ -200,3 +268,5 @@ export function useAuth(): AuthContext {
 
   return context;
 }
+
+export type { usersCollection };

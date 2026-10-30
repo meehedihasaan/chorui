@@ -1,5 +1,3 @@
-import type { Timestamp } from '@lib/firebase/db';
-
 const RELATIVE_TIME_FORMATTER = new Intl.RelativeTimeFormat('en-gb', {
   style: 'short',
   numeric: 'auto'
@@ -13,11 +11,19 @@ const UNITS: Units = {
   minute: 60 * 1000
 };
 
+type DateLike = string | Date | { toDate(): Date };
+
+function toDate(targetDate: DateLike): Date {
+  if (typeof targetDate === 'string') return new Date(targetDate);
+  if (targetDate instanceof Date) return targetDate;
+  return targetDate.toDate();
+}
+
 export function formatDate(
-  targetDate: Timestamp,
+  targetDate: DateLike,
   mode: 'tweet' | 'message' | 'full' | 'joined'
 ): string {
-  const date = targetDate.toDate();
+  const date = toDate(targetDate);
 
   if (mode === 'full') return getFullTime(date);
   if (mode === 'tweet') return getPostTime(date);
