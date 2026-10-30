@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as BookmarksRouteImport } from './routes/bookmarks'
 import { Route as HomeRouteImport } from './routes/home'
 import { Route as PeopleRouteImport } from './routes/people'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as TrendsRouteImport } from './routes/trends'
 import { Route as TweetIdRouteImport } from './routes/tweet.$id'
 import { Route as UserIdRouteImport } from './routes/user.$id'
@@ -22,6 +23,8 @@ import { Route as UserIdFollowingRouteImport } from './routes/user.$id.following
 import { Route as UserIdLikesRouteImport } from './routes/user.$id.likes'
 import { Route as UserIdMediaRouteImport } from './routes/user.$id.media'
 import { Route as UserIdWith_repliesRouteImport } from './routes/user.$id.with_replies'
+import { Route as ApiPublicTrendsAvailableRouteImport } from './routes/api/public/trends.available'
+import { Route as ApiPublicTrendsPlaceIdRouteImport } from './routes/api/public/trends.place.$id'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -41,6 +44,11 @@ const HomeRoute = HomeRouteImport.update({
 const PeopleRoute = PeopleRouteImport.update({
   id: '/people',
   path: '/people',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
   getParentRoute: () => rootRouteImport,
 } as any)
 const TrendsRoute = TrendsRouteImport.update({
@@ -88,12 +96,24 @@ const UserIdWith_repliesRoute = UserIdWith_repliesRouteImport.update({
   path: '/with_replies',
   getParentRoute: () => UserIdRoute,
 } as any)
+const ApiPublicTrendsAvailableRoute =
+  ApiPublicTrendsAvailableRouteImport.update({
+    id: '/api/public/trends/available',
+    path: '/api/public/trends/available',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ApiPublicTrendsPlaceIdRoute = ApiPublicTrendsPlaceIdRouteImport.update({
+  id: '/api/public/trends/place/$id',
+  path: '/api/public/trends/place/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/bookmarks': typeof BookmarksRoute
   '/home': typeof HomeRoute
   '/people': typeof PeopleRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/trends': typeof TrendsRoute
   '/tweet/$id': typeof TweetIdRoute
   '/user/$id': typeof UserIdRouteWithChildren
@@ -103,12 +123,15 @@ export interface FileRoutesByFullPath {
   '/user/$id/media': typeof UserIdMediaRoute
   '/user/$id/with_replies': typeof UserIdWith_repliesRoute
   '/user/$id/': typeof UserIdIndexRoute
+  '/api/public/trends/available': typeof ApiPublicTrendsAvailableRoute
+  '/api/public/trends/place/$id': typeof ApiPublicTrendsPlaceIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/bookmarks': typeof BookmarksRoute
   '/home': typeof HomeRoute
   '/people': typeof PeopleRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/trends': typeof TrendsRoute
   '/tweet/$id': typeof TweetIdRoute
   '/user/$id/followers': typeof UserIdFollowersRoute
@@ -117,6 +140,8 @@ export interface FileRoutesByTo {
   '/user/$id/media': typeof UserIdMediaRoute
   '/user/$id/with_replies': typeof UserIdWith_repliesRoute
   '/user/$id': typeof UserIdIndexRoute
+  '/api/public/trends/available': typeof ApiPublicTrendsAvailableRoute
+  '/api/public/trends/place/$id': typeof ApiPublicTrendsPlaceIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -124,6 +149,7 @@ export interface FileRoutesById {
   '/bookmarks': typeof BookmarksRoute
   '/home': typeof HomeRoute
   '/people': typeof PeopleRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/trends': typeof TrendsRoute
   '/tweet/$id': typeof TweetIdRoute
   '/user/$id': typeof UserIdRouteWithChildren
@@ -133,6 +159,8 @@ export interface FileRoutesById {
   '/user/$id/media': typeof UserIdMediaRoute
   '/user/$id/with_replies': typeof UserIdWith_repliesRoute
   '/user/$id/': typeof UserIdIndexRoute
+  '/api/public/trends/available': typeof ApiPublicTrendsAvailableRoute
+  '/api/public/trends/place/$id': typeof ApiPublicTrendsPlaceIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -141,6 +169,7 @@ export interface FileRouteTypes {
     | '/bookmarks'
     | '/home'
     | '/people'
+    | '/reset-password'
     | '/trends'
     | '/tweet/$id'
     | '/user/$id'
@@ -150,12 +179,15 @@ export interface FileRouteTypes {
     | '/user/$id/media'
     | '/user/$id/with_replies'
     | '/user/$id/'
+    | '/api/public/trends/available'
+    | '/api/public/trends/place/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/bookmarks'
     | '/home'
     | '/people'
+    | '/reset-password'
     | '/trends'
     | '/tweet/$id'
     | '/user/$id/followers'
@@ -164,12 +196,15 @@ export interface FileRouteTypes {
     | '/user/$id/media'
     | '/user/$id/with_replies'
     | '/user/$id'
+    | '/api/public/trends/available'
+    | '/api/public/trends/place/$id'
   id:
     | '__root__'
     | '/'
     | '/bookmarks'
     | '/home'
     | '/people'
+    | '/reset-password'
     | '/trends'
     | '/tweet/$id'
     | '/user/$id'
@@ -179,6 +214,8 @@ export interface FileRouteTypes {
     | '/user/$id/media'
     | '/user/$id/with_replies'
     | '/user/$id/'
+    | '/api/public/trends/available'
+    | '/api/public/trends/place/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -186,9 +223,12 @@ export interface RootRouteChildren {
   BookmarksRoute: typeof BookmarksRoute
   HomeRoute: typeof HomeRoute
   PeopleRoute: typeof PeopleRoute
+  ResetPasswordRoute: typeof ResetPasswordRoute
   TrendsRoute: typeof TrendsRoute
   TweetIdRoute: typeof TweetIdRoute
   UserIdRoute: typeof UserIdRouteWithChildren
+  ApiPublicTrendsAvailableRoute: typeof ApiPublicTrendsAvailableRoute
+  ApiPublicTrendsPlaceIdRoute: typeof ApiPublicTrendsPlaceIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -219,6 +259,13 @@ declare module '@tanstack/react-router' {
       path: '/people'
       fullPath: '/people'
       preLoaderRoute: typeof PeopleRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/trends': {
@@ -284,6 +331,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof UserIdWith_repliesRouteImport
       parentRoute: typeof UserIdRoute
     }
+    '/api/public/trends/available': {
+      id: '/api/public/trends/available'
+      path: '/api/public/trends/available'
+      fullPath: '/api/public/trends/available'
+      preLoaderRoute: typeof ApiPublicTrendsAvailableRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/trends/place/$id': {
+      id: '/api/public/trends/place/$id'
+      path: '/api/public/trends/place/$id'
+      fullPath: '/api/public/trends/place/$id'
+      preLoaderRoute: typeof ApiPublicTrendsPlaceIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -313,9 +374,12 @@ const rootRouteChildren: RootRouteChildren = {
   BookmarksRoute: BookmarksRoute,
   HomeRoute: HomeRoute,
   PeopleRoute: PeopleRoute,
+  ResetPasswordRoute: ResetPasswordRoute,
   TrendsRoute: TrendsRoute,
   TweetIdRoute: TweetIdRoute,
   UserIdRoute: UserIdRouteWithChildren,
+  ApiPublicTrendsAvailableRoute: ApiPublicTrendsAvailableRoute,
+  ApiPublicTrendsPlaceIdRoute: ApiPublicTrendsPlaceIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

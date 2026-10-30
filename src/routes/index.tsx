@@ -1,5 +1,4 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect } from "react";
 import { Toaster } from "react-hot-toast";
 import { AuthLayout } from "@components/layout/auth-layout";
 import { LoginMain } from "@components/login/login-main";
@@ -28,10 +27,6 @@ export const Route = createFileRoute("/")({
 });
 
 function Index() {
-  useEffect(() => {
-    document.documentElement.classList.toggle("dark", true);
-  }, []);
-
   return (
     <div className="grid min-h-screen grid-rows-[1fr,auto] bg-main-background text-light-primary dark:text-dark-primary">
       <LoginMain />
