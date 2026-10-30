@@ -40,8 +40,7 @@ const navLinks: Readonly<NavLink[]> = [
   {
     href: '/messages',
     linkName: 'Messages',
-    iconName: 'EnvelopeIcon',
-    canBeHidden: true
+    iconName: 'EnvelopeIcon'
   },
   {
     href: '/bookmarks',
@@ -90,7 +89,7 @@ export function Sidebar(): JSX.Element {
               </a>
             </Link>
           </h1>
-          <nav className='flex items-center justify-around xs:flex-col xs:justify-center xl:block'>
+          <nav className='flex h-14 items-center justify-around xs:h-auto xs:flex-col xs:justify-center xl:block'>
             {navLinks.map(({ ...linkData }) => (
               <SidebarLink {...linkData} key={linkData.href} />
             ))}

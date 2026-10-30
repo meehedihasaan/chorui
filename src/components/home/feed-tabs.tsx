@@ -25,14 +25,14 @@ export function FeedTabs(): JSX.Element {
     };
 
   return (
-    <nav className='flex flex-1 justify-center'>
+    <nav className='-mx-4 flex w-[calc(100%+2rem)]'>
       {tabs.map(({ id, name }) => (
         <button
           className={cn(
-            'hover-animation main-tab dark-bg-tab relative flex-1 max-w-[200px] px-4 py-2 font-semibold transition-colors',
+            'hover-animation main-tab dark-bg-tab relative flex-1 px-4 py-4 font-semibold transition-colors',
             'hover:bg-light-primary/10 dark:hover:bg-dark-primary/10',
             activeTab === id
-              ? 'font-bold text-main-background dark:text-main-background'
+              ? 'font-bold text-light-primary dark:text-dark-primary'
               : 'text-light-secondary dark:text-dark-secondary'
           )}
           onClick={handleClick(id)}
