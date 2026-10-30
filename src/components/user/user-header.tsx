@@ -1,5 +1,5 @@
-import { useRouter } from 'next/router';
-import { doc } from 'firebase/firestore';
+import { useRouter } from '@lib/router';
+import { doc } from '@lib/firebase/db';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useDocument } from '@lib/hooks/useDocument';
 import { useUser } from '@lib/context/user-context';

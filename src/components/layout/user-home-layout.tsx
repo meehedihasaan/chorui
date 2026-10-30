@@ -1,4 +1,4 @@
-import { useRouter } from 'next/router';
+import { useRouter } from '@lib/router';
 import { motion } from 'framer-motion';
 import { useAuth } from '@lib/context/auth-context';
 import { useUser } from '@lib/context/user-context';

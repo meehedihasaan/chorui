@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
-import { useRouter } from 'next/router';
-import { doc, getDoc } from 'firebase/firestore';
+import { useRouter } from '@lib/router';
+import { doc, getDoc } from '@lib/firebase/db';
 import { Popover } from '@headlessui/react';
 import { AnimatePresence, motion } from 'framer-motion';
 import cn from 'clsx';

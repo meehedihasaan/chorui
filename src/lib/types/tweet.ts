@@ -1,4 +1,4 @@
-import type { Timestamp, FirestoreDataConverter } from 'firebase/firestore';
+import type { Timestamp, FirestoreDataConverter } from '@lib/firebase/db';
 import type { ImagesPreview } from './file';
 import type { User } from './user';
 

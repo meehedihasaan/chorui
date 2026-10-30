@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import Link from '@lib/router';
 import { AnimatePresence, motion } from 'framer-motion';
 import cn from 'clsx';
 import { useAuth } from '@lib/context/auth-context';

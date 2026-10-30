@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { queryEqual } from 'firebase/firestore';
-import type { Query } from 'firebase/firestore';
+import { queryEqual } from '@lib/firebase/db';
+import type { Query } from '@lib/firebase/db';
 
 export function useCacheQuery<T>(query: Query<T>): Query<T> {
   const [cachedQuery, setCachedQuery] = useState(query);

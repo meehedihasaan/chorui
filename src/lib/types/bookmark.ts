@@ -1,4 +1,4 @@
-import type { Timestamp, FirestoreDataConverter } from 'firebase/firestore';
+import type { Timestamp, FirestoreDataConverter } from '@lib/firebase/db';
 
 export type Bookmark = {
   id: string;

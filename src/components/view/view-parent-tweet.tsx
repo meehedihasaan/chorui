@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { doc } from 'firebase/firestore';
+import { doc } from '@lib/firebase/db';
 import { useDocument } from '@lib/hooks/useDocument';
 import { tweetsCollection } from '@lib/firebase/collections';
 import { Tweet } from '@components/tweet/tweet';

@@ -1,4 +1,4 @@
-import type { Timestamp } from 'firebase/firestore';
+import type { Timestamp } from '@lib/firebase/db';
 
 const RELATIVE_TIME_FORMATTER = new Intl.RelativeTimeFormat('en-gb', {
   style: 'short',

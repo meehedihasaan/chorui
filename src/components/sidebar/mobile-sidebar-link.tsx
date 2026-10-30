@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import Link from '@lib/router';
 import cn from 'clsx';
 import { preventBubbling } from '@lib/utils';
 import { HeroIcon } from '@components/ui/hero-icon';

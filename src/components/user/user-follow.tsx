@@ -1,4 +1,4 @@
-import { query, where } from 'firebase/firestore';
+import { query, where } from '@lib/firebase/db';
 import { useUser } from '@lib/context/user-context';
 import { useCollection } from '@lib/hooks/useCollection';
 import { usersCollection } from '@lib/firebase/collections';

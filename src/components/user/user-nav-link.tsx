@@ -1,5 +1,5 @@
-import { useRouter } from 'next/router';
-import Link from 'next/link';
+import { useRouter } from '@lib/router';
+import Link from '@lib/router';
 import cn from 'clsx';
 
 type UserNavLinkProps = {

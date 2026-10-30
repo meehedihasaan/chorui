@@ -11,7 +11,7 @@ import {
   setDoc,
   onSnapshot,
   serverTimestamp
-} from 'firebase/firestore';
+} from '@lib/firebase/db';
 import { auth } from '@lib/firebase/app';
 import {
   usersCollection,
@@ -22,7 +22,7 @@ import { getRandomId, getRandomInt } from '@lib/random';
 import { checkUsernameAvailability } from '@lib/firebase/utils';
 import type { ReactNode } from 'react';
 import type { User as AuthUser } from 'firebase/auth';
-import type { WithFieldValue } from 'firebase/firestore';
+import type { WithFieldValue } from '@lib/firebase/db';
 import type { User } from '@lib/types/user';
 import type { Bookmark } from '@lib/types/bookmark';
 import type { Stats } from '@lib/types/stats';

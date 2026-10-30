@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import Link from '@lib/router';
 import { motion } from 'framer-motion';
 import {
   doc,
@@ -7,7 +7,7 @@ import {
   where,
   orderBy,
   documentId
-} from 'firebase/firestore';
+} from '@lib/firebase/db';
 import { useAuth } from '@lib/context/auth-context';
 import { useCollection } from '@lib/hooks/useCollection';
 import { useDocument } from '@lib/hooks/useDocument';

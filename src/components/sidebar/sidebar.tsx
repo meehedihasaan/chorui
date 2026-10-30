@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import Link from '@lib/router';
 import { useAuth } from '@lib/context/auth-context';
 import { useWindow } from '@lib/context/window-context';
 import { useModal } from '@lib/hooks/useModal';

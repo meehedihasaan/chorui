@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import Link from '@lib/router';
 import cn from 'clsx';
 import { useWindow } from '@lib/context/window-context';
 import { FollowButton } from '@components/ui/follow-button';

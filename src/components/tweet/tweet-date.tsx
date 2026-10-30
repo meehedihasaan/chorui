@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import Link from '@lib/router';
 import cn from 'clsx';
 import { formatDate } from '@lib/date';
 import { ToolTip } from '@components/ui/tooltip';

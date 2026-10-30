@@ -1,5 +1,5 @@
 import cn from 'clsx';
-import Link from 'next/link';
+import Link from '@lib/router';
 import { HeroIcon } from '@components/ui/hero-icon';
 
 type UserNameProps = {

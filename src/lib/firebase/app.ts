@@ -1,13 +1,13 @@
 import { initializeApp } from 'firebase/app';
 import { getAuth, connectAuthEmulator } from 'firebase/auth';
-import { getFirestore, connectFirestoreEmulator } from 'firebase/firestore';
+import { getFirestore, connectFirestoreEmulator } from '@lib/firebase/db';
 import { getStorage, connectStorageEmulator } from 'firebase/storage';
 import { getFunctions, connectFunctionsEmulator } from 'firebase/functions';
 import { isUsingEmulator } from '@lib/env';
 import { getFirebaseConfig } from './config';
 import type { Auth } from 'firebase/auth';
 import type { Functions } from 'firebase/functions';
-import type { Firestore } from 'firebase/firestore';
+import type { Firestore } from '@lib/firebase/db';
 import type { FirebaseApp } from 'firebase/app';
 import type { FirebaseStorage } from 'firebase/storage';
 

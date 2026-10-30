@@ -13,7 +13,7 @@ import {
   arrayRemove,
   serverTimestamp,
   getCountFromServer
-} from 'firebase/firestore';
+} from '@lib/firebase/db';
 import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 import { db, storage } from './app';
 import {
@@ -22,7 +22,7 @@ import {
   userStatsCollection,
   userBookmarksCollection
 } from './collections';
-import type { WithFieldValue, Query } from 'firebase/firestore';
+import type { WithFieldValue, Query } from '@lib/firebase/db';
 import type { EditableUserData } from '@lib/types/user';
 import type { FilesWithId, ImagesPreview } from '@lib/types/file';
 import type { Bookmark } from '@lib/types/bookmark';

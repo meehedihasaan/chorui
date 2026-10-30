@@ -1,4 +1,4 @@
-import { useRouter } from 'next/router';
+import { useRouter } from '@lib/router';
 import Head from 'next/head';
 import { siteURL } from '@lib/env';
 

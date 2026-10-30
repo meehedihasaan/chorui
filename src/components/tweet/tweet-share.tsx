@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import Link from '@lib/router';
 import cn from 'clsx';
 import { Popover } from '@headlessui/react';
 import { AnimatePresence, motion } from 'framer-motion';

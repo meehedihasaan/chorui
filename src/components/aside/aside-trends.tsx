@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import Link from '@lib/router';
 import cn from 'clsx';
 import { motion } from 'framer-motion';
 import { formatNumber } from '@lib/date';

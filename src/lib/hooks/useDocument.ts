@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
-import { getDoc, doc, onSnapshot } from 'firebase/firestore';
+import { getDoc, doc, onSnapshot } from '@lib/firebase/db';
 import { usersCollection } from '@lib/firebase/collections';
 import { useCacheRef } from './useCacheRef';
-import type { DocumentReference } from 'firebase/firestore';
+import type { DocumentReference } from '@lib/firebase/db';
 import type { User } from '@lib/types/user';
 
 type UseDocument<T> = {

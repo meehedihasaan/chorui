@@ -1,5 +1,5 @@
 import { forwardRef } from 'react';
-import Link from 'next/link';
+import Link from '@lib/router';
 import type { ComponentPropsWithRef } from 'react';
 
 type MenuLinkProps = ComponentPropsWithRef<'a'> & {
