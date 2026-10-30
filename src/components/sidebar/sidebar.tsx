@@ -1,15 +1,18 @@
 import Link from '@lib/router';
 import { useAuth } from '@lib/context/auth-context';
 import { useWindow } from '@lib/context/window-context';
+import { useAccountDrawer } from '@lib/context/drawer-context';
 import { useModal } from '@lib/hooks/useModal';
 import { Modal } from '@components/modal/modal';
 import { Input } from '@components/input/input';
 import { CustomIcon } from '@components/ui/custom-icon';
 import { Button } from '@components/ui/button';
+import { NextImage } from '@components/ui/next-image';
 import { SidebarLink } from './sidebar-link';
 import { MoreSettings } from './more-settings';
 import { SidebarProfile } from './sidebar-profile';
 import type { IconName } from '@components/ui/hero-icon';
+import type { User } from '@lib/types/user';
 
 export type NavLink = {
   href: string;
@@ -53,8 +56,13 @@ export function Sidebar(): JSX.Element {
   const { isMobile } = useWindow();
 
   const { open, openModal, closeModal } = useModal();
+  const { openDrawer } = useAccountDrawer();
 
   const username = user?.username as string;
+  const { photoURL, name } = (user ?? {
+    photoURL: '/assets/twitter-avatar.jpg',
+    name: 'You'
+  }) as User;
 
   return (
     <header
@@ -98,6 +106,32 @@ export function Sidebar(): JSX.Element {
               iconName='UserIcon'
               canBeHidden
             />
+            {/* On phones the account avatar lives in the bottom bar and opens
+                the same drawer the header avatar uses. */}
+            {isMobile && (
+              <button
+                type='button'
+                aria-label='Account'
+                className='group flex py-1 outline-none'
+                onClick={openDrawer}
+              >
+                <div
+                  className='custom-button flex items-center justify-center self-start p-2 transition 
+                             duration-200 group-hover:bg-light-primary/10 group-focus-visible:ring-2 
+                             group-focus-visible:ring-[#878a8c] dark:group-hover:bg-dark-primary/10 
+                             dark:group-focus-visible:ring-white'
+                >
+                  <NextImage
+                    useSkeleton
+                    imgClassName='rounded-full'
+                    width={28}
+                    height={28}
+                    src={photoURL}
+                    alt={name}
+                  />
+                </div>
+              </button>
+            )}
             {!isMobile && <MoreSettings />}
           </nav>
           <Button
