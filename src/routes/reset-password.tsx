@@ -6,9 +6,9 @@ export const Route = createFileRoute("/reset-password")({
   ssr: false,
   head: () => ({
     meta: [
-      { title: "Reset password / Twitter" },
+      { title: "Reset password / Chorui" },
       { name: "description", content: "Choose a new password for your account." },
-      { property: "og:title", content: "Reset password / Twitter" },
+      { property: "og:title", content: "Reset password / Chorui" },
       {
         property: "og:description",
         content: "Choose a new password for your account."

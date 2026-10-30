@@ -24,6 +24,16 @@ const topNavLinks: Readonly<MobileNavLink[]> = [
     iconName: 'ChatBubbleBottomCenterTextIcon'
   },
   {
+    href: '/explore',
+    linkName: 'Explore',
+    iconName: 'HashtagIcon'
+  },
+  {
+    href: '/notifications',
+    linkName: 'Notifications',
+    iconName: 'BellIcon'
+  },
+  {
     href: '/bookmarks',
     linkName: 'Bookmarks',
     iconName: 'BookmarkIcon'
@@ -45,8 +55,7 @@ const bottomNavLinks: Readonly<MobileNavLink[]> = [
   {
     href: '/settings',
     linkName: 'Settings and privacy',
-    iconName: 'Cog8ToothIcon',
-    disabled: true
+    iconName: 'Cog8ToothIcon'
   },
   {
     href: '/help-center',
@@ -120,7 +129,7 @@ export function MobileSidebarModal({
         <ActionModal
           useIcon
           focusOnMainBtn
-          title='Log out of Twitter?'
+          title='Log out of Chorui?'
           description='You can always log back in at any time. If you just want to switch accounts, you can do that by adding an existing account.'
           mainBtnLabel='Log out'
           action={signOut}

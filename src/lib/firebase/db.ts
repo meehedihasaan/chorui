@@ -34,7 +34,16 @@ export function mapField(field: string): string {
   return FIELD_MAP[field] ?? field;
 }
 
-type WhereOp = '==' | '!=' | '>' | '>=' | '<' | '<=' | 'array-contains';
+type WhereOp =
+  | '=='
+  | '!='
+  | '>'
+  | '>='
+  | '<'
+  | '<='
+  | 'array-contains'
+  | 'in'
+  | 'ilike';
 
 export type QueryConstraint =
   | { type: 'where'; field: string; op: WhereOp; value: unknown }
@@ -200,6 +209,12 @@ export function applyConstraints(builder: any, constraints: QueryConstraint[]): 
           break;
         case 'array-contains':
           current = current.contains(field, [constraint.value]);
+          break;
+        case 'in':
+          current = current.in(field, constraint.value as unknown[]);
+          break;
+        case 'ilike':
+          current = current.ilike(field, constraint.value as string);
           break;
       }
     } else if (constraint.type === 'orderBy') {

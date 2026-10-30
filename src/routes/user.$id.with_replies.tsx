@@ -15,9 +15,9 @@ export const Route = createFileRoute("/user/$id/with_replies")({
   ssr: false,
   head: () => ({
     meta: [
-      { title: "With replies / Twitter" },
+      { title: "With replies / Chorui" },
       { name: "description", content: "Tweets and replies by this profile." },
-      { property: "og:title", content: "With replies / Twitter" },
+      { property: "og:title", content: "With replies / Chorui" },
       {
         property: "og:description",
         content: "Tweets and replies by this profile."

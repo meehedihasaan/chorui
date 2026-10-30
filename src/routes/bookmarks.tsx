@@ -28,9 +28,9 @@ export const Route = createFileRoute("/bookmarks")({
   ssr: false,
   head: () => ({
     meta: [
-      { title: "Bookmarks / Twitter" },
+      { title: "Bookmarks / Chorui" },
       { name: "description", content: "Tweets you saved for later." },
-      { property: "og:title", content: "Bookmarks / Twitter" },
+      { property: "og:title", content: "Bookmarks / Chorui" },
       { property: "og:description", content: "Tweets you saved for later." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },

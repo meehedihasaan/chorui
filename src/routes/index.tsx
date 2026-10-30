@@ -8,13 +8,13 @@ export const Route = createFileRoute("/")({
   ssr: false,
   head: () => ({
     meta: [
-      { title: "Twitter — It's what's happening" },
+      { title: "Chorui — It's what's happening" },
       {
         name: "description",
         content:
           "From breaking news and entertainment to sports and politics, get the full story with all the live commentary.",
       },
-      { property: "og:title", content: "Twitter — It's what's happening" },
+      { property: "og:title", content: "Chorui — It's what's happening" },
       {
         property: "og:description",
         content: "Join the conversation. Sign up or sign in to continue.",

@@ -13,9 +13,9 @@ export const Route = createFileRoute("/user/$id/likes")({
   ssr: false,
   head: () => ({
     meta: [
-      { title: "Likes / Twitter" },
+      { title: "Likes / Chorui" },
       { name: "description", content: "Tweets liked by this profile." },
-      { property: "og:title", content: "Likes / Twitter" },
+      { property: "og:title", content: "Likes / Chorui" },
       { property: "og:description", content: "Tweets liked by this profile." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },

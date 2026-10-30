@@ -10,8 +10,11 @@ export const Route = createFileRoute("/api/public/media/$userId/$id")({
     handlers: {
       GET: async ({ params }) => {
         const { userId, id } = params;
+        // Image IDs were historically random alphanumerics, so accept any
+        // safe filename character set rather than UUID-only shapes.
         const valid =
-          /^[0-9a-f-]{8,36}$/i.test(userId) && /^[0-9a-f-]{8,36}$/i.test(id);
+          /^[0-9a-f-]{8,36}$/i.test(userId) &&
+          /^[A-Za-z0-9_-]{1,120}$/.test(id);
         if (!valid) return new Response("Not found", { status: 404 });
 
         const { supabaseAdmin } = await import(

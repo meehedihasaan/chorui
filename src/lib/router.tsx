@@ -101,3 +101,7 @@ export function useRouter() {
 }
 
 export { isValidElement };
+
+// Search-param helpers for the TanStack Router, re-exported under the same
+// shim namespace so ported components do not import framework packages.
+export { useSearch, useNavigate, useParams } from '@tanstack/react-router';

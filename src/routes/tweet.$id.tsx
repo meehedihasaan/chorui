@@ -22,9 +22,9 @@ export const Route = createFileRoute("/tweet/$id")({
   ssr: false,
   head: () => ({
     meta: [
-      { title: "Tweet / Twitter" },
+      { title: "Tweet / Chorui" },
       { name: "description", content: "A tweet thread." },
-      { property: "og:title", content: "Tweet / Twitter" },
+      { property: "og:title", content: "Tweet / Chorui" },
       { property: "og:description", content: "A tweet thread." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },

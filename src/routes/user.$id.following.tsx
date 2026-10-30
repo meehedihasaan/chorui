@@ -16,9 +16,9 @@ export const Route = createFileRoute("/user/$id/following")({
   ssr: false,
   head: () => ({
     meta: [
-      { title: "Following / Twitter" },
+      { title: "Following / Chorui" },
       { name: "description", content: "People this profile follows." },
-      { property: "og:title", content: "Following / Twitter" },
+      { property: "og:title", content: "Following / Chorui" },
       { property: "og:description", content: "People this profile follows." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },

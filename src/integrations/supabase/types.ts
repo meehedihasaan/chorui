@@ -32,6 +32,62 @@ export type Database = {
         }
         Relationships: []
       }
+      dm_conversations: {
+        Row: {
+          created_at: string
+          id: string
+          user1_id: string
+          user2_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          user1_id: string
+          user2_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          user1_id?: string
+          user2_id?: string
+        }
+        Relationships: []
+      }
+      dm_messages: {
+        Row: {
+          conversation_id: string
+          created_at: string
+          id: string
+          read: boolean
+          sender_id: string
+          text: string
+        }
+        Insert: {
+          conversation_id: string
+          created_at?: string
+          id?: string
+          read?: boolean
+          sender_id: string
+          text: string
+        }
+        Update: {
+          conversation_id?: string
+          created_at?: string
+          id?: string
+          read?: boolean
+          sender_id?: string
+          text?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "dm_messages_conversation_id_fkey"
+            columns: ["conversation_id"]
+            isOneToOne: false
+            referencedRelation: "dm_conversations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       follows: {
         Row: {
           created_at: string
@@ -47,6 +103,36 @@ export type Database = {
           created_at?: string
           follower_id?: string
           following_id?: string
+        }
+        Relationships: []
+      }
+      notifications: {
+        Row: {
+          actor_id: string
+          created_at: string
+          id: string
+          read: boolean
+          tweet_id: string | null
+          type: string
+          user_id: string
+        }
+        Insert: {
+          actor_id: string
+          created_at?: string
+          id?: string
+          read?: boolean
+          tweet_id?: string | null
+          type: string
+          user_id: string
+        }
+        Update: {
+          actor_id?: string
+          created_at?: string
+          id?: string
+          read?: boolean
+          tweet_id?: string | null
+          type?: string
+          user_id?: string
         }
         Relationships: []
       }
@@ -211,6 +297,19 @@ export type Database = {
           isSetofReturn: false
         }
       }
+      get_conversations: {
+        Args: never
+        Returns: {
+          conversation_id: string
+          last_created_at: string
+          last_text: string
+          other_id: string
+          other_name: string
+          other_photo_url: string
+          other_username: string
+          unread: number
+        }[]
+      }
       get_suggested_users: {
         Args: { p_limit: number; p_seed: string }
         Returns: {
@@ -240,6 +339,7 @@ export type Database = {
           isSetofReturn: true
         }
       }
+      is_conversation_participant: { Args: { c: string }; Returns: boolean }
       manage_like: {
         Args: { p_like: boolean; p_tweet_id: string }
         Returns: undefined

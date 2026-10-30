@@ -80,13 +80,13 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Twitter clone — It's what's happening" },
+      { title: "Chorui — It's what's happening" },
       {
         name: "description",
         content:
-          "A Twitter clone: share tweets, reply, retweet, like, bookmark and follow people.",
+          "A Chorui: share tweets, reply, retweet, like, bookmark and follow people.",
       },
-      { property: "og:title", content: "Twitter clone — It's what's happening" },
+      { property: "og:title", content: "Chorui — It's what's happening" },
       {
         property: "og:description",
         content: "Share tweets, reply, retweet, like, bookmark and follow people.",
