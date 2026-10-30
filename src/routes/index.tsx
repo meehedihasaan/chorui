@@ -44,6 +44,7 @@ function Index() {
           success: { duration: 4000 },
         }}
       />
-    </div>
+      </div>
+    </AuthLayout>
   );
 }
