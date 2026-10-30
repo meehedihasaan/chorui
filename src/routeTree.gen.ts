@@ -14,6 +14,7 @@ import { Route as BookmarksRouteImport } from './routes/bookmarks'
 import { Route as HomeRouteImport } from './routes/home'
 import { Route as PeopleRouteImport } from './routes/people'
 import { Route as TrendsRouteImport } from './routes/trends'
+import { Route as TweetIdRouteImport } from './routes/tweet.$id'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -40,6 +41,11 @@ const TrendsRoute = TrendsRouteImport.update({
   path: '/trends',
   getParentRoute: () => rootRouteImport,
 } as any)
+const TweetIdRoute = TweetIdRouteImport.update({
+  id: '/tweet/$id',
+  path: '/tweet/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -47,6 +53,7 @@ export interface FileRoutesByFullPath {
   '/home': typeof HomeRoute
   '/people': typeof PeopleRoute
   '/trends': typeof TrendsRoute
+  '/tweet/$id': typeof TweetIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -54,6 +61,7 @@ export interface FileRoutesByTo {
   '/home': typeof HomeRoute
   '/people': typeof PeopleRoute
   '/trends': typeof TrendsRoute
+  '/tweet/$id': typeof TweetIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -62,13 +70,21 @@ export interface FileRoutesById {
   '/home': typeof HomeRoute
   '/people': typeof PeopleRoute
   '/trends': typeof TrendsRoute
+  '/tweet/$id': typeof TweetIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/bookmarks' | '/home' | '/people' | '/trends'
+  fullPaths: '/' | '/bookmarks' | '/home' | '/people' | '/trends' | '/tweet/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/bookmarks' | '/home' | '/people' | '/trends'
-  id: '__root__' | '/' | '/bookmarks' | '/home' | '/people' | '/trends'
+  to: '/' | '/bookmarks' | '/home' | '/people' | '/trends' | '/tweet/$id'
+  id:
+    | '__root__'
+    | '/'
+    | '/bookmarks'
+    | '/home'
+    | '/people'
+    | '/trends'
+    | '/tweet/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -77,6 +93,7 @@ export interface RootRouteChildren {
   HomeRoute: typeof HomeRoute
   PeopleRoute: typeof PeopleRoute
   TrendsRoute: typeof TrendsRoute
+  TweetIdRoute: typeof TweetIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -116,6 +133,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TrendsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/tweet/$id': {
+      id: '/tweet/$id'
+      path: '/tweet/$id'
+      fullPath: '/tweet/$id'
+      preLoaderRoute: typeof TweetIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -125,6 +149,7 @@ const rootRouteChildren: RootRouteChildren = {
   HomeRoute: HomeRoute,
   PeopleRoute: PeopleRoute,
   TrendsRoute: TrendsRoute,
+  TweetIdRoute: TweetIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

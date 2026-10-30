@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useParams } from "@tanstack/react-router";
 import { useRef } from "react";
 import { AnimatePresence } from "framer-motion";
+import { doc, query, where, orderBy } from "@lib/firebase/db";
 import { tweetsCollection } from "@lib/firebase/collections";
 import { useCollection } from "@lib/hooks/useCollection";
 import { useDocument } from "@lib/hooks/useDocument";
@@ -15,6 +16,7 @@ import { ViewTweet } from "@components/view/view-tweet";
 import { Loading } from "@components/ui/loading";
 import { Error } from "@components/ui/error";
 import { ViewParentTweet } from "@components/view/view-parent-tweet";
+import { useRouter } from "@lib/router";
 
 export const Route = createFileRoute("/tweet/$id")({
   ssr: false,
@@ -33,17 +35,21 @@ export const Route = createFileRoute("/tweet/$id")({
 
 function TweetIdPage() {
   const { id } = useParams({ strict: false }) as { id?: string };
-  const { back } = useRouterBack();
+  const { back } = useRouter();
 
   const { data: tweetData, loading: tweetLoading } = useDocument(
-    { __ref: "document", table: "tweets", id: id as string },
+    doc(tweetsCollection, id as string),
     { includeUser: true, allowNull: true }
   );
 
   const viewTweetRef = useRef<HTMLElement>(null);
 
   const { data: repliesData, loading: repliesLoading } = useCollection(
-    tweetsCollection.withReplies?.(id) ?? tweetsCollection,
+    query(
+      tweetsCollection,
+      where("parent_id", "==", id),
+      orderBy("createdAt", "desc")
+    ),
     { includeUser: true, allowNull: true }
   );
 
@@ -82,7 +88,9 @@ function TweetIdPage() {
                     (repliesLoading ? (
                       <Loading className="mt-5" />
                     ) : !repliesData ? (
-                      <p className='mt-4 mb-10 px-4 text-xl font-bold'>No replies yet</p>
+                      <p className="mt-4 mb-10 px-4 text-xl font-bold">
+                        No replies yet
+                      </p>
                     ) : (
                       <AnimatePresence mode="popLayout">
                         {repliesData.map((replyData) => (
@@ -98,16 +106,4 @@ function TweetIdPage() {
       </MainLayout>
     </ProtectedLayout>
   );
-}
-
-import { query, where, orderBy } from "@lib/firebase/db";
-import { useRouter } from "@lib/router";
-
-declare module "@lib/firebase/db" {
-  interface CollectionRefAugmentation {}
-}
-
-function useRouterBack(): { back: () => void } {
-  const { back } = useRouter();
-  return { back };
 }
