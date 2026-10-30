@@ -56,7 +56,7 @@ export function ActionModal({
           </Dialog.Description>
         </div>
       </div>
-      <div className='flex flex-col gap-3 inner:py-2 inner:font-bold'>
+      <div className='flex flex-col gap-3 [&>*]:py-2 [&>*]:font-bold'>
         <button
           className={cn(
             'custom-button main-tab text-white',
