@@ -14,13 +14,215 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      bookmarks: {
+        Row: {
+          created_at: string
+          tweet_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          tweet_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          tweet_id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      follows: {
+        Row: {
+          created_at: string
+          follower_id: string
+          following_id: string
+        }
+        Insert: {
+          created_at?: string
+          follower_id: string
+          following_id: string
+        }
+        Update: {
+          created_at?: string
+          follower_id?: string
+          following_id?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          accent: string | null
+          bio: string | null
+          cover_photo_url: string | null
+          created_at: string
+          followers: string[]
+          following: string[]
+          id: string
+          location: string | null
+          name: string
+          photo_url: string
+          pinned_tweet: string | null
+          theme: string | null
+          total_photos: number
+          total_tweets: number
+          updated_at: string | null
+          username: string
+          verified: boolean
+          website: string | null
+        }
+        Insert: {
+          accent?: string | null
+          bio?: string | null
+          cover_photo_url?: string | null
+          created_at?: string
+          followers?: string[]
+          following?: string[]
+          id: string
+          location?: string | null
+          name?: string
+          photo_url?: string
+          pinned_tweet?: string | null
+          theme?: string | null
+          total_photos?: number
+          total_tweets?: number
+          updated_at?: string | null
+          username: string
+          verified?: boolean
+          website?: string | null
+        }
+        Update: {
+          accent?: string | null
+          bio?: string | null
+          cover_photo_url?: string | null
+          created_at?: string
+          followers?: string[]
+          following?: string[]
+          id?: string
+          location?: string | null
+          name?: string
+          photo_url?: string
+          pinned_tweet?: string | null
+          theme?: string | null
+          total_photos?: number
+          total_tweets?: number
+          updated_at?: string | null
+          username?: string
+          verified?: boolean
+          website?: string | null
+        }
+        Relationships: []
+      }
+      tweets: {
+        Row: {
+          created_at: string
+          created_by: string
+          id: string
+          images: Json | null
+          parent_id: string | null
+          parent_username: string | null
+          text: string | null
+          updated_at: string | null
+          user_likes: string[]
+          user_replies: number
+          user_retweets: string[]
+        }
+        Insert: {
+          created_at?: string
+          created_by: string
+          id?: string
+          images?: Json | null
+          parent_id?: string | null
+          parent_username?: string | null
+          text?: string | null
+          updated_at?: string | null
+          user_likes?: string[]
+          user_replies?: number
+          user_retweets?: string[]
+        }
+        Update: {
+          created_at?: string
+          created_by?: string
+          id?: string
+          images?: Json | null
+          parent_id?: string | null
+          parent_username?: string | null
+          text?: string | null
+          updated_at?: string | null
+          user_likes?: string[]
+          user_replies?: number
+          user_retweets?: string[]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tweets_parent_id_fkey"
+            columns: ["parent_id"]
+            isOneToOne: false
+            referencedRelation: "tweets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_stats: {
+        Row: {
+          likes: string[]
+          tweets: string[]
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          likes?: string[]
+          tweets?: string[]
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          likes?: string[]
+          tweets?: string[]
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      create_tweet: {
+        Args: { p_images: Json; p_parent_id: string; p_text: string }
+        Returns: {
+          created_at: string
+          created_by: string
+          id: string
+          images: Json | null
+          parent_id: string | null
+          parent_username: string | null
+          text: string | null
+          updated_at: string | null
+          user_likes: string[]
+          user_replies: number
+          user_retweets: string[]
+        }
+        SetofOptions: {
+          from: "*"
+          to: "tweets"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      manage_like: {
+        Args: { p_like: boolean; p_tweet_id: string }
+        Returns: undefined
+      }
+      manage_reply: {
+        Args: { p_increment: boolean; p_tweet_id: string }
+        Returns: undefined
+      }
+      manage_retweet: {
+        Args: { p_retweet: boolean; p_tweet_id: string }
+        Returns: undefined
+      }
     }
     Enums: {
       [_ in never]: never
