@@ -59,7 +59,7 @@ function ChatPage() {
           return (
             <div key={m.id} className={cn('flex flex-col', mine ? 'items-end' : 'items-start')}>
               <p className={cn('max-w-[80%] whitespace-pre-wrap break-words rounded-3xl px-4 py-2',
-                mine ? 'rounded-br-md bg-main-accent text-white' : 'rounded-bl-md bg-main-search-background')}>
+                mine ? 'rounded-br-md bg-main-accent text-main-accent-foreground' : 'rounded-bl-md bg-main-search-background')}>
                 {m.text}
               </p>
               <span className='mt-0.5 text-xs text-light-secondary dark:text-dark-secondary'>

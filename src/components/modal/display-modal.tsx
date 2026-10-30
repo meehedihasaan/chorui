@@ -89,7 +89,7 @@ export function DisplayModal({ closeModal }: DisplayModalProps): JSX.Element {
       </div>
       <Button
         className='bg-main-accent px-4 py-1.5 font-bold
-                   text-white hover:bg-main-accent/90 active:bg-main-accent/75'
+                   text-main-accent-foreground hover:bg-main-accent/90 active:bg-main-accent/75'
         onClick={closeModal}
       >
         Done

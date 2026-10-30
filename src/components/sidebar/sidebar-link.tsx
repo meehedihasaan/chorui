@@ -45,7 +45,7 @@ export function SidebarLink({
         >
           <span className='relative flex'>
           {showBadge && (
-            <span className='absolute -right-1.5 -top-1.5 z-10 flex h-5 min-w-5 items-center justify-center rounded-full bg-main-accent px-1 text-xs font-bold text-white'>
+            <span className='absolute -right-1.5 -top-1.5 z-10 flex h-5 min-w-5 items-center justify-center rounded-full bg-main-accent px-1 text-xs font-bold text-main-accent-foreground'>
               {unread > 9 ? '9+' : unread}
             </span>
           )}
