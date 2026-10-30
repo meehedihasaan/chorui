@@ -1,3 +1,5 @@
+import { MobileSidebar } from "@components/sidebar/mobile-sidebar";
+import { CustomIcon } from "@components/ui/custom-icon";
 import { createFileRoute } from "@tanstack/react-router";
 import { AnimatePresence } from "framer-motion";
 import { useWindow } from "@lib/context/window-context";
@@ -76,9 +78,11 @@ function HomeFeed() {
   return (
     <MainContainer>
       <MainHeader useMobileSidebar className="flex flex-col border-b border-light-border pb-0 dark:border-dark-border">
-        <div className="flex w-full items-center justify-between">
-          <h2 className="text-xl font-bold">Home</h2>
-          <UpdateUsername />
+        <div className="grid w-full grid-cols-[1fr_auto_1fr] items-center xs:flex xs:justify-between">
+          <div className="xs:hidden"><MobileSidebar /></div>
+          <h2 className="hidden text-xl font-bold xs:block">Home</h2>
+          <CustomIcon className="h-7 w-7 text-main-accent xs:hidden" iconName="TwitterIcon" />
+          <div className="flex justify-end"><UpdateUsername /></div>
         </div>
         <FeedTabs />
       </MainHeader>
