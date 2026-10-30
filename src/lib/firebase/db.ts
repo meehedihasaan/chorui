@@ -11,6 +11,7 @@ import type { User } from '@lib/types/user';
 import type { Tweet } from '@lib/types/tweet';
 import type { Stats } from '@lib/types/stats';
 import type { Bookmark } from '@lib/types/bookmark';
+import { DEFAULT_AVATAR_URL, resolveAvatarUrl } from '@lib/default-avatar';
 
 /* The generated table types are stricter than the shim's generic tables. */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -123,7 +124,7 @@ export function mapProfile(row: RawRow | null): User | null {
     website: (row.website as string | null) ?? null,
     location: (row.location as string | null) ?? null,
     username: (row.username as string) ?? '',
-    photoURL: (row.photo_url as string) ?? '/assets/twitter-avatar.jpg',
+    photoURL: resolveAvatarUrl(row.photo_url as string | null),
     verified: Boolean(row.verified),
     following: (row.following as string[]) ?? [],
     followers: (row.followers as string[]) ?? [],
@@ -282,7 +283,7 @@ const UNKNOWN_USER: Omit<User, 'id' | 'username' | 'name'> & {
   accent: null,
   website: null,
   location: null,
-  photoURL: '/assets/twitter-avatar.jpg',
+  photoURL: DEFAULT_AVATAR_URL,
   verified: false,
   following: [],
   followers: [],

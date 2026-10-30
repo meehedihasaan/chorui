@@ -3,6 +3,7 @@ import { UserName } from '@components/user/user-name';
 import { InputThemeRadio } from '@components/input/input-theme-radio';
 import { Button } from '@components/ui/button';
 import { InputAccentRadio } from '@components/input/input-accent-radio';
+import { DEFAULT_AVATAR_URL } from '@lib/default-avatar';
 import type { Theme, Accent } from '@lib/types/theme';
 
 type DisplayModalProps = {
@@ -38,7 +39,7 @@ export function DisplayModal({ closeModal }: DisplayModalProps): JSX.Element {
                    border-light-border px-4 py-3 dark:border-dark-border'
       >
         <div className='grid grid-cols-[auto_1fr] gap-3'>
-          <UserAvatar src='/assets/twitter-avatar.jpg' alt='Twitter' />
+          <UserAvatar src={DEFAULT_AVATAR_URL} alt='Chorui' />
           <div>
             <div className='flex gap-1'>
               <UserName verified name='Chorui' />
