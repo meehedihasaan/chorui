@@ -36,6 +36,13 @@
       "when": 1793371201743,
       "tag": "0004_notifications_and_messages",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1793375657178,
+      "tag": "0005_fix_mention_trigger_text_array",
+      "breakpoints": true
     }
   ]
 }
