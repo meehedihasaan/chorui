@@ -36,7 +36,7 @@ export function SidebarLink({
       >
         <div
           className={cn(
-            `custom-button flex items-center justify-center gap-4 self-start p-2 text-xl transition 
+            `custom-button flex flex-col items-center justify-center gap-0.5 self-start p-1 text-xl xs:flex-row xs:gap-4 xs:p-2 transition 
              duration-200 group-hover:bg-light-primary/10 group-focus-visible:ring-2 
              group-focus-visible:ring-[#878a8c] dark:group-hover:bg-dark-primary/10 
              dark:group-focus-visible:ring-white xs:p-3 xl:pr-5`,
@@ -60,6 +60,7 @@ export function SidebarLink({
             solid={isActive}
           />
           </span>
+          <p className='text-[11px] leading-none xs:hidden'>{linkName}</p>
           <p className='hidden xl:block'>{linkName}</p>
         </div>
       </a>

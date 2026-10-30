@@ -103,7 +103,7 @@ export function Tweet(tweet: TweetProps): JSX.Element {
              gap-y-4 px-4 py-3 outline-none duration-200`,
             parentTweet
               ? 'mt-0.5 pt-2.5 pb-0'
-              : 'border-b border-light-border dark:border-dark-border'
+              : 'rounded-xl border border-light-border bg-main-background shadow-sm dark:border-dark-border'
           )}
           draggable={false}
           onClick={(e) => {

@@ -25,24 +25,20 @@ export function FeedTabs(): JSX.Element {
     };
 
   return (
-    <nav className='-mx-4 flex w-[calc(100%+2rem)]'>
+    <nav className='flex w-full gap-2 py-2'>
       {tabs.map(({ id, name }) => (
         <button
           className={cn(
-            'hover-animation main-tab dark-bg-tab relative flex-1 px-4 py-4 font-semibold transition-colors',
-            'hover:bg-light-primary/10 dark:hover:bg-dark-primary/10',
+            'rounded-full border px-4 py-1.5 text-sm font-semibold transition-colors',
             activeTab === id
-              ? 'font-bold text-light-primary dark:text-dark-primary'
-              : 'text-light-secondary dark:text-dark-secondary'
+              ? 'border-main-accent bg-main-accent text-main-accent-foreground'
+              : 'border-light-border text-light-secondary hover:bg-light-primary/10 dark:border-dark-border dark:text-dark-secondary dark:hover:bg-dark-primary/10'
           )}
           onClick={handleClick(id)}
           key={id}
           type='button'
         >
           {name}
-          {activeTab === id && (
-            <span className='absolute inset-x-4 bottom-0 h-1 rounded-full bg-main-accent' />
-          )}
         </button>
       ))}
     </nav>
