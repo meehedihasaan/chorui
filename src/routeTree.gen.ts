@@ -16,6 +16,7 @@ import { Route as HomeRouteImport } from './routes/home'
 import { Route as MessagesRouteImport } from './routes/messages'
 import { Route as NotificationsRouteImport } from './routes/notifications'
 import { Route as PeopleRouteImport } from './routes/people'
+import { Route as PostRouteImport } from './routes/post'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as TrendsRouteImport } from './routes/trends'
@@ -65,6 +66,11 @@ const NotificationsRoute = NotificationsRouteImport.update({
 const PeopleRoute = PeopleRouteImport.update({
   id: '/people',
   path: '/people',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PostRoute = PostRouteImport.update({
+  id: '/post',
+  path: '/post',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ResetPasswordRoute = ResetPasswordRouteImport.update({
@@ -152,6 +158,7 @@ export interface FileRoutesByFullPath {
   '/messages': typeof MessagesRouteWithChildren
   '/notifications': typeof NotificationsRoute
   '/people': typeof PeopleRoute
+  '/post': typeof PostRoute
   '/reset-password': typeof ResetPasswordRoute
   '/settings': typeof SettingsRoute
   '/trends': typeof TrendsRoute
@@ -176,6 +183,7 @@ export interface FileRoutesByTo {
   '/messages': typeof MessagesRouteWithChildren
   '/notifications': typeof NotificationsRoute
   '/people': typeof PeopleRoute
+  '/post': typeof PostRoute
   '/reset-password': typeof ResetPasswordRoute
   '/settings': typeof SettingsRoute
   '/trends': typeof TrendsRoute
@@ -200,6 +208,7 @@ export interface FileRoutesById {
   '/messages': typeof MessagesRouteWithChildren
   '/notifications': typeof NotificationsRoute
   '/people': typeof PeopleRoute
+  '/post': typeof PostRoute
   '/reset-password': typeof ResetPasswordRoute
   '/settings': typeof SettingsRoute
   '/trends': typeof TrendsRoute
@@ -226,6 +235,7 @@ export interface FileRouteTypes {
     | '/messages'
     | '/notifications'
     | '/people'
+    | '/post'
     | '/reset-password'
     | '/settings'
     | '/trends'
@@ -250,6 +260,7 @@ export interface FileRouteTypes {
     | '/messages'
     | '/notifications'
     | '/people'
+    | '/post'
     | '/reset-password'
     | '/settings'
     | '/trends'
@@ -273,6 +284,7 @@ export interface FileRouteTypes {
     | '/messages'
     | '/notifications'
     | '/people'
+    | '/post'
     | '/reset-password'
     | '/settings'
     | '/trends'
@@ -298,6 +310,7 @@ export interface RootRouteChildren {
   MessagesRoute: typeof MessagesRouteWithChildren
   NotificationsRoute: typeof NotificationsRoute
   PeopleRoute: typeof PeopleRoute
+  PostRoute: typeof PostRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
   SettingsRoute: typeof SettingsRoute
   TrendsRoute: typeof TrendsRoute
@@ -357,6 +370,13 @@ declare module '@tanstack/react-router' {
       path: '/people'
       fullPath: '/people'
       preLoaderRoute: typeof PeopleRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/post': {
+      id: '/post'
+      path: '/post'
+      fullPath: '/post'
+      preLoaderRoute: typeof PostRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/reset-password': {
@@ -508,6 +528,7 @@ const rootRouteChildren: RootRouteChildren = {
   MessagesRoute: MessagesRouteWithChildren,
   NotificationsRoute: NotificationsRoute,
   PeopleRoute: PeopleRoute,
+  PostRoute: PostRoute,
   ResetPasswordRoute: ResetPasswordRoute,
   SettingsRoute: SettingsRoute,
   TrendsRoute: TrendsRoute,
