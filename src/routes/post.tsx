@@ -16,7 +16,9 @@ export const Route = createFileRoute('/post')({
 function PostPage(): JSX.Element {
   const navigate = useNavigate();
 
-  const goHome = (): void => navigate({ to: '/home' });
+  const goHome = (): void => {
+    void navigate({ to: '/home' });
+  };
 
   return (
     <ProtectedLayout>
