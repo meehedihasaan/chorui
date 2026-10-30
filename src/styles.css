@@ -3,6 +3,7 @@
 @import "tw-animate-css";
 
 @custom-variant dark (&:is(.dark *));
+@custom-variant inner (& > *);
 
 /*
  * Design system ported from the source Twitter clone (Tailwind v3 config +
