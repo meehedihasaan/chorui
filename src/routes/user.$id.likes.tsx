@@ -14,9 +14,9 @@ export const Route = createFileRoute("/user/$id/likes")({
   head: () => ({
     meta: [
       { title: "Likes / Chorui" },
-      { name: "description", content: "Tweets liked by this profile." },
+      { name: "description", content: "Posts liked by this profile." },
       { property: "og:title", content: "Likes / Chorui" },
-      { property: "og:description", content: "Tweets liked by this profile." },
+      { property: "og:description", content: "Posts liked by this profile." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
@@ -45,8 +45,8 @@ function UserLikesPage() {
           <Loading className="mt-5" />
         ) : !data ? (
           <StatsEmpty
-            title={`@${username as string} hasn't liked any Tweets`}
-            description="When they do, those Tweets will show up here."
+            title={`@${username as string} hasn't liked any Posts`}
+            description="When they do, those Posts will show up here."
           />
         ) : (
           <AnimatePresence mode="popLayout">

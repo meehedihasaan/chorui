@@ -15,9 +15,9 @@ export const Route = createFileRoute("/user/$id/media")({
   head: () => ({
     meta: [
       { title: "Media / Chorui" },
-      { name: "description", content: "Media tweets by this profile." },
+      { name: "description", content: "Media posts by this profile." },
       { property: "og:title", content: "Media / Chorui" },
-      { property: "og:description", content: "Media tweets by this profile." },
+      { property: "og:description", content: "Media posts by this profile." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
@@ -48,8 +48,8 @@ function UserMediaPage() {
           <Loading className="mt-5" />
         ) : !sortedTweets ? (
           <StatsEmpty
-            title={`@${username as string} hasn't Tweeted Media`}
-            description="Once they do, those Tweets will show up here."
+            title={`@${username as string} hasn't posted media`}
+            description="Once they do, those Posts will show up here."
             imageData={{ src: "/assets/no-media.png", alt: "No media" }}
           />
         ) : (

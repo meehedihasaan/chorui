@@ -67,8 +67,8 @@ function UserTweetsPage() {
           <Loading className="mt-5" />
         ) : !mergedTweets ? (
           <StatsEmpty
-            title={`@${username as string} hasn't tweeted`}
-            description="When they do, their Tweets will show up here."
+            title={`@${username as string} hasn't posted`}
+            description="When they do, their Posts will show up here."
           />
         ) : (
           <AnimatePresence mode="popLayout">

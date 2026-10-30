@@ -29,9 +29,9 @@ export const Route = createFileRoute("/bookmarks")({
   head: () => ({
     meta: [
       { title: "Bookmarks / Chorui" },
-      { name: "description", content: "Tweets you saved for later." },
+      { name: "description", content: "Posts you saved for later." },
       { property: "og:title", content: "Bookmarks / Chorui" },
-      { property: "og:description", content: "Tweets you saved for later." },
+      { property: "og:description", content: "Posts you saved for later." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
@@ -80,7 +80,7 @@ function BookmarksPage() {
             >
               <ActionModal
                 title="Clear all Bookmarks?"
-                description="This can’t be undone and you’ll remove all Tweets you’ve added to your Bookmarks."
+                description="This can’t be undone and you’ll remove all Posts you’ve added to your Bookmarks."
                 mainBtnClassName="bg-accent-red hover:bg-accent-red/90 active:bg-accent-red/75 accent-tab
                             focus-visible:bg-accent-red/90"
                 mainBtnLabel="Clear"
@@ -113,8 +113,8 @@ function BookmarksPage() {
                 <Loading className="mt-5" />
               ) : !bookmarksRef ? (
                 <StatsEmpty
-                  title="Save Tweets for later"
-                  description="Don’t let the good ones fly away! Bookmark Tweets to easily find them again in the future."
+                  title="Save Posts for later"
+                  description="Don’t let the good ones fly away! Bookmark Posts to easily find them again in the future."
                   imageData={{
                     src: "/assets/no-bookmarks.png",
                     alt: "No bookmarks"
