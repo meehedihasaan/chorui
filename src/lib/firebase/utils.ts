@@ -1,77 +1,98 @@
-import {
-  doc,
-  query,
-  where,
-  limit,
-  setDoc,
-  getDocs,
-  updateDoc,
-  deleteDoc,
-  increment,
-  writeBatch,
-  arrayUnion,
-  arrayRemove,
-  serverTimestamp,
-  getCountFromServer
-} from '@lib/firebase/db';
-import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
-import { db, storage } from './app';
-import {
-  usersCollection,
-  tweetsCollection,
-  userStatsCollection,
-  userBookmarksCollection
-} from './collections';
-import type { WithFieldValue, Query } from '@lib/firebase/db';
+/**
+ * Data mutations for the Twitter clone, backed by Lovable Cloud.
+ * Function names/signatures match the source app so call sites stay stable.
+ */
+import { supabase } from '@/integrations/supabase/client';
+import { getCollectionCount, mapTweet, mapProfile } from './db';
+import type { CollectionRef } from './db';
 import type { EditableUserData } from '@lib/types/user';
 import type { FilesWithId, ImagesPreview } from '@lib/types/file';
 import type { Bookmark } from '@lib/types/bookmark';
 import type { Theme, Accent } from '@lib/types/theme';
+import type { Tweet } from '@lib/types/tweet';
+
+export { getCollectionCount };
+
+const PROFILE_UPDATED_EVENT = 'app:profile-updated';
+
+function notifyProfileUpdated(): void {
+  window.dispatchEvent(new Event(PROFILE_UPDATED_EVENT));
+}
+
+export function onProfileUpdated(callback: () => void): () => void {
+  window.addEventListener(PROFILE_UPDATED_EVENT, callback);
+  return () => window.removeEventListener(PROFILE_UPDATED_EVENT, callback);
+}
 
 export async function checkUsernameAvailability(
   username: string
 ): Promise<boolean> {
-  const { empty } = await getDocs(
-    query(usersCollection, where('username', '==', username), limit(1))
-  );
-  return empty;
+  const { data } = await supabase
+    .from('profiles')
+    .select('id')
+    .eq('username', username)
+    .limit(1);
+
+  return !data?.length;
 }
 
-export async function getCollectionCount<T>(
-  collection: Query<T>
-): Promise<number> {
-  const snapshot = await getCountFromServer(collection);
-  return snapshot.data().count;
+async function bumpProfileCounter(
+  userId: string,
+  field: 'total_tweets' | 'total_photos',
+  delta: number
+): Promise<void> {
+  const { data } = await supabase
+    .from('profiles')
+    .select(field)
+    .eq('id', userId)
+    .single();
+
+  if (!data) return;
+
+  await supabase
+    .from('profiles')
+    .update({
+      [field]: Math.max((data[field] as number) + delta, 0),
+      updated_at: new Date().toISOString()
+    })
+    .eq('id', userId);
 }
 
 export async function updateUserData(
   userId: string,
   userData: EditableUserData
 ): Promise<void> {
-  const userRef = doc(usersCollection, userId);
-  await updateDoc(userRef, {
-    ...userData,
-    updatedAt: serverTimestamp()
-  });
+  await supabase
+    .from('profiles')
+    .update({
+      ...userData,
+      photoURL: undefined,
+      ...(userData.photoURL ? { photo_url: userData.photoURL } : {}),
+      ...(userData.coverPhotoURL ? { cover_photo_url: userData.coverPhotoURL } : {}),
+      updated_at: new Date().toISOString()
+    })
+    .eq('id', userId);
+
+  notifyProfileUpdated();
 }
 
 export async function updateUserTheme(
   userId: string,
   themeData: { theme?: Theme; accent?: Accent }
 ): Promise<void> {
-  const userRef = doc(usersCollection, userId);
-  await updateDoc(userRef, { ...themeData });
+  await supabase.from('profiles').update(themeData).eq('id', userId);
 }
 
 export async function updateUsername(
   userId: string,
   username?: string
 ): Promise<void> {
-  const userRef = doc(usersCollection, userId);
-  await updateDoc(userRef, {
-    ...(username && { username }),
-    updatedAt: serverTimestamp()
-  });
+  await supabase
+    .from('profiles')
+    .update({ ...(username && { username }), updated_at: new Date().toISOString() })
+    .eq('id', userId);
+
+  notifyProfileUpdated();
 }
 
 export async function managePinnedTweet(
@@ -79,11 +100,15 @@ export async function managePinnedTweet(
   userId: string,
   tweetId: string
 ): Promise<void> {
-  const userRef = doc(usersCollection, userId);
-  await updateDoc(userRef, {
-    updatedAt: serverTimestamp(),
-    pinnedTweet: type === 'pin' ? tweetId : null
-  });
+  await supabase
+    .from('profiles')
+    .update({
+      updated_at: new Date().toISOString(),
+      pinned_tweet: type === 'pin' ? tweetId : null
+    })
+    .eq('id', userId);
+
+  notifyProfileUpdated();
 }
 
 export async function manageFollow(
@@ -91,39 +116,42 @@ export async function manageFollow(
   userId: string,
   targetUserId: string
 ): Promise<void> {
-  const batch = writeBatch(db);
-
-  const userDocRef = doc(usersCollection, userId);
-  const targetUserDocRef = doc(usersCollection, targetUserId);
-
-  if (type === 'follow') {
-    batch.update(userDocRef, {
-      following: arrayUnion(targetUserId),
-      updatedAt: serverTimestamp()
-    });
-    batch.update(targetUserDocRef, {
-      followers: arrayUnion(userId),
-      updatedAt: serverTimestamp()
-    });
-  } else {
-    batch.update(userDocRef, {
-      following: arrayRemove(targetUserId),
-      updatedAt: serverTimestamp()
-    });
-    batch.update(targetUserDocRef, {
-      followers: arrayRemove(userId),
-      updatedAt: serverTimestamp()
-    });
-  }
-
-  await batch.commit();
+  if (type === 'follow')
+    await supabase
+      .from('follows')
+      .insert({ follower_id: userId, following_id: targetUserId });
+  else
+    await supabase
+      .from('follows')
+      .delete()
+      .eq('follower_id', userId)
+      .eq('following_id', targetUserId);
 }
 
 export async function removeTweet(tweetId: string): Promise<void> {
-  const userRef = doc(tweetsCollection, tweetId);
-  await deleteDoc(userRef);
+  await supabase.from('tweets').delete().eq('id', tweetId);
 }
 
+export async function createTweet(
+  text: string | null,
+  images: ImagesPreview | null,
+  parentId?: string
+): Promise<Tweet | null> {
+  const { data, error } = await supabase.rpc('create_tweet', {
+    p_text: text,
+    p_images: images ? (images as unknown as never) : null,
+    p_parent_id: parentId ?? null
+  });
+
+  if (error) {
+    console.error('createTweet failed', error.message);
+    return null;
+  }
+
+  return mapTweet(data as Record<string, unknown>);
+}
+
+/** Uploads image files to cloud storage and returns preview data for a Tweet. */
 export async function uploadImages(
   userId: string,
   files: FilesWithId
@@ -134,13 +162,20 @@ export async function uploadImages(
     files.map(async (file) => {
       const { id, name: alt, type } = file;
 
-      const storageRef = ref(storage, `images/${userId}/${id}`);
+      const { error } = await supabase.storage
+        .from('images')
+        .upload(`${userId}/${id}`, file, {
+          contentType: file.type || 'application/octet-stream'
+        });
 
-      await uploadBytesResumable(storageRef, file);
+      if (error) console.error('image upload failed', error.message);
 
-      const src = await getDownloadURL(storageRef);
-
-      return { id, src, alt, type };
+      return {
+        id,
+        src: `/api/public/media/${userId}/${id}`,
+        alt,
+        type
+      };
     })
   );
 
@@ -151,12 +186,10 @@ export async function manageReply(
   type: 'increment' | 'decrement',
   tweetId: string
 ): Promise<void> {
-  const tweetRef = doc(tweetsCollection, tweetId);
-
   try {
-    await updateDoc(tweetRef, {
-      userReplies: increment(type === 'increment' ? 1 : -1),
-      updatedAt: serverTimestamp()
+    await supabase.rpc('manage_reply', {
+      p_tweet_id: tweetId,
+      p_increment: type === 'increment'
     });
   } catch {
     // do nothing, because parent tweet was already deleted
@@ -167,22 +200,16 @@ export async function manageTotalTweets(
   type: 'increment' | 'decrement',
   userId: string
 ): Promise<void> {
-  const userRef = doc(usersCollection, userId);
-  await updateDoc(userRef, {
-    totalTweets: increment(type === 'increment' ? 1 : -1),
-    updatedAt: serverTimestamp()
-  });
+  await bumpProfileCounter(userId, 'total_tweets', type === 'increment' ? 1 : -1);
+  notifyProfileUpdated();
 }
 
 export async function manageTotalPhotos(
   type: 'increment' | 'decrement',
   userId: string
 ): Promise<void> {
-  const userRef = doc(usersCollection, userId);
-  await updateDoc(userRef, {
-    totalPhotos: increment(type === 'increment' ? 1 : -1),
-    updatedAt: serverTimestamp()
-  });
+  await bumpProfileCounter(userId, 'total_photos', type === 'increment' ? 1 : -1);
+  notifyProfileUpdated();
 }
 
 export function manageRetweet(
@@ -191,32 +218,10 @@ export function manageRetweet(
   tweetId: string
 ) {
   return async (): Promise<void> => {
-    const batch = writeBatch(db);
-
-    const tweetRef = doc(tweetsCollection, tweetId);
-    const userStatsRef = doc(userStatsCollection(userId), 'stats');
-
-    if (type === 'retweet') {
-      batch.update(tweetRef, {
-        userRetweets: arrayUnion(userId),
-        updatedAt: serverTimestamp()
-      });
-      batch.update(userStatsRef, {
-        tweets: arrayUnion(tweetId),
-        updatedAt: serverTimestamp()
-      });
-    } else {
-      batch.update(tweetRef, {
-        userRetweets: arrayRemove(userId),
-        updatedAt: serverTimestamp()
-      });
-      batch.update(userStatsRef, {
-        tweets: arrayRemove(tweetId),
-        updatedAt: serverTimestamp()
-      });
-    }
-
-    await batch.commit();
+    await supabase.rpc('manage_retweet', {
+      p_tweet_id: tweetId,
+      p_retweet: type === 'retweet'
+    });
   };
 }
 
@@ -226,32 +231,10 @@ export function manageLike(
   tweetId: string
 ) {
   return async (): Promise<void> => {
-    const batch = writeBatch(db);
-
-    const userStatsRef = doc(userStatsCollection(userId), 'stats');
-    const tweetRef = doc(tweetsCollection, tweetId);
-
-    if (type === 'like') {
-      batch.update(tweetRef, {
-        userLikes: arrayUnion(userId),
-        updatedAt: serverTimestamp()
-      });
-      batch.update(userStatsRef, {
-        likes: arrayUnion(tweetId),
-        updatedAt: serverTimestamp()
-      });
-    } else {
-      batch.update(tweetRef, {
-        userLikes: arrayRemove(userId),
-        updatedAt: serverTimestamp()
-      });
-      batch.update(userStatsRef, {
-        likes: arrayRemove(tweetId),
-        updatedAt: serverTimestamp()
-      });
-    }
-
-    await batch.commit();
+    await supabase.rpc('manage_like', {
+      p_tweet_id: tweetId,
+      p_like: type === 'like'
+    });
   };
 }
 
@@ -260,24 +243,27 @@ export async function manageBookmark(
   userId: string,
   tweetId: string
 ): Promise<void> {
-  const bookmarkRef = doc(userBookmarksCollection(userId), tweetId);
-
   if (type === 'bookmark') {
-    const bookmarkData: WithFieldValue<Bookmark> = {
+    const bookmarkData: Bookmark = {
       id: tweetId,
-      createdAt: serverTimestamp()
+      createdAt: new Date().toISOString()
     };
-    await setDoc(bookmarkRef, bookmarkData);
-  } else await deleteDoc(bookmarkRef);
+    await supabase.from('bookmarks').insert({
+      user_id: userId,
+      tweet_id: tweetId,
+      createdAt: undefined as never
+    }).then(() => bookmarkData);
+  } else {
+    await supabase
+      .from('bookmarks')
+      .delete()
+      .eq('user_id', userId)
+      .eq('tweet_id', tweetId);
+  }
 }
 
 export async function clearAllBookmarks(userId: string): Promise<void> {
-  const bookmarksRef = userBookmarksCollection(userId);
-  const bookmarksSnapshot = await getDocs(bookmarksRef);
-
-  const batch = writeBatch(db);
-
-  bookmarksSnapshot.forEach(({ ref }) => batch.delete(ref));
-
-  await batch.commit();
+  await supabase.from('bookmarks').delete().eq('user_id', userId);
 }
+
+export type { CollectionRef, mapProfile, mapTweet };
