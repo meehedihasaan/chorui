@@ -18,8 +18,11 @@ const Icons = {
   TwitterIcon,
   FeatherIcon,
   SpinnerIcon,
-  TriangleIcon
+  TriangleIcon,
+  MessageIcon
 };
+
+export type CustomIconName = keyof typeof Icons;
 
 export function CustomIcon({
   iconName,
