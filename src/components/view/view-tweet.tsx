@@ -63,7 +63,7 @@ export function ViewTweet(tweet: ViewTweetProps): JSX.Element {
         reply && 'scroll-m-[3.25rem] pt-0'
       )}
       {...variants}
-      animate={{ ...variants.animate, transition: { duration: 0.2 } }}
+      animate={{ ...variants['animate'], transition: { duration: 0.2 } }}
       exit={undefined}
       ref={viewTweetRef}
     >
