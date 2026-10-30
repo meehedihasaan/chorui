@@ -21,9 +21,7 @@ export function UserHomeLayout({ children }: LayoutProps): JSX.Element {
   const { user, isAdmin } = useAuth();
   const { user: userData, loading } = useUser();
 
-  const {
-    query: { id }
-  } = useRouter();
+  const { id } = useParams({ strict: false }) as { id?: string };
 
   const coverData = userData?.coverPhotoURL
     ? { src: userData.coverPhotoURL, alt: userData.name }

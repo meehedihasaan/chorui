@@ -10,10 +10,8 @@ import { UserHeader } from '@components/user/user-header';
 import type { LayoutProps } from './common-layout';
 
 export function UserDataLayout({ children }: LayoutProps): JSX.Element {
-  const {
-    query: { id },
-    back
-  } = useRouter();
+  const { id } = useParams({ strict: false }) as { id?: string };
+  const { back } = useRouter();
 
   const { data, loading } = useCollection(
     query(usersCollection, where('username', '==', id), limit(1)),

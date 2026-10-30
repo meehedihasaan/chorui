@@ -211,6 +211,35 @@ export type Database = {
           isSetofReturn: false
         }
       }
+      get_suggested_users: {
+        Args: { p_limit: number; p_seed: string }
+        Returns: {
+          accent: string | null
+          bio: string | null
+          cover_photo_url: string | null
+          created_at: string
+          followers: string[]
+          following: string[]
+          id: string
+          location: string | null
+          name: string
+          photo_url: string
+          pinned_tweet: string | null
+          theme: string | null
+          total_photos: number
+          total_tweets: number
+          updated_at: string | null
+          username: string
+          verified: boolean
+          website: string | null
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "profiles"
+          isOneToOne: false
+          isSetofReturn: true
+        }
+      }
       manage_like: {
         Args: { p_like: boolean; p_tweet_id: string }
         Returns: undefined

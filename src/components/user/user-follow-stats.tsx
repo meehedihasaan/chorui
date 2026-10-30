@@ -38,9 +38,7 @@ export function UserFollowStats({
     [totalFollowers]
   );
 
-  const {
-    query: { id }
-  } = useRouter();
+  const { id } = useParams({ strict: false }) as { id?: string };
 
   const userPath = `/user/${id as string}`;
 

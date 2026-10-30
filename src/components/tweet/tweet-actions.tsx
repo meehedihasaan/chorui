@@ -1,15 +1,17 @@
 import { useMemo } from 'react';
+import { useRouter } from '@lib/router';
+import { Popover } from '@headlessui/react';
+import { AnimatePresence, motion } from 'framer-motion';
+import cn from 'clsx';
 import { toast } from 'react-hot-toast';
 import { useAuth } from '@lib/context/auth-context';
 import { useModal } from '@lib/hooks/useModal';
-import { tweetsCollection } from '@lib/firebase/collections';
 import {
+  getTweetById,
   removeTweet,
   manageReply,
   manageFollow,
-  managePinnedTweet,
-  manageTotalTweets,
-  manageTotalPhotos
+  managePinnedTweet
 } from '@lib/firebase/utils';
 import { delayScroll, preventBubbling, sleep } from '@lib/utils';
 import { Modal } from '@components/modal/modal';
@@ -92,9 +94,9 @@ export function TweetActions({
   const handleRemove = async (): Promise<void> => {
     if (viewTweet)
       if (parentId) {
-        const parentSnapshot = await getDoc(doc(tweetsCollection, parentId));
-        if (parentSnapshot.exists()) {
-          await push(`/tweet/${parentId}`, undefined, { scroll: false });
+        const parent = await getTweetById(parentId);
+        if (parent) {
+          await push(`/tweet/${parentId}`);
           delayScroll(200)();
           await sleep(50);
         } else await push('/home');
@@ -102,8 +104,6 @@ export function TweetActions({
 
     await Promise.all([
       removeTweet(tweetId),
-      manageTotalTweets('decrement', ownerId),
-      hasImages && manageTotalPhotos('decrement', createdBy),
       parentId && manageReply('decrement', parentId)
     ]);
 

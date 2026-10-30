@@ -1,3 +1,4 @@
+import { useParams } from '@tanstack/react-router';
 import { useRouter } from '@lib/router';
 import Link from '@lib/router';
 import cn from 'clsx';
@@ -8,10 +9,8 @@ type UserNavLinkProps = {
 };
 
 export function UserNavLink({ name, path }: UserNavLinkProps): JSX.Element {
-  const {
-    asPath,
-    query: { id }
-  } = useRouter();
+  const { asPath } = useRouter();
+  const { id } = useParams({ strict: false }) as { id?: string };
 
   const userPath = `/user/${id as string}${path ? `/${path}` : ''}`;
 

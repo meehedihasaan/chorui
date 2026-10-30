@@ -1,10 +1,10 @@
 import { useRouter } from '@lib/router';
-import { doc } from '@lib/firebase/db';
+import { useQuery } from '@tanstack/react-query';
+import { supabase } from '@/integrations/supabase/client';
 import { AnimatePresence, motion } from 'framer-motion';
-import { useDocument } from '@lib/hooks/useDocument';
 import { useUser } from '@lib/context/user-context';
 import { isPlural } from '@lib/utils';
-import { userStatsCollection } from '@lib/firebase/collections';
+import { mapStats } from '@lib/firebase/db';
 import { UserName } from './user-name';
 import type { Variants } from 'framer-motion';
 
@@ -15,22 +15,32 @@ export const variants: Variants = {
 };
 
 export function UserHeader(): JSX.Element {
-  const {
-    pathname,
-    query: { id }
-  } = useRouter();
+  const { pathname } = useRouter();
 
   const { user, loading } = useUser();
 
   const userId = user ? user.id : null;
 
-  const { data: statsData, loading: statsLoading } = useDocument(
-    doc(userStatsCollection(userId ?? 'null'), 'stats'),
-    {
-      allowNull: true,
-      disabled: !userId
-    }
+  const page = ['with_replies', 'media', 'likes', 'following', 'followers'].find(
+    (segment) => pathname.endsWith(`/${segment}`)
   );
+
+  const { data: statsData, isPending: statsPending } = useQuery({
+    queryKey: ['stats', userId],
+    queryFn: async () => {
+      const { data } = await supabase
+        .from('user_stats')
+        .select('*')
+        .eq('user_id', userId as string)
+        .maybeSingle();
+
+      return mapStats(data as Record<string, unknown> | null);
+    },
+    enabled: !!userId,
+    staleTime: 10_000
+  });
+
+  const statsLoading = !userId ? false : statsPending && !statsData;
 
   const { tweets, likes } = statsData ?? {};
 
@@ -40,16 +50,14 @@ export function UserHeader(): JSX.Element {
     likes?.length
   ];
 
-  const currentPage = pathname.split('/').pop() ?? '';
-
-  const isInTweetPage = ['[id]', 'with_replies'].includes(currentPage);
-  const isInFollowPage = ['following', 'followers'].includes(currentPage);
+  const isInTweetPage = !page || page === 'with_replies';
+  const isInFollowPage = page === 'following' || page === 'followers';
 
   return (
     <AnimatePresence mode='popLayout'>
       {loading || statsLoading ? (
         <motion.div
-          className='-mb-1 inner:animate-pulse inner:rounded-lg 
+          className='-mb-1 inner:animate-pulse inner:rounded-lg
                      inner:bg-light-secondary dark:inner:bg-dark-secondary'
           {...variants}
           key='loading'
@@ -59,7 +67,7 @@ export function UserHeader(): JSX.Element {
         </motion.div>
       ) : !user ? (
         <motion.h2 className='text-xl font-bold' {...variants} key='not-found'>
-          {isInFollowPage ? `@${id as string}` : 'User'}
+          User
         </motion.h2>
       ) : (
         <motion.div className='-mb-1 truncate' {...variants} key='found'>
@@ -77,7 +85,7 @@ export function UserHeader(): JSX.Element {
               ? totalTweets
                 ? `${totalTweets} ${`Tweet${isPlural(totalTweets)}`}`
                 : 'No Tweet'
-              : currentPage === 'media'
+              : page === 'media'
               ? totalPhotos
                 ? `${totalPhotos} Photo${isPlural(totalPhotos)} & GIF${isPlural(
                     totalPhotos
