@@ -3,13 +3,10 @@ import { useState, useEffect, useRef, useId } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import cn from 'clsx';
 import { toast } from 'react-hot-toast';
-import { addDoc, getDoc, serverTimestamp } from '@lib/firebase/db';
-import { tweetsCollection } from '@lib/firebase/collections';
 import {
+  createTweet,
   manageReply,
-  uploadImages,
-  manageTotalTweets,
-  manageTotalPhotos
+  uploadImages
 } from '@lib/firebase/utils';
 import { useAuth } from '@lib/context/auth-context';
 import { sleep } from '@lib/utils';
@@ -19,7 +16,6 @@ import { InputForm, fromTop } from './input-form';
 import { ImagePreview } from './image-preview';
 import { InputOptions } from './input-options';
 import type { ReactNode, FormEvent, ChangeEvent, ClipboardEvent } from 'react';
-import type { WithFieldValue } from '@lib/firebase/db';
 import type { Variants } from 'framer-motion';
 import type { User } from '@lib/types/user';
 import type { Tweet } from '@lib/types/tweet';
@@ -81,28 +77,17 @@ export function Input({
 
     const userId = user?.id as string;
 
-    const tweetData: WithFieldValue<Omit<Tweet, 'id'>> = {
-      text: inputValue.trim() || null,
-      parent: isReplying && parent ? parent : null,
-      images: await uploadImages(userId, selectedImages),
-      userLikes: [],
-      createdBy: userId,
-      createdAt: serverTimestamp(),
-      updatedAt: null,
-      userReplies: 0,
-      userRetweets: []
-    };
+    const images = await uploadImages(userId, selectedImages);
 
     await sleep(500);
 
-    const [tweetRef] = await Promise.all([
-      addDoc(tweetsCollection, tweetData),
-      manageTotalTweets('increment', userId),
-      tweetData.images && manageTotalPhotos('increment', userId),
-      isReplying && manageReply('increment', parent?.id as string)
-    ]);
+    const tweet = await createTweet(
+      inputValue.trim() || null,
+      images,
+      isReplying && parent ? parent.id : undefined
+    );
 
-    const { id: tweetId } = await getDoc(tweetRef);
+    const tweetId = tweet?.id;
 
     if (!modal && !replyModal) {
       discardTweet();

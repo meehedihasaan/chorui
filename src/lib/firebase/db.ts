@@ -185,7 +185,10 @@ function applyConstraints(builder: ReturnType<typeof fromTable>, constraints: Qu
               : current.eq(field, constraint.value as string);
           break;
         case '!=':
-          current = current.neq(field, constraint.value as string);
+          current =
+            constraint.value === null
+              ? (current as unknown as { not: (f: string, op: string, v: unknown) => typeof current }).not(field, 'is', null)
+              : current.neq(field, constraint.value as string);
           break;
         case '>':
           current = current.gt(field, constraint.value as string);

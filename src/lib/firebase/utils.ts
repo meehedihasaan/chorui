@@ -15,6 +15,16 @@ export { getCollectionCount };
 
 const PROFILE_UPDATED_EVENT = 'app:profile-updated';
 
+export async function getTweetById(tweetId: string): Promise<Tweet | null> {
+  const { data } = await supabase
+    .from('tweets')
+    .select('*')
+    .eq('id', tweetId)
+    .maybeSingle();
+
+  return mapTweet(data as Record<string, unknown> | null);
+}
+
 function notifyProfileUpdated(): void {
   window.dispatchEvent(new Event(PROFILE_UPDATED_EVENT));
 }
