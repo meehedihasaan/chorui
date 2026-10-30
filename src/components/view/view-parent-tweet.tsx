@@ -7,7 +7,7 @@ import type { RefObject } from 'react';
 
 type ViewParentTweetProps = {
   parentId: string;
-  viewTweetRef: RefObject<HTMLElement>;
+  viewTweetRef: RefObject<HTMLElement | null>;
 };
 
 export function ViewParentTweet({

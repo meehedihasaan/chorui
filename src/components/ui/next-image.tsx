@@ -13,7 +13,10 @@ type NextImageProps = {
   imgClassName?: string;
   previewCount?: number;
   blurClassName?: string;
-} & Omit<React.ImgHTMLAttributes<HTMLImageElement>, 'src' | 'alt'>;
+  /** Compatibility with the source app's next/image props (ignored). */
+  layout?: string;
+  onLoadingComplete?: () => void;
+} & Omit<React.ImgHTMLAttributes<HTMLImageElement>, "src" | "alt">;
 
 /**
  * @description Drop-in replacement for the source app's next/image wrapper.

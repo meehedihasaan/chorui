@@ -21,7 +21,7 @@ import type { Tweet } from '@lib/types/tweet';
 
 type ViewTweetProps = Tweet & {
   user: User;
-  viewTweetRef?: RefObject<HTMLElement>;
+  viewTweetRef?: RefObject<HTMLElement | null>;
 };
 
 export function ViewTweet(tweet: ViewTweetProps): JSX.Element {
