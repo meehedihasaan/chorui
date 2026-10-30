@@ -4,6 +4,7 @@ type IconName = keyof typeof Icons;
 
 type IconProps = {
   className?: string;
+  solid?: boolean;
 };
 
 type CustomIconProps = IconProps & {
@@ -18,16 +19,20 @@ const Icons = {
   TwitterIcon,
   FeatherIcon,
   SpinnerIcon,
-  TriangleIcon
+  TriangleIcon,
+  MessageIcon
 };
+
+export type CustomIconName = keyof typeof Icons;
 
 export function CustomIcon({
   iconName,
-  className
+  className,
+  solid
 }: CustomIconProps): JSX.Element {
   const Icon = Icons[iconName];
 
-  return <Icon className={className ?? 'h-6 w-6'} />;
+  return <Icon className={className ?? 'h-6 w-6'} solid={solid} />;
 }
 
 function TwitterIcon({ className }: IconProps): JSX.Element {
@@ -171,6 +176,26 @@ function PinOffIcon({ className }: IconProps): JSX.Element {
       <path d='M15 4.5l-3.249 3.249m-2.57 1.433l-2.181 .818l-1.5 1.5l7 7l1.5 -1.5l.82 -2.186m1.43 -2.563l3.25 -3.251' />
       <line x1='9' y1='15' x2='4.5' y2='19.5' />
       <line x1='14.5' y1='4' x2='20' y2='9.5' />
+    </svg>
+  );
+}
+
+function MessageIcon({ className, solid }: IconProps): JSX.Element {
+  return (
+    <svg
+      className={cn('fill-current', className)}
+      viewBox='0 0 24 24'
+      aria-hidden='true'
+    >
+      {solid ? (
+        <path
+          fillRule='evenodd'
+          clipRule='evenodd'
+          d='M2 5.5C2 4.119 3.119 3 4.5 3h15C20.881 3 22 4.119 22 5.5v13c0 1.381-1.119 2.5-2.5 2.5h-15C3.119 21 2 19.881 2 18.5V5.5zM3.5 6l8.5 4.6 8.5-4.6v1.6L12 12.2 3.5 7.6V6z'
+        />
+      ) : (
+        <path d='M1.998 5.5c0-1.381 1.119-2.5 2.5-2.5h15c1.381 0 2.5 1.119 2.5 2.5v13c0 1.381-1.119 2.5-2.5 2.5h-15c-1.381 0-2.5-1.119-2.5-2.5v-13zm2.5-.5c-.276 0-.5.224-.5.5v2.764l8 3.638 8-3.636V5.5c0-.276-.224-.5-.5-.5h-15zm15.5 4.464l-8 3.636-8-3.638V18.5c0 .276.224.5.5.5h15c.276 0 .5-.224.5-.5v-9.036z' />
+      )}
     </svg>
   );
 }
