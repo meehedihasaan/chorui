@@ -1,23 +1,22 @@
 import { useState } from 'react';
-import Image from 'next/image';
 import cn from 'clsx';
 import type { ReactNode } from 'react';
-import type { ImageProps } from 'next/image';
 
 type NextImageProps = {
+  src: string;
   alt: string;
   width?: string | number;
+  height?: string | number;
   children?: ReactNode;
+  className?: string;
   useSkeleton?: boolean;
   imgClassName?: string;
   previewCount?: number;
   blurClassName?: string;
-} & ImageProps;
+} & Omit<React.ImgHTMLAttributes<HTMLImageElement>, 'src' | 'alt'>;
 
 /**
- *
- * @description Must set width and height, if not add layout='fill'
- * @param useSkeleton add background with pulse animation, don't use it if image is transparent
+ * @description Drop-in replacement for the source app's next/image wrapper.
  */
 export function NextImage({
   src,
@@ -38,7 +37,8 @@ export function NextImage({
 
   return (
     <figure style={{ width }} className={className}>
-      <Image
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
         className={cn(
           imgClassName,
           loading
@@ -49,14 +49,15 @@ export function NextImage({
             : 'object-cover'
         )}
         src={src}
-        width={width}
-        height={height}
+        width={width as number | undefined}
+        height={height as number | undefined}
         alt={alt}
-        onLoadingComplete={handleLoad}
-        layout='responsive'
+        onLoad={handleLoad}
         {...rest}
       />
       {children}
     </figure>
   );
 }
+
+import type * as React from 'react';

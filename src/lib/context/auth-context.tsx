@@ -59,23 +59,9 @@ async function ensureProfile(
 
   const { error } = await supabase.from('profiles').insert({
     id: uid,
-    bio: null,
     name: displayName,
-    theme: null,
-    accent: null,
-    website: null,
-    location: null,
-    photoURL: undefined as never,
-    photo_url: photoURL ?? '/assets/twitter-avatar.jpg',
     username,
-    verified: false,
-    following: [],
-    followers: [],
-    totalTweets: undefined as never,
-    total_tweets: 0,
-    total_photos: 0,
-    pinnedTweet: undefined as never,
-    cover_photo_url: null
+    photo_url: photoURL ?? '/assets/twitter-avatar.jpg'
   });
 
   if (error) {

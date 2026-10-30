@@ -62,13 +62,14 @@ export async function updateUserData(
   userId: string,
   userData: EditableUserData
 ): Promise<void> {
+  const { photoURL, coverPhotoURL, ...rest } = userData;
+
   await supabase
     .from('profiles')
     .update({
-      ...userData,
-      photoURL: undefined,
-      ...(userData.photoURL ? { photo_url: userData.photoURL } : {}),
-      ...(userData.coverPhotoURL ? { cover_photo_url: userData.coverPhotoURL } : {}),
+      ...rest,
+      ...(photoURL !== undefined ? { photo_url: photoURL } : {}),
+      ...(coverPhotoURL !== undefined ? { cover_photo_url: coverPhotoURL } : {}),
       updated_at: new Date().toISOString()
     })
     .eq('id', userId);
