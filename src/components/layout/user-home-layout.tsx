@@ -1,3 +1,5 @@
+import { createConversation } from '@lib/hooks/useMessages';
+import { useNavigate } from '@tanstack/react-router';
 import { useParams } from '@tanstack/react-router';
 import { useRouter } from '@lib/router';
 import { motion } from 'framer-motion';
@@ -20,6 +22,7 @@ import type { LayoutProps } from './common-layout';
 
 export function UserHomeLayout({ children }: LayoutProps): JSX.Element {
   const { user, isAdmin } = useAuth();
+  const navigate = useNavigate();
   const { user: userData, loading } = useUser();
 
   const { id } = useParams({ strict: false }) as { id?: string };
@@ -74,7 +77,12 @@ export function UserHomeLayout({ children }: LayoutProps): JSX.Element {
                   <div className='flex gap-2 self-start'>
                     <UserShare username={userData.username} />
                     <Button
-                      className='dark-bg-tab group relative cursor-not-allowed border border-light-line-reply p-2
+                      onClick={async () => {
+                        if (!userId) return;
+                        const cid = await createConversation(userId, userData.id);
+                        if (cid) void navigate({ to: '/messages/$id', params: { id: cid } });
+                      }}
+                      className='dark-bg-tab group relative border border-light-line-reply p-2
                                  hover:bg-light-primary/10 active:bg-light-primary/20 dark:border-light-secondary 
                                  dark:hover:bg-dark-primary/10 dark:active:bg-dark-primary/20'
                     >
