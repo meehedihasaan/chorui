@@ -100,7 +100,7 @@ export function TweetStats({
           tip={tweetIsLiked ? 'Unlike' : 'Like'}
           move={likeMove}
           stats={currentLikes}
-          iconName='HeartIcon'
+          iconName='HandThumbUpIcon'
           viewTweet={viewTweet}
           onClick={manageLike(
             tweetIsLiked ? 'unlike' : 'like',
