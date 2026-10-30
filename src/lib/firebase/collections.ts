@@ -1,29 +1,28 @@
-import { collection } from '@lib/firebase/db';
-import { userConverter } from '@lib/types/user';
-import { tweetConverter } from '@lib/types/tweet';
-import { bookmarkConverter } from '@lib/types/bookmark';
-import { statsConverter } from '@lib/types/stats';
-import { db } from './app';
-import type { CollectionReference } from '@lib/firebase/db';
+import { collection } from './db';
+import type { CollectionRef } from './db';
+import type { User } from '@lib/types/user';
+import type { Tweet } from '@lib/types/tweet';
 import type { Bookmark } from '@lib/types/bookmark';
 import type { Stats } from '@lib/types/stats';
 
-export const usersCollection = collection(db, 'users').withConverter(
-  userConverter
-);
+export const usersCollection: CollectionRef<User> = collection<User>('profiles');
 
-export const tweetsCollection = collection(db, 'tweets').withConverter(
-  tweetConverter
-);
+export const tweetsCollection: CollectionRef<Tweet> = collection<Tweet>('tweets');
 
-export function userBookmarksCollection(
-  id: string
-): CollectionReference<Bookmark> {
-  return collection(db, `users/${id}/bookmarks`).withConverter(
-    bookmarkConverter
-  );
+export function userBookmarksCollection(id: string): CollectionRef<Bookmark> {
+  return collection<Bookmark>('bookmarks', {
+    type: 'where',
+    field: 'user_id',
+    op: '==',
+    value: id
+  });
 }
 
-export function userStatsCollection(id: string): CollectionReference<Stats> {
-  return collection(db, `users/${id}/stats`).withConverter(statsConverter);
+export function userStatsCollection(id: string): CollectionRef<Stats> {
+  return collection<Stats>('user_stats', {
+    type: 'where',
+    field: 'user_id',
+    op: '==',
+    value: id
+  });
 }
