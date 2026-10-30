@@ -29,7 +29,7 @@ export function AccountDrawer(): JSX.Element {
     <Modal
       className='p-0'
       modalAnimation={drawerAnimation}
-      modalClassName='pb-4 pl-2 min-h-screen w-72 bg-main-background'
+      modalClassName='pb-4 pl-2 min-h-screen w-80 max-w-[85vw] overflow-y-auto bg-main-background'
       open={open}
       closeModal={closeDrawer}
     >
