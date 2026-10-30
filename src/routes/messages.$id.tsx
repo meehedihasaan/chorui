@@ -51,7 +51,7 @@ function ChatPage() {
   return (
     <PageShell>
       <MainHeader useActionButton action={() => history.back()} title={other ? other.other_name : 'Conversation'} />
-      <section className='flex min-h-[60vh] flex-col gap-2 px-4 py-4 pb-24'>
+      <section className='flex flex-col gap-2 px-4 py-4 pb-24'>
         {loading ? <Loading className='mt-5' /> : data.length === 0 ? (
           <p className='mt-10 text-center text-light-secondary dark:text-dark-secondary'>Say hi 👋</p>
         ) : data.map((m) => {
@@ -71,7 +71,7 @@ function ChatPage() {
         <div ref={end} />
       </section>
       <form onSubmit={submit}
-        className='sticky bottom-16 z-10 flex items-center gap-2 border-t border-light-border bg-main-background px-3 py-2 dark:border-dark-border xs:bottom-0'>
+        className='fixed inset-x-0 bottom-16 z-10 mx-auto flex w-full max-w-xl items-center gap-2 border-t border-light-border bg-main-background px-3 py-2 dark:border-dark-border xs:bottom-0'>
         <input
           className='flex-1 rounded-full bg-main-search-background px-4 py-2 outline-none'
           placeholder='Start a new message'
