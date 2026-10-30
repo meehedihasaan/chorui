@@ -127,7 +127,7 @@
 }
 
 @utility hover-animation {
-  transition-colors 0.2s ease;
+  @apply transition-colors duration-200;
 }
 
 @utility custom-button {
