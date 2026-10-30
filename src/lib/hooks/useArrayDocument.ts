@@ -2,7 +2,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { mapProfile, mapTweet, mapStats, mapBookmark } from '@lib/firebase/db';
-import type { CollectionRef, RawRowAlias } from './db-types';
+import type { CollectionRef, RawRow } from '@lib/firebase/db';
 import type { User } from '@lib/types/user';
 
 type UserArrayDocument<T> = {
@@ -10,7 +10,17 @@ type UserArrayDocument<T> = {
   loading: boolean;
 };
 
-type DataWithUser<T> = UserArrayDocument<T & { user: User | null }>;
+type DataWithUser<T> = UserArrayDocument<T & { user: User }>;
+
+const MAPPERS: Record<string, (row: RawRow) => unknown> = {
+  profiles: mapProfile,
+  tweets: mapTweet,
+  user_stats: mapStats,
+  bookmarks: mapBookmark
+};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const client = supabase as any;
 
 export function useArrayDocument<T>(
   docsIds: string[],
@@ -26,7 +36,7 @@ export function useArrayDocument<T>(
     queryFn: async () => {
       if (!docsIds.length) return null;
 
-      const { data: rows, error } = await supabase
+      const { data: rows, error } = await client
         .from(collectionRef.table)
         .select('*')
         .in('id', docsIds);
@@ -37,34 +47,31 @@ export function useArrayDocument<T>(
       }
 
       const mapped = MAPPERS[collectionRef.table];
-      const rowsById = new Map(
-        ((rows as RawRowAlias[]) ?? [])
-          .map((row) => mapped(row as RawRowAlias))
-          .filter(Boolean)
-          .map((row) => [(row as { id: string }).id, row])
-      );
+      const rowsById = new Map<string, (T & { createdBy: string }) & { id: string }>();
+
+      for (const row of ((rows as RawRow[]) ?? []) as RawRow[]) {
+        const item = mapped(row) as (T & { createdBy: string }) & { id: string };
+        if (item) rowsById.set(item.id, item);
+      }
 
       const ordered = docsIds
         .map((id) => rowsById.get(id))
-        .filter(Boolean) as (T & { createdBy: string })[];
+        .filter(Boolean) as ((T & { createdBy: string }) & { id: string })[];
 
       if (!ordered.length) return null;
 
       if (!includeUser) return ordered;
 
-      const ownerIds = [...new Set(ordered.map(({ createdBy }) => createdBy))];
-
-      const { data: userRows } = await supabase
+      const { data: userRows } = await client
         .from('profiles')
         .select('*')
-        .in('id', ownerIds);
+        .in('id', [...new Set(ordered.map(({ createdBy }) => createdBy))]);
 
-      const usersById = new Map(
-        ((userRows as RawRowAlias[]) ?? [])
-          .map((row) => mapProfile(row))
-          .filter(Boolean)
-          .map((user) => [(user as User).id, user])
-      );
+      const usersById = new Map<string, User>();
+      for (const row of ((userRows as RawRow[]) ?? []) as RawRow[]) {
+        const user = mapProfile(row);
+        if (user) usersById.set(user.id, user);
+      }
 
       return ordered.map((item) => ({
         ...item,
@@ -78,7 +85,10 @@ export function useArrayDocument<T>(
   const loading = !disabled && isPending && !data;
 
   if (includeUser)
-    return { data: (data ?? null) as (T & { user: User | null })[] | null, loading } as DataWithUser<T>;
+    return {
+      data: (data ?? null) as (T & { user: User })[] | null,
+      loading
+    } as DataWithUser<T>;
 
   return { data: (data ?? null) as T[] | null, loading };
 }

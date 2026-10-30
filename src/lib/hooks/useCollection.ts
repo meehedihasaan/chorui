@@ -9,7 +9,7 @@ import {
   mapStats,
   mapBookmark
 } from '@lib/firebase/db';
-import type { CollectionRef, RawRowAlias } from './db-types';
+import type { CollectionRef, QueryConstraint, RawRow } from '@lib/firebase/db';
 import type { User } from '@lib/types/user';
 
 type UseCollection<T> = {
@@ -17,7 +17,7 @@ type UseCollection<T> = {
   loading: boolean;
 };
 
-type DataWithUser<T> = UseCollection<T & { user: User | null }>;
+type DataWithUser<T> = UseCollection<T & { user: User }>;
 
 export type UseCollectionOptions = {
   includeUser?: boolean;
@@ -26,7 +26,7 @@ export type UseCollectionOptions = {
   preserve?: boolean;
 };
 
-const MAPPERS: Record<string, (row: RawRowAlias) => unknown> = {
+const MAPPERS: Record<string, (row: RawRow) => unknown> = {
   profiles: mapProfile,
   tweets: mapTweet,
   user_stats: mapStats,
@@ -57,14 +57,17 @@ export function useCollection<T>(
   const { data, isPending } = useQuery({
     queryKey: queryKey(ref),
     queryFn: async () => {
-      const rows = await fetchCollection<T>(ref, MAPPERS[ref.table] as (row: RawRowAlias) => T | null);
+      const rows = await fetchCollection<T>(
+        ref,
+        MAPPERS[ref.table] as (row: RawRow) => T | null
+      );
 
       if (!rows) return null;
 
       if (includeUser)
-        return (await populateUsers(rows as (T & { createdBy: string })[])) as (T & {
-          user: User | null;
-        })[];
+        return (await populateUsers(
+          rows as unknown as (T & { createdBy: string })[]
+        )) as unknown as (T & { user: User })[];
 
       return rows;
     },
@@ -78,7 +81,12 @@ export function useCollection<T>(
   const result = data ?? (allowNull ? null : []);
 
   if (includeUser)
-    return { data: result as (T & { user: User | null })[] | null, loading } as DataWithUser<T>;
+    return {
+      data: (result ?? null) as (T & { user: User })[] | null,
+      loading
+    } as DataWithUser<T>;
 
   return { data: result as T[] | null, loading };
 }
+
+export type { QueryConstraint };

@@ -8,9 +8,13 @@
  */
 import { supabase } from '@/integrations/supabase/client';
 import type { User } from '@lib/types/user';
-import type { Tweet, TweetWithUser } from '@lib/types/tweet';
+import type { Tweet } from '@lib/types/tweet';
 import type { Stats } from '@lib/types/stats';
 import type { Bookmark } from '@lib/types/bookmark';
+
+/* The generated table types are stricter than the shim's generic tables. */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const client = supabase as any;
 
 const FIELD_MAP: Readonly<Record<string, string>> = {
   createdAt: 'created_at',
@@ -30,14 +34,7 @@ export function mapField(field: string): string {
   return FIELD_MAP[field] ?? field;
 }
 
-type WhereOp =
-  | '=='
-  | '!='
-  | '>'
-  | '>='
-  | '<'
-  | '<='
-  | 'array-contains';
+type WhereOp = '==' | '!=' | '>' | '>=' | '<' | '<=' | 'array-contains';
 
 export type QueryConstraint =
   | { type: 'where'; field: string; op: WhereOp; value: unknown }
@@ -74,14 +71,14 @@ export function query<T = unknown>(
   ref: CollectionRef<T>,
   ...constraints: QueryConstraint[]
 ): CollectionRef<T> {
-  return { __ref: 'collection', table: ref.table, constraints: [...ref.constraints, ...constraints] };
+  return {
+    __ref: 'collection',
+    table: ref.table,
+    constraints: [...ref.constraints, ...constraints]
+  };
 }
 
-export function where(
-  field: string,
-  op: WhereOp,
-  value: unknown
-): QueryConstraint {
+export function where(field: string, op: WhereOp, value: unknown): QueryConstraint {
   return { type: 'where', field, op, value };
 }
 
@@ -103,7 +100,9 @@ export function queryKey(ref: CollectionRef): unknown[] {
 
 /* ------------------------------ row mappers ------------------------------ */
 
-export function mapProfile(row: Record<string, unknown> | null): User | null {
+export type RawRow = Record<string, unknown>;
+
+export function mapProfile(row: RawRow | null): User | null {
   if (!row) return null;
 
   return {
@@ -128,17 +127,16 @@ export function mapProfile(row: Record<string, unknown> | null): User | null {
   };
 }
 
-export function mapTweet(row: Record<string, unknown> | null): Tweet | null {
+export function mapTweet(row: RawRow | null): Tweet | null {
   if (!row) return null;
 
   return {
     id: row.id as string,
     text: (row.text as string | null) ?? null,
     images: (row.images as Tweet['images']) ?? null,
-    parent:
-      row.parent_id
-        ? { id: row.parent_id as string, username: (row.parent_username as string) ?? '' }
-        : null,
+    parent: row.parent_id
+      ? { id: row.parent_id as string, username: (row.parent_username as string) ?? '' }
+      : null,
     userLikes: (row.user_likes as string[]) ?? [],
     userRetweets: (row.user_retweets as string[]) ?? [],
     createdBy: row.created_by as string,
@@ -148,7 +146,7 @@ export function mapTweet(row: Record<string, unknown> | null): Tweet | null {
   };
 }
 
-export function mapStats(row: Record<string, unknown> | null): Stats | null {
+export function mapStats(row: RawRow | null): Stats | null {
   if (!row) return null;
 
   return {
@@ -158,7 +156,7 @@ export function mapStats(row: Record<string, unknown> | null): Stats | null {
   };
 }
 
-export function mapBookmark(row: Record<string, unknown> | null): Bookmark | null {
+export function mapBookmark(row: RawRow | null): Bookmark | null {
   if (!row) return null;
 
   return {
@@ -169,9 +167,7 @@ export function mapBookmark(row: Record<string, unknown> | null): Bookmark | nul
 
 /* ------------------------------ execution ------------------------------- */
 
-type RawRow = Record<string, unknown>;
-
-function applyConstraints(builder: ReturnType<typeof fromTable>, constraints: QueryConstraint[]): void {
+export function applyConstraints(builder: any, constraints: QueryConstraint[]): any {
   let current = builder;
 
   for (const constraint of constraints) {
@@ -182,25 +178,25 @@ function applyConstraints(builder: ReturnType<typeof fromTable>, constraints: Qu
           current =
             constraint.value === null
               ? current.is(field, null)
-              : current.eq(field, constraint.value as string);
+              : current.eq(field, constraint.value);
           break;
         case '!=':
           current =
             constraint.value === null
-              ? (current as unknown as { not: (f: string, op: string, v: unknown) => typeof current }).not(field, 'is', null)
-              : current.neq(field, constraint.value as string);
+              ? current.not(field, 'is', null)
+              : current.neq(field, constraint.value);
           break;
         case '>':
-          current = current.gt(field, constraint.value as string);
+          current = current.gt(field, constraint.value);
           break;
         case '>=':
-          current = current.gte(field, constraint.value as string);
+          current = current.gte(field, constraint.value);
           break;
         case '<':
-          current = current.lt(field, constraint.value as string);
+          current = current.lt(field, constraint.value);
           break;
         case '<=':
-          current = current.lte(field, constraint.value as string);
+          current = current.lte(field, constraint.value);
           break;
         case 'array-contains':
           current = current.contains(field, [constraint.value]);
@@ -215,19 +211,15 @@ function applyConstraints(builder: ReturnType<typeof fromTable>, constraints: Qu
       current = current.limit(constraint.count);
     }
   }
+
+  return current;
 }
 
-type FromTable = ReturnType<typeof supabase.from>;
-
-function fromTable(table: string): FromTable {
-  return supabase.from(table);
-}
-
-export async function fetchRows(
-  ref: CollectionRef
-): Promise<RawRow[] | null> {
-  const builder = applyConstraints(fromTable(ref.table).select('*'), ref.constraints);
-  const { data, error } = await builder;
+export async function fetchRows(ref: CollectionRef): Promise<RawRow[] | null> {
+  const { data, error } = await applyConstraints(
+    client.from(ref.table).select('*'),
+    ref.constraints
+  );
 
   if (error) {
     console.error('query failed', ref.table, error.message);
@@ -251,52 +243,80 @@ export async function fetchCollection<T>(
     .map((row) => ({ ...row, id: (row as { id: string }).id }));
 }
 
-export async function fetchDocument<T>(
-  ref: DocumentRef<T>,
-  mapRow: (row: RawRow) => T | null
-): Promise<T | null> {
-  const { data, error } = await fromTable(ref.table).select('*').eq('id', ref.id).maybeSingle();
-
-  if (error) {
-    console.error('get failed', ref.table, error.message);
-    return null;
-  }
-
-  return mapRow(data as RawRow);
-}
-
 export async function getCollectionCount(ref: CollectionRef): Promise<number> {
-  const builder = applyConstraints(
-    fromTable(ref.table).select('id', { count: 'exact', head: true }),
-    ref.constraints.filter((c) => c.type !== 'limit')
+  const { count, error } = await applyConstraints(
+    client.from(ref.table).select('id', { count: 'exact', head: true }),
+    ref.constraints.filter((constraint) => constraint.type !== 'limit')
   );
-  const { count, error } = await builder;
 
   if (error) return 0;
 
   return count ?? 0;
 }
 
-/** Fetch profiles for a list of owner ids and merge them onto the items. */
-export async function populateUsers<
-  T extends { createdBy: string }
->(items: T[]): Promise<(T & { user: User })[]> {
-  const ownerIds = [...new Set(items.map(({ createdBy }) => createdBy))];
+const UNKNOWN_USER: Omit<User, 'id' | 'username' | 'name'> & {
+  id: string;
+  username: string;
+  name: string;
+} = {
+  id: 'unknown',
+  username: 'unknown',
+  name: 'Unknown',
+  bio: null,
+  theme: null,
+  accent: null,
+  website: null,
+  location: null,
+  photoURL: '/assets/twitter-avatar.jpg',
+  verified: false,
+  following: [],
+  followers: [],
+  createdAt: new Date(0).toISOString(),
+  updatedAt: null,
+  totalTweets: 0,
+  totalPhotos: 0,
+  pinnedTweet: null,
+  coverPhotoURL: null
+};
 
-  if (!ownerIds.length) return items.map((item) => ({ ...item, user: null as unknown as User }));
+async function fetchProfilesByIds(ids: string[]): Promise<Map<string, User>> {
+  if (!ids.length) return new Map();
 
-  const { data, error } = await fromTable('profiles').select('*').in('id', ownerIds);
+  const { data, error } = await client.from('profiles').select('*').in('id', ids);
 
   if (error) {
-    console.error('populateUsers failed', error.message);
-    return items.map((item) => ({ ...item, user: null as unknown as User }));
+    console.error('profile fetch failed', error.message);
+    return new Map();
   }
 
-  const usersById = new Map(
-    ((data as RawRow[]) ?? []).map((row) => [row.id as string, mapProfile(row)])
-  );
-
-  return items.map((item) => ({ ...item, user: usersById.get(item.createdBy) as User }));
+  const map = new Map<string, User>();
+  for (const row of (data as RawRow[]) ?? []) {
+    const user = mapProfile(row);
+    if (user) map.set(user.id, user);
+  }
+  return map;
 }
 
-export type { Tweet, TweetWithUser, User, Stats, Bookmark };
+/** Fetch profiles for a list of owner ids and merge them onto the items. */
+export async function populateUsers<T extends { createdBy: string }>(
+  items: T[]
+): Promise<(T & { user: User })[]> {
+  const usersById = await fetchProfilesByIds([
+    ...new Set(items.map(({ createdBy }) => createdBy))
+  ]);
+
+  return items.map((item) => ({
+    ...item,
+    user: usersById.get(item.createdBy) ?? { ...UNKNOWN_USER, id: item.createdBy }
+  }));
+}
+
+export async function getTweetById(tweetId: string): Promise<Tweet | null> {
+  const { data } = await client
+    .from('tweets')
+    .select('*')
+    .eq('id', tweetId)
+    .maybeSingle();
+
+  return mapTweet((data as RawRow) ?? null);
+}

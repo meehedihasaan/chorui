@@ -3,8 +3,7 @@
  * Function names/signatures match the source app so call sites stay stable.
  */
 import { supabase } from '@/integrations/supabase/client';
-import { getCollectionCount, mapTweet, mapProfile } from './db';
-import type { CollectionRef } from './db';
+import { getCollectionCount, mapTweet } from './db';
 import type { EditableUserData } from '@lib/types/user';
 import type { FilesWithId, ImagesPreview } from '@lib/types/file';
 import type { Bookmark } from '@lib/types/bookmark';
@@ -13,16 +12,20 @@ import type { Tweet } from '@lib/types/tweet';
 
 export { getCollectionCount };
 
+/* The generated table types are stricter than the shim's generic tables. */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const client = supabase as any;
+
 const PROFILE_UPDATED_EVENT = 'app:profile-updated';
 
 export async function getTweetById(tweetId: string): Promise<Tweet | null> {
-  const { data } = await supabase
+  const { data } = await client
     .from('tweets')
     .select('*')
     .eq('id', tweetId)
     .maybeSingle();
 
-  return mapTweet(data as Record<string, unknown> | null);
+  return mapTweet((data as Record<string, unknown>) ?? null);
 }
 
 function notifyProfileUpdated(): void {
@@ -37,7 +40,7 @@ export function onProfileUpdated(callback: () => void): () => void {
 export async function checkUsernameAvailability(
   username: string
 ): Promise<boolean> {
-  const { data } = await supabase
+  const { data } = await client
     .from('profiles')
     .select('id')
     .eq('username', username)
@@ -51,7 +54,7 @@ async function bumpProfileCounter(
   field: 'total_tweets' | 'total_photos',
   delta: number
 ): Promise<void> {
-  const { data } = await supabase
+  const { data } = await client
     .from('profiles')
     .select(field)
     .eq('id', userId)
@@ -59,10 +62,12 @@ async function bumpProfileCounter(
 
   if (!data) return;
 
-  await supabase
+  const current = (data as Record<string, unknown>)[field] as number;
+
+  await client
     .from('profiles')
     .update({
-      [field]: Math.max((data[field] as number) + delta, 0),
+      [field]: Math.max(current + delta, 0),
       updated_at: new Date().toISOString()
     })
     .eq('id', userId);
@@ -74,12 +79,14 @@ export async function updateUserData(
 ): Promise<void> {
   const { photoURL, coverPhotoURL, ...rest } = userData;
 
-  await supabase
+  await client
     .from('profiles')
     .update({
       ...rest,
       ...(photoURL !== undefined ? { photo_url: photoURL } : {}),
-      ...(coverPhotoURL !== undefined ? { cover_photo_url: coverPhotoURL } : {}),
+      ...(coverPhotoURL !== undefined
+        ? { cover_photo_url: coverPhotoURL }
+        : {}),
       updated_at: new Date().toISOString()
     })
     .eq('id', userId);
@@ -91,16 +98,19 @@ export async function updateUserTheme(
   userId: string,
   themeData: { theme?: Theme; accent?: Accent }
 ): Promise<void> {
-  await supabase.from('profiles').update(themeData).eq('id', userId);
+  await client.from('profiles').update(themeData).eq('id', userId);
 }
 
 export async function updateUsername(
   userId: string,
   username?: string
 ): Promise<void> {
-  await supabase
+  await client
     .from('profiles')
-    .update({ ...(username && { username }), updated_at: new Date().toISOString() })
+    .update({
+      ...(username && { username }),
+      updated_at: new Date().toISOString()
+    })
     .eq('id', userId);
 
   notifyProfileUpdated();
@@ -111,7 +121,7 @@ export async function managePinnedTweet(
   userId: string,
   tweetId: string
 ): Promise<void> {
-  await supabase
+  await client
     .from('profiles')
     .update({
       updated_at: new Date().toISOString(),
@@ -128,11 +138,11 @@ export async function manageFollow(
   targetUserId: string
 ): Promise<void> {
   if (type === 'follow')
-    await supabase
+    await client
       .from('follows')
       .insert({ follower_id: userId, following_id: targetUserId });
   else
-    await supabase
+    await client
       .from('follows')
       .delete()
       .eq('follower_id', userId)
@@ -140,7 +150,7 @@ export async function manageFollow(
 }
 
 export async function removeTweet(tweetId: string): Promise<void> {
-  await supabase.from('tweets').delete().eq('id', tweetId);
+  await client.from('tweets').delete().eq('id', tweetId);
 }
 
 export async function createTweet(
@@ -150,7 +160,7 @@ export async function createTweet(
 ): Promise<Tweet | null> {
   const { data, error } = await supabase.rpc('create_tweet', {
     p_text: text,
-    p_images: images ? (images as unknown as never) : null,
+    p_images: images ? JSON.parse(JSON.stringify(images)) : null,
     p_parent_id: parentId ?? null
   });
 
@@ -159,7 +169,7 @@ export async function createTweet(
     return null;
   }
 
-  return mapTweet(data as Record<string, unknown>);
+  return mapTweet((data as Record<string, unknown>) ?? null);
 }
 
 /** Uploads image files to cloud storage and returns preview data for a Tweet. */
@@ -236,11 +246,7 @@ export function manageRetweet(
   };
 }
 
-export function manageLike(
-  type: 'like' | 'unlike',
-  userId: string,
-  tweetId: string
-) {
+export function manageLike(type: 'like' | 'unlike', userId: string, tweetId: string) {
   return async (): Promise<void> => {
     await supabase.rpc('manage_like', {
       p_tweet_id: tweetId,
@@ -253,28 +259,23 @@ export async function manageBookmark(
   type: 'bookmark' | 'unbookmark',
   userId: string,
   tweetId: string
-): Promise<void> {
+): Promise<Bookmark | void> {
   if (type === 'bookmark') {
     const bookmarkData: Bookmark = {
       id: tweetId,
       createdAt: new Date().toISOString()
     };
-    await supabase
-      .from('bookmarks')
-      .insert({ user_id: userId, tweet_id: tweetId });
+    await client.from('bookmarks').insert({ user_id: userId, tweet_id: tweetId });
     return bookmarkData;
-  } else {
-    await supabase
-      .from('bookmarks')
-      .delete()
-      .eq('user_id', userId)
-      .eq('tweet_id', tweetId);
-    return undefined;
   }
+
+  await client
+    .from('bookmarks')
+    .delete()
+    .eq('user_id', userId)
+    .eq('tweet_id', tweetId);
 }
 
 export async function clearAllBookmarks(userId: string): Promise<void> {
-  await supabase.from('bookmarks').delete().eq('user_id', userId);
+  await client.from('bookmarks').delete().eq('user_id', userId);
 }
-
-export type { CollectionRef, mapProfile, mapTweet };
