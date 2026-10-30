@@ -12,7 +12,7 @@ type TweetStatusProps = {
 export function TweetStatus({ type, children }: TweetStatusProps): JSX.Element {
   return (
     <motion.div
-      className='col-span-2 grid grid-cols-[48px,1fr] gap-3 text-light-secondary dark:text-dark-secondary'
+      className='col-span-2 grid grid-cols-[48px_1fr] gap-3 text-light-secondary dark:text-dark-secondary'
       {...fromTop}
     >
       <i className='justify-self-end'>

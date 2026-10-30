@@ -215,7 +215,7 @@ export function Input({
       )}
       <label
         className={cn(
-          'hover-animation grid w-full grid-cols-[auto,1fr] gap-3 px-4 py-3',
+          'hover-animation grid w-full grid-cols-[auto_1fr] gap-3 px-4 py-3',
           reply
             ? 'pt-3 pb-1'
             : replyModal

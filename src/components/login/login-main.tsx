@@ -37,7 +37,7 @@ export function LoginMain(): JSX.Element {
     'dark:hover:brightness-90 dark:focus-visible:brightness-90 dark:active:brightness-75';
 
   return (
-    <main className='grid lg:grid-cols-[1fr,45vw]'>
+    <main className='grid lg:grid-cols-[1fr_45vw]'>
       <div className='relative hidden items-center justify-center lg:flex'>
         <NextImage
           imgClassName='object-cover'
@@ -76,7 +76,7 @@ export function LoginMain(): JSX.Element {
               <CustomIcon iconName='TwitterIcon' className='h-5 w-5 text-accent-blue' />
               Continue with Lovable
             </Button>
-            <div className='grid w-full grid-cols-[1fr,auto,1fr] items-center gap-2'>
+            <div className='grid w-full grid-cols-[1fr_auto_1fr] items-center gap-2'>
               <i className='border-b border-light-border dark:border-dark-border' />
               <p>or</p>
               <i className='border-b border-light-border dark:border-dark-border' />
