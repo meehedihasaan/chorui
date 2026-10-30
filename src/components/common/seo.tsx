@@ -1,6 +1,4 @@
 import { useRouter } from '@lib/router';
-import Head from 'next/head';
-import { siteURL } from '@lib/env';
 
 type MainLayoutProps = {
   title: string;
@@ -8,24 +6,15 @@ type MainLayoutProps = {
   description?: string;
 };
 
-export function SEO({
-  title,
-  image,
-  description
-}: MainLayoutProps): JSX.Element {
-  const { asPath } = useRouter();
+/**
+ * Head metadata is managed by TanStack Router's per-route `head()` option;
+ * this component stays as a no-op for compatibility with source call sites.
+ */
+export function SEO({ title, image, description }: MainLayoutProps): null {
+  void useRouter;
+  void title;
+  void image;
+  void description;
 
-  return (
-    <Head>
-      <title>{title}</title>
-      <meta name='og:title' content={title} />
-      {description && <meta name='description' content={description} />}
-      {description && <meta name='og:description' content={description} />}
-      {image && <meta property='og:image' content={image} />}
-      <meta
-        name='og:url'
-        content={`${siteURL}${asPath === '/' ? '' : asPath}`}
-      />
-    </Head>
-  );
+  return null;
 }

@@ -1,21 +1,51 @@
+import { useState } from 'react';
+import { toast } from 'react-hot-toast';
 import { useAuth } from '@lib/context/auth-context';
 import { NextImage } from '@components/ui/next-image';
 import { CustomIcon } from '@components/ui/custom-icon';
 import { Button } from '@components/ui/button';
 
 export function LoginMain(): JSX.Element {
-  const { signInWithGoogle } = useAuth();
+  const {
+    signInWithGoogle,
+    signInWithLovable,
+    signInWithEmail,
+    signUpWithEmail,
+    error
+  } = useAuth();
+
+  const [showEmailForm, setShowEmailForm] = useState(false);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [isSignUp, setIsSignUp] = useState(true);
+
+  const handleEmailSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    if (!email || !password) {
+      toast.error('Enter your email and password.');
+      return;
+    }
+
+    if (isSignUp) await signUpWithEmail(email, password);
+    else await signInWithEmail(email, password);
+  };
+
+  const googleButtonClass =
+    'flex justify-center gap-2 border border-light-line-reply font-bold text-light-primary transition ' +
+    'hover:bg-[#e6e6e6] focus-visible:bg-[#e6e6e6] active:bg-[#cccccc] dark:border-0 dark:bg-white ' +
+    'dark:hover:brightness-90 dark:focus-visible:brightness-90 dark:active:brightness-75';
 
   return (
     <main className='grid lg:grid-cols-[1fr,45vw]'>
-      <div className='relative hidden items-center justify-center  lg:flex'>
+      <div className='relative hidden items-center justify-center lg:flex'>
         <NextImage
           imgClassName='object-cover'
           blurClassName='bg-accent-blue'
           src='/assets/twitter-banner.png'
           alt='Twitter banner'
-          layout='fill'
           useSkeleton
+          className='absolute inset-0 h-full w-full'
         />
         <i className='absolute'>
           <CustomIcon className='h-96 w-96 text-white' iconName='TwitterIcon' />
@@ -30,7 +60,7 @@ export function LoginMain(): JSX.Element {
         </i>
         <div className='flex max-w-xs flex-col gap-4 font-twitter-chirp-extended lg:max-w-none lg:gap-16'>
           <h1
-            className='text-3xl before:content-["See_what’s_happening_in_the_world_right_now."] 
+            className='text-3xl before:content-["See_what’s_happening_in_the_world_right_now."]
                        lg:text-6xl lg:before:content-["Happening_now"]'
           />
           <h2 className='hidden text-xl lg:block lg:text-3xl'>
@@ -39,20 +69,12 @@ export function LoginMain(): JSX.Element {
         </div>
         <div className='flex max-w-xs flex-col gap-6 [&_button]:py-2'>
           <div className='grid gap-3 font-bold'>
-            <Button
-              className='flex justify-center gap-2 border border-light-line-reply font-bold text-light-primary transition
-                         hover:bg-[#e6e6e6] focus-visible:bg-[#e6e6e6] active:bg-[#cccccc] dark:border-0 dark:bg-white
-                         dark:hover:brightness-90 dark:focus-visible:brightness-90 dark:active:brightness-75'
-              onClick={signInWithGoogle}
-            >
+            <Button className={googleButtonClass} onClick={signInWithGoogle}>
               <CustomIcon iconName='GoogleIcon' /> Sign up with Google
             </Button>
-            <Button
-              className='flex cursor-not-allowed justify-center gap-2 border border-light-line-reply font-bold text-light-primary
-                         transition hover:bg-[#e6e6e6] focus-visible:bg-[#e6e6e6] active:bg-[#cccccc] dark:border-0
-                         dark:bg-white dark:hover:brightness-90 dark:focus-visible:brightness-90 dark:active:brightness-75'
-            >
-              <CustomIcon iconName='AppleIcon' /> Sign up with Apple
+            <Button className={googleButtonClass} onClick={signInWithLovable}>
+              <CustomIcon iconName='TwitterIcon' className='h-5 w-5 text-accent-blue' />
+              Continue with Lovable
             </Button>
             <div className='grid w-full grid-cols-[1fr,auto,1fr] items-center gap-2'>
               <i className='border-b border-light-border dark:border-dark-border' />
@@ -60,21 +82,60 @@ export function LoginMain(): JSX.Element {
               <i className='border-b border-light-border dark:border-dark-border' />
             </div>
             <Button
-              className='cursor-not-allowed bg-accent-blue text-white transition hover:brightness-90
+              className='bg-accent-blue text-white transition hover:brightness-90
                          focus-visible:!ring-accent-blue/80 focus-visible:brightness-90 active:brightness-75'
+              onClick={() => setShowEmailForm(!showEmailForm)}
             >
-              Sign up with phone or email
+              {showEmailForm ? 'Hide email sign-up' : 'Sign up with email'}
             </Button>
+
+            {showEmailForm && (
+              <form className='grid gap-2' onSubmit={handleEmailSubmit}>
+                <input
+                  type='email'
+                  required
+                  placeholder='Email'
+                  value={email}
+                  onChange={({ target: { value } }) => setEmail(value)}
+                  className='rounded-md border border-light-line-reply bg-main-background px-4 py-3 text-sm
+                             outline-none focus:ring-2 focus:ring-main-accent dark:border-light-border'
+                />
+                <input
+                  type='password'
+                  required
+                  minLength={6}
+                  placeholder='Password'
+                  value={password}
+                  onChange={({ target: { value } }) => setPassword(value)}
+                  className='rounded-md border border-light-line-reply bg-main-background px-4 py-3 text-sm
+                             outline-none focus:ring-2 focus:ring-main-accent dark:border-light-border'
+                />
+                <div className='grid grid-cols-2 gap-2'>
+                  <Button
+                    type='submit'
+                    className='bg-accent-blue text-white transition hover:brightness-90
+                               focus-visible:!ring-accent-blue/80 focus-visible:brightness-90 active:brightness-75'
+                  >
+                    {isSignUp ? 'Create account' : 'Sign in'}
+                  </Button>
+                  <Button
+                    type='button'
+                    className='border border-light-line-reply font-bold text-accent-blue hover:bg-accent-blue/10
+                               dark:border-light-secondary'
+                    onClick={() => setIsSignUp(!isSignUp)}
+                  >
+                    {isSignUp ? 'I have an account' : 'Create one'}
+                  </Button>
+                </div>
+              </form>
+            )}
+
             <p
               className='inner:custom-underline inner:custom-underline text-center text-xs
                          text-light-secondary inner:text-accent-blue dark:text-dark-secondary'
             >
               By signing up, you agree to the{' '}
-              <a
-                href='https://twitter.com/tos'
-                target='_blank'
-                rel='noreferrer'
-              >
+              <a href='https://twitter.com/tos' target='_blank' rel='noreferrer'>
                 Terms of Service
               </a>{' '}
               and{' '}
@@ -107,6 +168,11 @@ export function LoginMain(): JSX.Element {
               Sign in
             </Button>
           </div>
+          {error && (
+            <p className='text-sm text-accent-red' role='alert'>
+              {error.message}
+            </p>
+          )}
         </div>
       </div>
     </main>

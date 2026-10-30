@@ -37,7 +37,7 @@ export function useTrends(
   config?: SWRConfiguration
 ): UseTrendsReturn | FilteredUseTrendsReturn {
   const { data, error } = useSWR<SuccessResponse, Error>(
-    `/api/trends/place/${id}${limit ? `?limit=${limit}` : ''}`,
+    `/api/public/trends/place/${id}${limit ? `?limit=${limit}` : ''}`,
     config
   );
 

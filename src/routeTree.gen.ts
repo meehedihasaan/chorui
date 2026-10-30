@@ -15,6 +15,13 @@ import { Route as HomeRouteImport } from './routes/home'
 import { Route as PeopleRouteImport } from './routes/people'
 import { Route as TrendsRouteImport } from './routes/trends'
 import { Route as TweetIdRouteImport } from './routes/tweet.$id'
+import { Route as UserIdRouteImport } from './routes/user.$id'
+import { Route as UserIdIndexRouteImport } from './routes/user.$id.index'
+import { Route as UserIdFollowersRouteImport } from './routes/user.$id.followers'
+import { Route as UserIdFollowingRouteImport } from './routes/user.$id.following'
+import { Route as UserIdLikesRouteImport } from './routes/user.$id.likes'
+import { Route as UserIdMediaRouteImport } from './routes/user.$id.media'
+import { Route as UserIdWith_repliesRouteImport } from './routes/user.$id.with_replies'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -46,6 +53,41 @@ const TweetIdRoute = TweetIdRouteImport.update({
   path: '/tweet/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const UserIdRoute = UserIdRouteImport.update({
+  id: '/user/$id',
+  path: '/user/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const UserIdIndexRoute = UserIdIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => UserIdRoute,
+} as any)
+const UserIdFollowersRoute = UserIdFollowersRouteImport.update({
+  id: '/followers',
+  path: '/followers',
+  getParentRoute: () => UserIdRoute,
+} as any)
+const UserIdFollowingRoute = UserIdFollowingRouteImport.update({
+  id: '/following',
+  path: '/following',
+  getParentRoute: () => UserIdRoute,
+} as any)
+const UserIdLikesRoute = UserIdLikesRouteImport.update({
+  id: '/likes',
+  path: '/likes',
+  getParentRoute: () => UserIdRoute,
+} as any)
+const UserIdMediaRoute = UserIdMediaRouteImport.update({
+  id: '/media',
+  path: '/media',
+  getParentRoute: () => UserIdRoute,
+} as any)
+const UserIdWith_repliesRoute = UserIdWith_repliesRouteImport.update({
+  id: '/with_replies',
+  path: '/with_replies',
+  getParentRoute: () => UserIdRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -54,6 +96,13 @@ export interface FileRoutesByFullPath {
   '/people': typeof PeopleRoute
   '/trends': typeof TrendsRoute
   '/tweet/$id': typeof TweetIdRoute
+  '/user/$id': typeof UserIdRouteWithChildren
+  '/user/$id/followers': typeof UserIdFollowersRoute
+  '/user/$id/following': typeof UserIdFollowingRoute
+  '/user/$id/likes': typeof UserIdLikesRoute
+  '/user/$id/media': typeof UserIdMediaRoute
+  '/user/$id/with_replies': typeof UserIdWith_repliesRoute
+  '/user/$id/': typeof UserIdIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -62,6 +111,12 @@ export interface FileRoutesByTo {
   '/people': typeof PeopleRoute
   '/trends': typeof TrendsRoute
   '/tweet/$id': typeof TweetIdRoute
+  '/user/$id/followers': typeof UserIdFollowersRoute
+  '/user/$id/following': typeof UserIdFollowingRoute
+  '/user/$id/likes': typeof UserIdLikesRoute
+  '/user/$id/media': typeof UserIdMediaRoute
+  '/user/$id/with_replies': typeof UserIdWith_repliesRoute
+  '/user/$id': typeof UserIdIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -71,12 +126,44 @@ export interface FileRoutesById {
   '/people': typeof PeopleRoute
   '/trends': typeof TrendsRoute
   '/tweet/$id': typeof TweetIdRoute
+  '/user/$id': typeof UserIdRouteWithChildren
+  '/user/$id/followers': typeof UserIdFollowersRoute
+  '/user/$id/following': typeof UserIdFollowingRoute
+  '/user/$id/likes': typeof UserIdLikesRoute
+  '/user/$id/media': typeof UserIdMediaRoute
+  '/user/$id/with_replies': typeof UserIdWith_repliesRoute
+  '/user/$id/': typeof UserIdIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/bookmarks' | '/home' | '/people' | '/trends' | '/tweet/$id'
+  fullPaths:
+    | '/'
+    | '/bookmarks'
+    | '/home'
+    | '/people'
+    | '/trends'
+    | '/tweet/$id'
+    | '/user/$id'
+    | '/user/$id/followers'
+    | '/user/$id/following'
+    | '/user/$id/likes'
+    | '/user/$id/media'
+    | '/user/$id/with_replies'
+    | '/user/$id/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/bookmarks' | '/home' | '/people' | '/trends' | '/tweet/$id'
+  to:
+    | '/'
+    | '/bookmarks'
+    | '/home'
+    | '/people'
+    | '/trends'
+    | '/tweet/$id'
+    | '/user/$id/followers'
+    | '/user/$id/following'
+    | '/user/$id/likes'
+    | '/user/$id/media'
+    | '/user/$id/with_replies'
+    | '/user/$id'
   id:
     | '__root__'
     | '/'
@@ -85,6 +172,13 @@ export interface FileRouteTypes {
     | '/people'
     | '/trends'
     | '/tweet/$id'
+    | '/user/$id'
+    | '/user/$id/followers'
+    | '/user/$id/following'
+    | '/user/$id/likes'
+    | '/user/$id/media'
+    | '/user/$id/with_replies'
+    | '/user/$id/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -94,6 +188,7 @@ export interface RootRouteChildren {
   PeopleRoute: typeof PeopleRoute
   TrendsRoute: typeof TrendsRoute
   TweetIdRoute: typeof TweetIdRoute
+  UserIdRoute: typeof UserIdRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
@@ -140,8 +235,78 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TweetIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/user/$id': {
+      id: '/user/$id'
+      path: '/user/$id'
+      fullPath: '/user/$id'
+      preLoaderRoute: typeof UserIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/user/$id/': {
+      id: '/user/$id/'
+      path: '/'
+      fullPath: '/user/$id/'
+      preLoaderRoute: typeof UserIdIndexRouteImport
+      parentRoute: typeof UserIdRoute
+    }
+    '/user/$id/followers': {
+      id: '/user/$id/followers'
+      path: '/followers'
+      fullPath: '/user/$id/followers'
+      preLoaderRoute: typeof UserIdFollowersRouteImport
+      parentRoute: typeof UserIdRoute
+    }
+    '/user/$id/following': {
+      id: '/user/$id/following'
+      path: '/following'
+      fullPath: '/user/$id/following'
+      preLoaderRoute: typeof UserIdFollowingRouteImport
+      parentRoute: typeof UserIdRoute
+    }
+    '/user/$id/likes': {
+      id: '/user/$id/likes'
+      path: '/likes'
+      fullPath: '/user/$id/likes'
+      preLoaderRoute: typeof UserIdLikesRouteImport
+      parentRoute: typeof UserIdRoute
+    }
+    '/user/$id/media': {
+      id: '/user/$id/media'
+      path: '/media'
+      fullPath: '/user/$id/media'
+      preLoaderRoute: typeof UserIdMediaRouteImport
+      parentRoute: typeof UserIdRoute
+    }
+    '/user/$id/with_replies': {
+      id: '/user/$id/with_replies'
+      path: '/with_replies'
+      fullPath: '/user/$id/with_replies'
+      preLoaderRoute: typeof UserIdWith_repliesRouteImport
+      parentRoute: typeof UserIdRoute
+    }
   }
 }
+
+interface UserIdRouteChildren {
+  UserIdFollowersRoute: typeof UserIdFollowersRoute
+  UserIdFollowingRoute: typeof UserIdFollowingRoute
+  UserIdLikesRoute: typeof UserIdLikesRoute
+  UserIdMediaRoute: typeof UserIdMediaRoute
+  UserIdWith_repliesRoute: typeof UserIdWith_repliesRoute
+  UserIdIndexRoute: typeof UserIdIndexRoute
+}
+
+const UserIdRouteChildren: UserIdRouteChildren = {
+  UserIdFollowersRoute: UserIdFollowersRoute,
+  UserIdFollowingRoute: UserIdFollowingRoute,
+  UserIdLikesRoute: UserIdLikesRoute,
+  UserIdMediaRoute: UserIdMediaRoute,
+  UserIdWith_repliesRoute: UserIdWith_repliesRoute,
+  UserIdIndexRoute: UserIdIndexRoute,
+}
+
+const UserIdRouteWithChildren =
+  UserIdRoute._addFileChildren(UserIdRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
@@ -150,6 +315,7 @@ const rootRouteChildren: RootRouteChildren = {
   PeopleRoute: PeopleRoute,
   TrendsRoute: TrendsRoute,
   TweetIdRoute: TweetIdRoute,
+  UserIdRoute: UserIdRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
