@@ -17,6 +17,7 @@ const themes: Readonly<[Theme, string][]> = [
 ];
 
 const accentsColor: Readonly<Accent[]> = [
+  'mono',
   'blue',
   'yellow',
   'pink',

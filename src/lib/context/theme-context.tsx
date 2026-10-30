@@ -90,6 +90,13 @@ export function ThemeContextProvider({
       const root = document.documentElement;
 
       root.style.setProperty('--main-accent', `var(--accent-${accent})`);
+      root.style.setProperty(
+        '--main-accent-foreground',
+        accent === 'mono'
+          ? 'var(--accent-mono-foreground)'
+          : 'rgb(255 255 255)'
+      );
+
 
       if (user) {
         localStorage.setItem('accent', accent);

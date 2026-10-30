@@ -120,6 +120,13 @@
     --accent-green: 0 184 122;
   }
 
+  /* Monochrome accent: black on light backgrounds, white on dark ones. */
+  :root.dark {
+    --accent-mono: 255 255 255;
+    --accent-mono-foreground: 0 0 0;
+  }
+
+
   a,
   input,
   button,
