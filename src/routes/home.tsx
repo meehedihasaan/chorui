@@ -12,7 +12,6 @@ import { Input } from "@components/input/input";
 import { UpdateUsername } from "@components/home/update-username";
 import { MainHeader } from "@components/home/main-header";
 import { FeedTabs } from "@components/home/feed-tabs";
-import { Placeholder } from "@components/common/placeholder";
 import { Tweet } from "@components/tweet/tweet";
 import { Loading } from "@components/ui/loading";
 import { Error } from "@components/ui/error";
@@ -90,9 +89,9 @@ function HomeFeed() {
         ) : !data ? (
           <Error message="Something went wrong" />
         ) : data.length === 0 && followingTab ? (
-          <div className="mt-2">
-            <Placeholder title="Nothing to see here — yet" text="Posts from the people you follow will show up here. Follow a few people to fill up this feed." />
-          </div>
+          <p className="mt-10 px-4 text-center text-lg text-light-secondary dark:text-dark-secondary">
+            Nothing to see here — yet
+          </p>
         ) : (
           <>
             <AnimatePresence mode="popLayout">
