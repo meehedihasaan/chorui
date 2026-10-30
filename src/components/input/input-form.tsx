@@ -25,6 +25,7 @@ type InputFormProps = {
   inputRef: RefObject<HTMLTextAreaElement | null>;
   inputValue: string;
   replyModal?: boolean;
+  keepNav?: boolean;
   isValidTweet: boolean;
   isUploadingImages: boolean;
   sendTweet: () => Promise<void>;
@@ -60,6 +61,7 @@ export function InputForm({
   children,
   inputRef,
   replyModal,
+  keepNav,
   inputValue,
   isValidTweet,
   isUploadingImages,
@@ -94,6 +96,8 @@ export function InputForm({
       setTimeout(() => (sidebar.style.opacity = ''), 200);
       return;
     }
+
+    if (keepNav) return;
 
     if (window.innerWidth < 500) sidebar.style.opacity = '0';
   };

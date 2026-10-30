@@ -28,6 +28,7 @@ type InputProps = {
   disabled?: boolean;
   children?: ReactNode;
   replyModal?: boolean;
+  keepNav?: boolean;
   closeModal?: () => void;
 };
 
@@ -43,6 +44,7 @@ export function Input({
   disabled,
   children,
   replyModal,
+  keepNav,
   closeModal
 }: InputProps): JSX.Element {
   const [selectedImages, setSelectedImages] = useState<FilesWithId>([]);
@@ -235,6 +237,7 @@ export function Input({
             loading={loading}
             inputRef={inputRef}
             replyModal={replyModal}
+            keepNav={keepNav}
             inputValue={inputValue}
             isValidTweet={isValidTweet}
             isUploadingImages={isUploadingImages}
