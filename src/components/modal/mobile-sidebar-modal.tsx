@@ -24,6 +24,16 @@ const topNavLinks: Readonly<MobileNavLink[]> = [
     iconName: 'ChatBubbleBottomCenterTextIcon'
   },
   {
+    href: '/explore',
+    linkName: 'Explore',
+    iconName: 'HashtagIcon'
+  },
+  {
+    href: '/notifications',
+    linkName: 'Notifications',
+    iconName: 'BellIcon'
+  },
+  {
     href: '/bookmarks',
     linkName: 'Bookmarks',
     iconName: 'BookmarkIcon'
@@ -45,8 +55,7 @@ const bottomNavLinks: Readonly<MobileNavLink[]> = [
   {
     href: '/settings',
     linkName: 'Settings and privacy',
-    iconName: 'Cog8ToothIcon',
-    disabled: true
+    iconName: 'Cog8ToothIcon'
   },
   {
     href: '/help-center',
