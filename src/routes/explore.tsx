@@ -9,7 +9,7 @@ import { Tweet } from '@components/tweet/tweet';
 import { UserCard } from '@components/user/user-card';
 import { HeroIcon } from '@components/ui/hero-icon';
 import { Loading } from '@components/ui/loading';
-import { trends } from '@lib/trends-data';
+import { WORLDWIDE_TRENDS as trends } from '@lib/trends-data';
 import type { FormEvent } from 'react';
 
 type Search = { q?: string; tab?: 'top' | 'people' };
