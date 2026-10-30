@@ -15,3 +15,4 @@
 - [x] 11. Post card: @username shows after the name on the same line
 - [x] 12. Like reaction: remove the button background and the "Like"/"Unlike" label
 - [x] 13. Bring back the previous heart ("love") reaction mark — red #e0245e
+- [x] 14. Restore the original post card from the source file (header inline with · time, no comment box)
