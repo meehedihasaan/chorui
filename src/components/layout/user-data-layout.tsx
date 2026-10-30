@@ -1,3 +1,4 @@
+import { useParams } from '@tanstack/react-router';
 import { useRouter } from '@lib/router';
 import { query, where, limit } from '@lib/firebase/db';
 import { UserContextProvider } from '@lib/context/user-context';

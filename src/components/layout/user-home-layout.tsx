@@ -1,3 +1,4 @@
+import { useParams } from '@tanstack/react-router';
 import { useRouter } from '@lib/router';
 import { motion } from 'framer-motion';
 import { useAuth } from '@lib/context/auth-context';

@@ -69,11 +69,7 @@ function UserWithRepliesPage() {
             )}
             {data.map((tweet) =>
               tweet.parent ? (
-                <TweetWithParent
-                  {...tweet}
-                  parentTweetUsername={tweet.parent.username}
-                  key={tweet.id}
-                />
+                <TweetWithParent data={[tweet]} key={tweet.id} />
               ) : (
                 <Tweet {...tweet} profile={user} key={tweet.id} />
               )
