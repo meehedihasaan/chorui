@@ -40,13 +40,19 @@ export function NextImage({
 
   const handleLoad = (): void => { setLoading(false); onLoadingComplete?.(); };
 
+  const fixedSize = width != null && height != null && layout !== 'fill';
+
   return (
-    <figure style={{ width }} className={className}>
+    <figure
+      style={fixedSize ? { width, height } : { width }}
+      className={cn(fixedSize && 'shrink-0 overflow-hidden', className)}
+    >
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         className={cn(
           imgClassName,
           layout === 'fill' && 'absolute inset-0 h-full w-full',
+          fixedSize && 'h-full w-full',
           loading
             ? blurClassName ??
                 'animate-pulse bg-light-secondary dark:bg-dark-secondary'
