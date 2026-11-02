@@ -6,7 +6,6 @@ import { manageRetweet, manageLike } from '@lib/firebase/utils';
 import { ViewTweetStats } from '@components/view/view-tweet-stats';
 import { TweetOption } from './tweet-option';
 import { TweetShare } from './tweet-share';
-import { TweetLikeButton } from './tweet-like-button';
 
 import type { Tweet } from '@lib/types/tweet';
 
@@ -92,10 +91,17 @@ export function TweetStats({
           viewTweet ? 'justify-around py-2' : 'max-w-md justify-between'
         )}
       >
-        <TweetLikeButton
-          liked={tweetIsLiked}
+        <TweetOption
+          className={cn(
+            'hover:text-accent-pink focus-visible:text-accent-pink',
+            tweetIsLiked && 'text-accent-pink [&>i>svg]:fill-accent-pink'
+          )}
+          iconClassName='group-hover:bg-accent-pink/10 group-active:bg-accent-pink/20
+                         group-focus-visible:bg-accent-pink/10 group-focus-visible:ring-accent-pink/80'
+          tip={tweetIsLiked ? 'Unlike' : 'Like'}
           move={likeMove}
           stats={currentLikes}
+          iconName='HeartIcon'
           viewTweet={viewTweet}
           onClick={manageLike(
             tweetIsLiked ? 'unlike' : 'like',
