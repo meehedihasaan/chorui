@@ -25,6 +25,7 @@ import { Route as TrendsRouteImport } from './routes/trends'
 import { Route as MessagesIdRouteImport } from './routes/messages.$id'
 import { Route as TweetIdRouteImport } from './routes/tweet.$id'
 import { Route as UserIdRouteImport } from './routes/user.$id'
+import { Route as ApiPublicLinkImageRouteImport } from './routes/api/public/link-image'
 import { Route as UserIdIndexRouteImport } from './routes/user.$id.index'
 import { Route as UserIdFollowersRouteImport } from './routes/user.$id.followers'
 import { Route as UserIdFollowingRouteImport } from './routes/user.$id.following'
@@ -115,6 +116,11 @@ const UserIdRoute = UserIdRouteImport.update({
   path: '/user/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicLinkImageRoute = ApiPublicLinkImageRouteImport.update({
+  id: '/api/public/link-image',
+  path: '/api/public/link-image',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const UserIdIndexRoute = UserIdIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -179,6 +185,7 @@ export interface FileRoutesByFullPath {
   '/messages/$id': typeof MessagesIdRoute
   '/tweet/$id': typeof TweetIdRoute
   '/user/$id': typeof UserIdRouteWithChildren
+  '/api/public/link-image': typeof ApiPublicLinkImageRoute
   '/user/$id/followers': typeof UserIdFollowersRoute
   '/user/$id/following': typeof UserIdFollowingRoute
   '/user/$id/likes': typeof UserIdLikesRoute
@@ -205,6 +212,7 @@ export interface FileRoutesByTo {
   '/trends': typeof TrendsRoute
   '/messages/$id': typeof MessagesIdRoute
   '/tweet/$id': typeof TweetIdRoute
+  '/api/public/link-image': typeof ApiPublicLinkImageRoute
   '/user/$id/followers': typeof UserIdFollowersRoute
   '/user/$id/following': typeof UserIdFollowingRoute
   '/user/$id/likes': typeof UserIdLikesRoute
@@ -233,6 +241,7 @@ export interface FileRoutesById {
   '/messages/$id': typeof MessagesIdRoute
   '/tweet/$id': typeof TweetIdRoute
   '/user/$id': typeof UserIdRouteWithChildren
+  '/api/public/link-image': typeof ApiPublicLinkImageRoute
   '/user/$id/followers': typeof UserIdFollowersRoute
   '/user/$id/following': typeof UserIdFollowingRoute
   '/user/$id/likes': typeof UserIdLikesRoute
@@ -262,6 +271,7 @@ export interface FileRouteTypes {
     | '/messages/$id'
     | '/tweet/$id'
     | '/user/$id'
+    | '/api/public/link-image'
     | '/user/$id/followers'
     | '/user/$id/following'
     | '/user/$id/likes'
@@ -288,6 +298,7 @@ export interface FileRouteTypes {
     | '/trends'
     | '/messages/$id'
     | '/tweet/$id'
+    | '/api/public/link-image'
     | '/user/$id/followers'
     | '/user/$id/following'
     | '/user/$id/likes'
@@ -315,6 +326,7 @@ export interface FileRouteTypes {
     | '/messages/$id'
     | '/tweet/$id'
     | '/user/$id'
+    | '/api/public/link-image'
     | '/user/$id/followers'
     | '/user/$id/following'
     | '/user/$id/likes'
@@ -342,6 +354,7 @@ export interface RootRouteChildren {
   TrendsRoute: typeof TrendsRoute
   TweetIdRoute: typeof TweetIdRoute
   UserIdRoute: typeof UserIdRouteWithChildren
+  ApiPublicLinkImageRoute: typeof ApiPublicLinkImageRoute
   ApiPublicTrendsAvailableRoute: typeof ApiPublicTrendsAvailableRoute
   ApiPublicMediaUserIdIdRoute: typeof ApiPublicMediaUserIdIdRoute
   ApiPublicTrendsPlaceIdRoute: typeof ApiPublicTrendsPlaceIdRoute
@@ -461,6 +474,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof UserIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/link-image': {
+      id: '/api/public/link-image'
+      path: '/api/public/link-image'
+      fullPath: '/api/public/link-image'
+      preLoaderRoute: typeof ApiPublicLinkImageRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/user/$id/': {
       id: '/user/$id/'
       path: '/'
@@ -576,6 +596,7 @@ const rootRouteChildren: RootRouteChildren = {
   TrendsRoute: TrendsRoute,
   TweetIdRoute: TweetIdRoute,
   UserIdRoute: UserIdRouteWithChildren,
+  ApiPublicLinkImageRoute: ApiPublicLinkImageRoute,
   ApiPublicTrendsAvailableRoute: ApiPublicTrendsAvailableRoute,
   ApiPublicMediaUserIdIdRoute: ApiPublicMediaUserIdIdRoute,
   ApiPublicTrendsPlaceIdRoute: ApiPublicTrendsPlaceIdRoute,

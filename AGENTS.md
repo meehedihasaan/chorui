@@ -18,3 +18,4 @@
 - Post analytics are owner-only through authenticated RPC; unique signed-in non-author views are deduplicated per post/user and start when tracking is deployed.
 - Account switching keeps provider-issued sessions in tab-scoped sessionStorage only, validates through auth.setSession, and never treats saved identity metadata as authorization.
 - Shared optimistic follow/reaction controls roll back failed writes; Home timelines retain deterministic createdAt ordering.
+- Post link previews use shared supplemental Query metadata from a fixed external metadata provider and isolated image proxy; never fetch arbitrary post URLs directly from the app server, and keep plain-link fallbacks on provider failures.

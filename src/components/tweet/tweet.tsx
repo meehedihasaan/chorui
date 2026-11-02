@@ -16,6 +16,7 @@ import { TweetStatus } from './tweet-status';
 import { TweetStats } from './tweet-stats';
 import { TweetDate } from './tweet-date';
 import { PostFollow } from './post-follow';
+import { PostLinkPreview } from './link-preview';
 import { supabase } from '@/integrations/supabase/client';
 import type { Variants } from 'framer-motion';
 import type { Tweet } from '@lib/types/tweet';
@@ -197,6 +198,7 @@ export function Tweet(tweet: TweetProps): JSX.Element {
                 <p className='whitespace-pre-line break-words'>{text}</p>
               )}
               <div className='mt-1 flex flex-col gap-2'>
+                <PostLinkPreview text={text} />
                 {images && (
                   <ImagePreview
                     tweet
