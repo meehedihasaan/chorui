@@ -11,6 +11,7 @@ import {
 import { PageShell, pageHead } from '@components/layout/page-shell';
 import { DisplayModal } from '@components/modal/display-modal';
 import { HeroIcon } from '@components/ui/hero-icon';
+import { RestrictedAccounts } from '@components/user/restricted-accounts';
 import type { FormEvent, ReactNode } from 'react';
 
 type SectionId = 'account' | 'security' | 'privacy' | 'notifications' | 'display' | 'resources';
@@ -245,6 +246,7 @@ function SectionBody({ id }: { id: SectionId }) {
   if (id === 'privacy')
     return (
       <>
+        <RestrictedAccounts />
         <Block title='Your data' desc='Download a copy of everything you have posted.'>
           <button type='button' disabled={busy} className={btnCls} onClick={() => void downloadData()}>Download data</button>
         </Block>

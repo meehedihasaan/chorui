@@ -1,4 +1,5 @@
 import Link from '@lib/router';
+import { supabase } from '@/integrations/supabase/client';
 import { useState, useEffect, useRef, useId } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import cn from 'clsx';
@@ -70,7 +71,11 @@ export function Input({
   );
 
   const sendTweet = async (): Promise<void> => {
-    if (loading || !user) return;
+    if (loading || !user || disabled) return;
+    if (parent?.id) {
+      const { data: allowed, error } = await supabase.rpc('can_reply_to_post', { p_post_id: parent.id });
+      if (error || !allowed) { toast.error('You cannot reply to this post.'); return; }
+    }
     inputRef.current?.blur();
 
     setLoading(true);

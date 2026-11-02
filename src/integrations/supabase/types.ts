@@ -136,6 +136,44 @@ export type Database = {
         }
         Relationships: []
       }
+      post_reports: {
+        Row: {
+          created_at: string
+          details: string
+          id: string
+          post_id: string
+          reason: string
+          reporter_id: string
+          status: string
+        }
+        Insert: {
+          created_at?: string
+          details?: string
+          id?: string
+          post_id: string
+          reason: string
+          reporter_id: string
+          status?: string
+        }
+        Update: {
+          created_at?: string
+          details?: string
+          id?: string
+          post_id?: string
+          reason?: string
+          reporter_id?: string
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "post_reports_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "tweets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       post_views: {
         Row: {
           post_id: string
@@ -229,10 +267,12 @@ export type Database = {
         Row: {
           created_at: string
           created_by: string
+          edited_at: string | null
           id: string
           images: Json | null
           parent_id: string | null
           parent_username: string | null
+          reply_permission: string
           text: string | null
           updated_at: string | null
           user_likes: string[]
@@ -242,10 +282,12 @@ export type Database = {
         Insert: {
           created_at?: string
           created_by: string
+          edited_at?: string | null
           id?: string
           images?: Json | null
           parent_id?: string | null
           parent_username?: string | null
+          reply_permission?: string
           text?: string | null
           updated_at?: string | null
           user_likes?: string[]
@@ -255,10 +297,12 @@ export type Database = {
         Update: {
           created_at?: string
           created_by?: string
+          edited_at?: string | null
           id?: string
           images?: Json | null
           parent_id?: string | null
           parent_username?: string | null
+          reply_permission?: string
           text?: string | null
           updated_at?: string | null
           user_likes?: string[]
@@ -274,6 +318,42 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      user_blocks: {
+        Row: {
+          created_at: string
+          target_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          target_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          target_id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_mutes: {
+        Row: {
+          created_at: string
+          target_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          target_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          target_id?: string
+          user_id?: string
+        }
+        Relationships: []
       }
       user_stats: {
         Row: {
@@ -301,15 +381,18 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      can_reply_to_post: { Args: { p_post_id: string }; Returns: boolean }
       create_tweet: {
         Args: { p_images: Json; p_parent_id: string; p_text: string }
         Returns: {
           created_at: string
           created_by: string
+          edited_at: string | null
           id: string
           images: Json | null
           parent_id: string | null
           parent_username: string | null
+          reply_permission: string
           text: string | null
           updated_at: string | null
           user_likes: string[]
@@ -337,6 +420,7 @@ export type Database = {
         }[]
       }
       get_post_analytics: { Args: { p_post_id?: string }; Returns: Json }
+      get_public_post_activity: { Args: { p_post_id: string }; Returns: Json }
       get_suggested_users: {
         Args: { p_limit: number; p_seed: string }
         Returns: {
@@ -380,6 +464,7 @@ export type Database = {
         Returns: undefined
       }
       record_post_view: { Args: { p_post_id: string }; Returns: undefined }
+      users_blocked: { Args: { a: string; b: string }; Returns: boolean }
     }
     Enums: {
       [_ in never]: never

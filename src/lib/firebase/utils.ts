@@ -131,14 +131,14 @@ export async function managePinnedTweet(
   userId: string,
   tweetId: string
 ): Promise<void> {
-  await client
+  const { error } = await client
     .from('profiles')
     .update({
       updated_at: new Date().toISOString(),
       pinned_tweet: type === 'pin' ? tweetId : null
     })
     .eq('id', userId);
-
+  if (error) throw error;
   notifyProfileUpdated();
 }
 
@@ -164,7 +164,8 @@ export async function manageFollow(
 }
 
 export async function removeTweet(tweetId: string): Promise<void> {
-  await client.from('tweets').delete().eq('id', tweetId);
+  const { error } = await client.from('tweets').delete().eq('id', tweetId);
+  if (error) throw error;
   notifyDataChanged();
 }
 
@@ -181,7 +182,7 @@ export async function createTweet(
 
   if (error) {
     console.error('createTweet failed', error.message);
-    return null;
+    throw new Error(error.message.includes('restricted') ? 'You cannot reply to this post.' : 'Could not publish the post.');
   }
 
   notifyDataChanged();

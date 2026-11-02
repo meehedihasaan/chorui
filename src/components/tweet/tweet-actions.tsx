@@ -1,4 +1,9 @@
 import { useMemo, useState } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
+import { useServerFn } from '@tanstack/react-start';
+import { setAccountRestriction } from '@lib/post-controls.functions';
+import { PostControlDialog } from './post-control-dialog';
+import type { PostControlMode } from './post-control-dialog';
 import { useRouter } from '@lib/router';
 import { Popover, Portal } from '@headlessui/react';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -10,7 +15,6 @@ import { useModal } from '@lib/hooks/useModal';
 import {
   getTweetById,
   removeTweet,
-  manageReply,
   manageFollow,
   managePinnedTweet
 } from '@lib/firebase/utils';
@@ -75,6 +79,11 @@ export function TweetActions({
   const { user, isAdmin } = useAuth();
   const { push } = useRouter();
   const [menuTop, setMenuTop] = useState(16);
+  const [controlMode, setControlMode] = useState<PostControlMode | null>(null);
+  const [restriction, setRestriction] = useState<'mute' | 'block' | null>(null);
+  const [busy, setBusy] = useState(false);
+  const queryClient = useQueryClient();
+  const restrict = useServerFn(setAccountRestriction);
   const { followed: userIsFollowed, toggle: toggleFollow } = useFollowAction(createdBy);
 
   const {
@@ -107,22 +116,21 @@ export function TweetActions({
         } else await push('/home');
       } else await push('/home');
 
-    await Promise.all([
-      removeTweet(tweetId),
-      parentId && manageReply('decrement', parentId)
-    ]);
+    try { await removeTweet(tweetId); } catch { toast.error('Could not delete the post.'); return; }
+    await queryClient.invalidateQueries();
 
     toast.success(
-      `${isInAdminControl ? `@${username}'s` : 'Your'} Tweet was deleted`
+      `${isInAdminControl ? `@${username}'s` : 'Your'} post was deleted`
     );
 
     removeCloseModal();
   };
 
   const handlePin = async (): Promise<void> => {
-    await managePinnedTweet(tweetIsPinned ? 'unpin' : 'pin', userId, tweetId);
+    try { await managePinnedTweet(tweetIsPinned ? 'unpin' : 'pin', userId, tweetId); } catch { toast.error('Could not pin this post.'); return; }
+    await queryClient.invalidateQueries();
     toast.success(
-      `Your tweet was ${tweetIsPinned ? 'unpinned' : 'pinned'} to your profile`
+      `Your post was ${tweetIsPinned ? 'unpinned' : 'pinned'} to your profile`
     );
     pinCloseModal();
   };
@@ -133,7 +141,8 @@ export function TweetActions({
       const [type] = args;
 
       closeMenu();
-      await toggleFollow();
+      const updated = await toggleFollow();
+      if (!updated) return;
 
       toast.success(
         `You ${type === 'follow' ? 'followed' : 'unfollowed'} @${username}`
@@ -265,17 +274,17 @@ export function TweetActions({
                     <Popover.Button as={Button} className='accent-tab flex w-full items-center gap-3 rounded-none p-4 text-left text-accent-red hover:bg-main-sidebar-background' onClick={preventBubbling(removeOpenModal)}>
                       <HeroIcon iconName='TrashIcon' />Delete Post
                     </Popover.Button>
-                    <Button disabled title='Post editing is not available yet' className='flex w-full items-center gap-3 rounded-none p-4 text-left disabled:opacity-50'><HeroIcon iconName='PencilSquareIcon' />Edit Post</Button>
-                    <Button disabled title='Reply permissions are not available yet' className='flex w-full items-center gap-3 rounded-none p-4 text-left disabled:opacity-50'><HeroIcon iconName='ChatBubbleLeftRightIcon' /><span>Change who can reply</span></Button>
+                    <Popover.Button as={Button} onClick={() => setControlMode('edit')} className='flex w-full items-center gap-3 rounded-none p-4 text-left hover:bg-main-sidebar-background'><HeroIcon iconName='PencilSquareIcon' />Edit Post</Popover.Button>
+                    <Popover.Button as={Button} onClick={() => setControlMode('replies')} className='flex w-full items-center gap-3 rounded-none p-4 text-left hover:bg-main-sidebar-background'><HeroIcon iconName='ChatBubbleLeftRightIcon' /><span>Change who can reply</span></Popover.Button>
                   </>}
                   {!isOwner && <>
-                    <Button disabled title='Muting is not available yet' className='flex w-full items-center gap-3 rounded-none p-4 text-left disabled:opacity-50'><HeroIcon iconName='SpeakerXMarkIcon' />Mute</Button>
-                    <Button disabled title='Blocking is not available yet' className='flex w-full items-center gap-3 rounded-none p-4 text-left disabled:opacity-50'><HeroIcon iconName='NoSymbolIcon' /><span className='break-all'>Block @{username}</span></Button>
+                    <Popover.Button as={Button} onClick={() => setRestriction('mute')} className='flex w-full items-center gap-3 rounded-none p-4 text-left hover:bg-main-sidebar-background'><HeroIcon iconName='SpeakerXMarkIcon' />Mute</Popover.Button>
+                    <Popover.Button as={Button} onClick={() => setRestriction('block')} className='flex w-full items-center gap-3 rounded-none p-4 text-left hover:bg-main-sidebar-background'><HeroIcon iconName='NoSymbolIcon' /><span className='break-all'>Block @{username}</span></Popover.Button>
                   </>}
                   <Popover.Button as={Button} className='accent-tab flex w-full items-center gap-3 rounded-none p-4 text-left hover:bg-main-sidebar-background' onClick={preventBubbling(() => { close(); if (isOwner) void push(`/analytics?post=${tweetId}`); else activityOpenModal(); })}>
                     <HeroIcon iconName='ChartBarIcon' />View post activity
                   </Popover.Button>
-                  {!isOwner && <Button disabled title='Reporting is not available yet' className='flex w-full items-center gap-3 rounded-none p-4 text-left disabled:opacity-50'><HeroIcon iconName='FlagIcon' />Report post</Button>}
+                  {!isOwner && <Popover.Button as={Button} onClick={() => setControlMode('report')} className='flex w-full items-center gap-3 rounded-none p-4 text-left hover:bg-main-sidebar-background'><HeroIcon iconName='FlagIcon' />Report post</Popover.Button>}
                 </Popover.Panel>
                 </Portal>
               )}
@@ -283,12 +292,14 @@ export function TweetActions({
           </>
         )}
       </Popover>
-      <Modal open={activityOpen} closeModal={activityCloseModal} modalClassName='w-full max-w-sm rounded-lg bg-main-background p-6'>
-        <div className='space-y-4 text-light-primary dark:text-dark-primary'>
-          <h2 className='text-xl font-bold'>Post activity</h2>
-          <p className='text-light-secondary dark:text-dark-secondary'>Detailed analytics are only available to the author. Public likes, replies, and repost counts appear below the post.</p>
-          <Button onClick={activityCloseModal} className='w-full bg-main-accent py-2 font-bold text-main-accent-foreground'>Close</Button>
-        </div>
+      {(controlMode || activityOpen) && <PostControlDialog mode={controlMode ?? 'activity'} postId={tweetId} hasImages={hasImages} close={() => { setControlMode(null); activityCloseModal(); }} />}
+      <Modal open={!!restriction} closeModal={() => setRestriction(null)} modalClassName='w-full max-w-sm rounded-lg bg-main-background p-6'>
+        <div className='space-y-4 text-light-primary dark:text-dark-primary'><h2 className='text-xl font-bold'>{restriction === 'block' ? 'Block' : 'Mute'} @{username}?</h2><p className='text-light-secondary dark:text-dark-secondary'>{restriction === 'block' ? 'Posts will be hidden and you cannot follow, reply, react, or message each other. Existing follows are removed.' : 'Their posts and notifications will be hidden for your account.'}</p><div className='flex gap-3'><Button disabled={busy} className='flex-1 border border-light-border py-2 dark:border-dark-border' onClick={() => setRestriction(null)}>Cancel</Button><Button loading={busy} className='flex-1 bg-main-accent py-2 font-bold text-main-accent-foreground' onClick={async () => {
+          if (!restriction || busy) return; const kind = restriction; setBusy(true);
+          try { await restrict({ data: { targetId: createdBy, kind, enabled: true } }); setRestriction(null); await queryClient.invalidateQueries(); window.dispatchEvent(new Event('app:data-changed')); window.dispatchEvent(new Event('app:profile-updated'));
+            toast.success(t => <span>{kind === 'block' ? 'Blocked' : 'Muted'} @{username} <Button className='ml-3 font-bold underline' onClick={async () => { try { await restrict({ data: { targetId: createdBy, kind, enabled: false } }); await queryClient.invalidateQueries(); toast.dismiss(t.id); } catch { toast.error('Could not undo.'); } }}>Undo</Button></span>, { duration: 8000 });
+          } catch { toast.error('Could not update the account.'); } finally { setBusy(false); }
+        }}>{restriction === 'block' ? 'Block' : 'Mute'}</Button></div></div>
       </Modal>
     </>
   );

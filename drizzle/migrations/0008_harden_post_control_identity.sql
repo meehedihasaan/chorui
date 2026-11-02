@@ -1,0 +1,6 @@
+CREATE FUNCTION public.protect_post_identity() RETURNS trigger LANGUAGE plpgsql SET search_path=public AS $$ BEGIN IF NEW.created_by IS DISTINCT FROM OLD.created_by OR (NEW.parent_id IS DISTINCT FROM OLD.parent_id AND NEW.parent_id IS NOT NULL) THEN RAISE EXCEPTION 'Post identity cannot be changed'; END IF; RETURN NEW; END; $$;
+CREATE TRIGGER protect_post_identity BEFORE UPDATE OF created_by,parent_id ON public.tweets FOR EACH ROW EXECUTE FUNCTION public.protect_post_identity();
+CREATE OR REPLACE FUNCTION public.users_blocked(a uuid,b uuid) RETURNS boolean LANGUAGE sql STABLE SECURITY DEFINER SET search_path=public AS $$ SELECT CASE WHEN auth.uid() IS NULL OR auth.uid() NOT IN (a,b) THEN false ELSE EXISTS(SELECT 1 FROM public.user_blocks WHERE (user_id=a AND target_id=b) OR (user_id=b AND target_id=a)) END; $$;
+CREATE INDEX user_blocks_reverse_idx ON public.user_blocks(target_id,user_id);
+REVOKE UPDATE ON public.dm_messages FROM authenticated;
+GRANT UPDATE(read) ON public.dm_messages TO authenticated;

@@ -14,8 +14,8 @@ export function useFollowAction(targetId: string) {
     busy.current = true;
     setPending(true);
     setFollowing(targetId, next);
-    try { await manageFollow(next ? 'follow' : 'unfollow', user.id, targetId); }
-    catch { setFollowing(targetId, !next); toast.error('Could not update follow. Please try again.'); }
+    try { await manageFollow(next ? 'follow' : 'unfollow', user.id, targetId); return true; }
+    catch { setFollowing(targetId, !next); toast.error('Could not update follow. Please try again.'); return false; }
     finally { busy.current = false; setPending(false); }
   };
   return { followed, pending, toggle };
