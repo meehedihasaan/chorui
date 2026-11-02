@@ -1,10 +1,5 @@
 const items = [
   {
-    title: 'Google sign-in',
-    status: 'On',
-    steps: 'Works already. To use your own Google app, open More → Users → Auth settings → Sign In Methods → Google and add your client ID and secret.'
-  },
-  {
     title: 'Phone sign-in (SMS)',
     status: 'Needs setup',
     steps: 'Open More → Users → Auth settings → Phone settings, turn it on and add a text-message service such as Twilio.'
@@ -19,7 +14,7 @@ const items = [
 export function AuthSetup(): JSX.Element {
   return (
     <section className='mt-6 flex flex-col gap-3 px-4 pb-6'>
-      <h2 className='text-lg font-bold'>Sign-in &amp; email setup</h2>
+      <h2 className='text-lg font-bold'>Phone &amp; email setup</h2>
       <p className='text-sm text-light-secondary dark:text-dark-secondary'>
         These are managed in the Lovable editor for security. The app itself cannot change them.
       </p>
