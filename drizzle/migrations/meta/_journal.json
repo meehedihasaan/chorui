@@ -50,6 +50,13 @@
       "when": 1793598837893,
       "tag": "0006_post_view_analytics",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1793600537264,
+      "tag": "0007_post_menu_controls",
+      "breakpoints": true
     }
   ]
 }
