@@ -30,7 +30,7 @@ export function UserNavLink({ name, path }: UserNavLinkProps): JSX.Element {
             )}
           >
             {name}
-            <i className='h-1 scale-50 rounded-full bg-main-accent opacity-0 transition duration-200' />
+            <i className='h-1 w-8 self-center scale-50 rounded-full bg-main-accent opacity-0 transition duration-200' />
           </p>
         </div>
       </a>
