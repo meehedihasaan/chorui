@@ -50,13 +50,20 @@ export function onProfileUpdated(callback: () => void): () => void {
 export async function checkUsernameAvailability(
   username: string
 ): Promise<boolean> {
-  const { data } = await client
+  // Handles are compared without letter case, so ask the database directly.
+  const { data, error } = await client.rpc('username_taken', {
+    p_username: username
+  });
+
+  if (!error && typeof data === 'boolean') return !data;
+
+  const { data: rows } = await client
     .from('profiles')
     .select('id')
     .eq('username', username)
     .limit(1);
 
-  return !data?.length;
+  return !rows?.length;
 }
 
 async function bumpProfileCounter(
@@ -100,7 +107,11 @@ export async function updateUserData(
       updated_at: new Date().toISOString()
     })
     .eq('id', userId);
-  if (error) throw error;
+  if (error) {
+    if (error.code === '23505')
+      throw new Error('That username is taken. Try another one.');
+    throw error;
+  }
   notifyProfileUpdated();
 }
 
