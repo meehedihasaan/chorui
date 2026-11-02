@@ -2,10 +2,20 @@ import { useState, useEffect } from 'react';
 import { toast } from 'react-hot-toast';
 import cn from 'clsx';
 import { useUser } from '@lib/context/user-context';
+import { useRouter } from '@lib/router';
 import { useModal } from '@lib/hooks/useModal';
-import { updateUserData, uploadImages } from '@lib/firebase/utils';
+import {
+  checkUsernameAvailability,
+  updateUserData,
+  uploadImages
+} from '@lib/firebase/utils';
 import { DEFAULT_AVATAR_URL } from '@lib/default-avatar';
 import { getImagesData } from '@lib/validation';
+import {
+  getUsernameError,
+  isUsernameUnchanged,
+  normalizeUsername
+} from '@lib/username';
 import { Modal, backdrop } from '@components/modal/modal';
 import { EditProfileModal } from '@components/modal/edit-profile-modal';
 import { Button } from '@components/ui/button';
@@ -36,10 +46,14 @@ type UserEditProfileProps = {
 export function UserEditProfile({ hide }: UserEditProfileProps): JSX.Element {
   const { user } = useUser();
   const { open, openModal, closeModal } = useModal();
+  const { asPath, replace } = useRouter();
 
   const [loading, setLoading] = useState(false);
+  const [usernameError, setUsernameError] = useState('');
+  const [usernameHint, setUsernameHint] = useState('');
+  const [checkingUsername, setCheckingUsername] = useState(false);
 
-  const { bio, name, website, location, photoURL, coverPhotoURL } =
+  const { bio, name, website, location, photoURL, coverPhotoURL, username } =
     user as User;
 
   const [editUserData, setEditUserData] = useState<EditableUserData>({
@@ -48,7 +62,8 @@ export function UserEditProfile({ hide }: UserEditProfileProps): JSX.Element {
     website,
     photoURL,
     location,
-    coverPhotoURL
+    coverPhotoURL,
+    username
   });
 
   const [userImages, setUserImages] = useState<UserImages>({
@@ -58,6 +73,56 @@ export function UserEditProfile({ hide }: UserEditProfileProps): JSX.Element {
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => cleanImage, []);
+
+  // Validate the typed handle and, once it looks usable, ask the database
+  // whether somebody else already holds it.
+  useEffect(() => {
+    const value = normalizeUsername(editUserData.username);
+
+    if (isUsernameUnchanged(username, value)) {
+      setUsernameError('');
+      setUsernameHint(
+        value ? `@${value} is your current handle.` : 'Handles are 4-15 characters.'
+      );
+      setCheckingUsername(false);
+      return;
+    }
+
+    const invalid = getUsernameError(username, value);
+
+    if (invalid) {
+      setUsernameError(invalid);
+      setUsernameHint('');
+      setCheckingUsername(false);
+      return;
+    }
+
+    let cancelled = false;
+
+    setCheckingUsername(true);
+    setUsernameHint(`Checking @${value}…`);
+
+    const timer = setTimeout(async () => {
+      const available = await checkUsernameAvailability(value);
+
+      if (cancelled) return;
+
+      setCheckingUsername(false);
+
+      if (available) {
+        setUsernameError('');
+        setUsernameHint(`@${value} is available.`);
+      } else {
+        setUsernameError('This username has been taken. Please choose another.');
+        setUsernameHint('');
+      }
+    }, 400);
+
+    return () => {
+      cancelled = true;
+      clearTimeout(timer);
+    };
+  }, [editUserData.username, username]);
 
   const inputNameError = !editUserData.name?.trim()
     ? "Name can't be blank"
@@ -69,6 +134,18 @@ export function UserEditProfile({ hide }: UserEditProfileProps): JSX.Element {
     try {
 
     const userId = user?.id as string;
+
+    const newUsername = normalizeUsername(editUserData.username);
+    const usernameChanged = !isUsernameUnchanged(username, newUsername);
+
+    if (usernameChanged) {
+      const invalid = getUsernameError(username, newUsername);
+
+      if (invalid) throw new Error(invalid);
+
+      if (!(await checkUsernameAvailability(newUsername)))
+        throw new Error('This username has been taken. Please choose another.');
+    }
 
     const { photoURL, coverPhotoURL: coverURL } = userImages;
 
@@ -88,7 +165,8 @@ export function UserEditProfile({ hide }: UserEditProfileProps): JSX.Element {
       'name',
       'bio',
       'location',
-      'website'
+      'website',
+      'username'
     ];
 
     const trimmedTexts = trimmedKeys.reduce(
@@ -99,6 +177,7 @@ export function UserEditProfile({ hide }: UserEditProfileProps): JSX.Element {
     const newUserData: Readonly<EditableUserData> = {
       ...editUserData,
       ...trimmedTexts,
+      ...(usernameChanged && { username: newUsername }),
       ...newImages
     };
 
@@ -110,6 +189,10 @@ export function UserEditProfile({ hide }: UserEditProfileProps): JSX.Element {
 
     setLoading(false);
     setEditUserData(newUserData);
+
+    // The profile address is built from the handle, so follow the new one.
+    if (usernameChanged)
+      replace(asPath.replace(/\/user\/[^/?#]+/i, `/user/${newUsername}`));
 
     toast.success('Profile updated successfully');
     } catch (error) { toast.error(error instanceof Error ? error.message : 'Could not save your profile.'); }
@@ -186,7 +269,8 @@ export function UserEditProfile({ hide }: UserEditProfileProps): JSX.Element {
       website,
       photoURL,
       location,
-      coverPhotoURL
+      coverPhotoURL,
+      username
     });
   };
 
@@ -202,7 +286,13 @@ export function UserEditProfile({ hide }: UserEditProfileProps): JSX.Element {
     target,
     ctrlKey
   }: KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>): void => {
-    if (ctrlKey && key === 'Enter' && !inputNameError) {
+    if (
+      ctrlKey &&
+      key === 'Enter' &&
+      !inputNameError &&
+      !usernameError &&
+      !checkingUsername
+    ) {
       (target as HTMLInputElement).blur();
       void updateData();
     }
@@ -215,6 +305,14 @@ export function UserEditProfile({ hide }: UserEditProfileProps): JSX.Element {
       inputValue: editUserData.name,
       inputLimit: 50,
       errorMessage: inputNameError
+    },
+    {
+      label: 'Username',
+      inputId: 'username',
+      inputValue: editUserData.username,
+      inputLimit: 15,
+      hint: usernameHint,
+      errorMessage: usernameError
     },
     {
       label: 'Bio',
@@ -252,6 +350,7 @@ export function UserEditProfile({ hide }: UserEditProfileProps): JSX.Element {
           photoURL={editUserData.photoURL}
           coverPhotoURL={editUserData.coverPhotoURL}
           inputNameError={inputNameError}
+          saveDisabled={!!usernameError || checkingUsername}
           editImage={editImage}
           closeModal={closeModal}
           updateData={updateData}
