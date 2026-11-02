@@ -6,7 +6,7 @@ import { useWindow } from "@lib/context/window-context";
 import { useAuth } from "@lib/context/auth-context";
 import { useInfiniteScroll } from "@lib/hooks/useInfiniteScroll";
 import { tweetsCollection } from "@lib/firebase/collections";
-import { where } from "@lib/firebase/db";
+import { orderBy, where } from "@lib/firebase/db";
 import { HomeLayout, ProtectedLayout } from "@components/layout/common-layout";
 import { MainLayout } from "@components/layout/main-layout";
 import { MainContainer } from "@components/home/main-container";
@@ -62,6 +62,7 @@ function HomeFeed() {
     tweetsCollection,
     [
       { type: "where", field: "parent_id", op: "==", value: null },
+      orderBy("createdAt", "desc"),
       ...(followingTab && user
         ? [
             {
