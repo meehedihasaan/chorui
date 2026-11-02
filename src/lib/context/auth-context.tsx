@@ -166,6 +166,9 @@ export function AuthContextProvider({
     const unsubData = onDataChanged(() => void fetchBookmarks());
 
     const unsubProfile = onProfileUpdated(() => {
+      // Cached feeds and cards embed author profiles, so a renamed or
+      // re-photoed account has to be re-read everywhere.
+      void queryClient.invalidateQueries();
 
       void supabase
         .from('profiles')
