@@ -78,7 +78,7 @@ export function GeneralSettings(): JSX.Element {
             </button>
           )}
         </div>
-        <p className={cn('text-sm', muted)}>Square image, max 500 KB.</p>
+        <p className={cn('text-sm', muted)}>Square image, max 2 MB.</p>
       </section>
 
       <section className='flex flex-col gap-2'>
