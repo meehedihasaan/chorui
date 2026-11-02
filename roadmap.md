@@ -1,5 +1,8 @@
 # Roadmap
 
+## Link previews
+- [ ] Show clickable link metadata in feed cards and post details, with safe fallbacks.
+
 ## November 2 improvements
 - [x] Small follow/following control before the post menu.
 - [x] Account drawer plus opens account switching/add account.
