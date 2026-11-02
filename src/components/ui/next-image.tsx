@@ -1,3 +1,4 @@
+import { resolveMediaUrl } from "@/lib/media-url";
 import { useState } from 'react';
 import cn from 'clsx';
 import type { ReactNode } from 'react';
@@ -58,7 +59,7 @@ export function NextImage({
                 'animate-pulse bg-light-secondary dark:bg-dark-secondary'
             : previewCount === 1 ? 'object-contain' : 'object-cover'
         )}
-        src={src}
+        src={resolveMediaUrl(src)}
         width={width as number | undefined}
         height={height as number | undefined}
         alt={alt}
