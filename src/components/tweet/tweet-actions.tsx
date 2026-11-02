@@ -1,6 +1,6 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { useRouter } from '@lib/router';
-import { Popover } from '@headlessui/react';
+import { Popover, Portal } from '@headlessui/react';
 import { AnimatePresence, motion } from 'framer-motion';
 import cn from 'clsx';
 import { toast } from 'react-hot-toast';
@@ -74,6 +74,7 @@ export function TweetActions({
 }: TweetActionsProps): JSX.Element {
   const { user, isAdmin } = useAuth();
   const { push } = useRouter();
+  const [menuTop, setMenuTop] = useState(16);
   const { followed: userIsFollowed, toggle: toggleFollow } = useFollowAction(createdBy);
 
   const {
@@ -187,6 +188,10 @@ export function TweetActions({
           <>
             <Popover.Button
               aria-label='More post options'
+              onClick={(event: React.MouseEvent<HTMLButtonElement>) => {
+                const rect = event.currentTarget.getBoundingClientRect();
+                setMenuTop(Math.max(16, Math.min(rect.bottom + 8, window.innerHeight - 350)));
+              }}
               as={Button}
               className={cn(
                 `main-tab group p-2 ${viewTweet ? 'absolute top-2 right-2' : 'relative'}
@@ -206,8 +211,10 @@ export function TweetActions({
             </Popover.Button>
             <AnimatePresence>
               {open && (
+                <Portal>
                 <Popover.Panel
-                  className='menu-container group absolute top-[50px] right-0 z-20 w-64 max-w-[calc(100vw-32px)] text-light-primary 
+                  style={{ top: menuTop }}
+                  className='menu-container group fixed right-4 z-50 max-h-[calc(100dvh-32px)] w-64 max-w-[calc(100vw-32px)] overflow-y-auto bg-main-background text-light-primary 
                              dark:text-dark-primary'
                   as={motion.div}
                   {...variants}
@@ -270,6 +277,7 @@ export function TweetActions({
                   </Popover.Button>
                   {!isOwner && <Button disabled title='Reporting is not available yet' className='flex w-full items-center gap-3 rounded-none p-4 text-left disabled:opacity-50'><HeroIcon iconName='FlagIcon' />Report post</Button>}
                 </Popover.Panel>
+                </Portal>
               )}
             </AnimatePresence>
           </>
