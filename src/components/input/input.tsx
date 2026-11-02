@@ -149,6 +149,30 @@ export function Input({
     inputRef.current?.focus();
   };
 
+  const addFiles = (files: File[]): void => {
+    const dt = new DataTransfer();
+    files.forEach(f => dt.items.add(f));
+    const imagesData = getImagesData(dt.files, { currentFiles: previewCount, allowUploadingVideos: true });
+    if (!imagesData) { toast.error('Please choose a GIF or photo up to 4'); return; }
+    setImagesPreview(previous => [...previous, ...imagesData.imagesPreviewData]);
+    setSelectedImages(previous => [...previous, ...imagesData.selectedImagesData]);
+    setVisited(true);
+  };
+
+  const insertEmoji = (emoji: string): void => {
+    const el = inputRef.current;
+    const start = el?.selectionStart ?? inputValue.length;
+    const end = el?.selectionEnd ?? inputValue.length;
+    setInputValue(inputValue.slice(0, start) + emoji + inputValue.slice(end));
+    setVisited(true);
+    requestAnimationFrame(() => {
+      if (!el) return;
+      el.focus();
+      const pos = start + emoji.length;
+      el.setSelectionRange(pos, pos);
+    });
+  };
+
   const removeImage = (targetId: string) => (): void => {
     setSelectedImages(selectedImages.filter(({ id }) => id !== targetId));
     setImagesPreview(imagesPreview.filter(({ id }) => id !== targetId));
@@ -273,6 +297,8 @@ export function Input({
                 isValidTweet={isValidTweet}
                 isCharLimitExceeded={isCharLimitExceeded}
                 handleImageUpload={handleImageUpload}
+                onEmoji={insertEmoji}
+                onGifFile={file => addFiles([file])}
               />
             )}
           </AnimatePresence>

@@ -1,4 +1,5 @@
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
+import { EmojiGifPicker } from './emoji-gif-picker';
 import { motion } from 'framer-motion';
 import { Button } from '@components/ui/button';
 import { HeroIcon } from '@components/ui/hero-icon';
@@ -24,16 +25,16 @@ const options: Readonly<Options> = [
   {
     name: 'GIF',
     iconName: 'GifIcon',
-    disabled: true
-  },
-  {
-    name: 'Poll',
-    iconName: 'ChartBarIcon',
-    disabled: true
+    disabled: false
   },
   {
     name: 'Emoji',
     iconName: 'FaceSmileIcon',
+    disabled: false
+  },
+  {
+    name: 'Poll',
+    iconName: 'ChartBarIcon',
     disabled: true
   },
   {
@@ -58,6 +59,8 @@ type InputOptionsProps = {
   handleImageUpload: (
     e: ChangeEvent<HTMLInputElement> | ClipboardEvent<HTMLTextAreaElement>
   ) => void;
+  onEmoji?: (emoji: string) => void;
+  onGifFile?: (file: File) => void;
 };
 
 export function InputOptions({
@@ -67,21 +70,30 @@ export function InputOptions({
   inputLength,
   isValidTweet,
   isCharLimitExceeded,
-  handleImageUpload
+  handleImageUpload,
+  onEmoji,
+  onGifFile
 }: InputOptionsProps): JSX.Element {
   const inputFileRef = useRef<HTMLInputElement>(null);
 
+  const [picker, setPicker] = useState<'emoji' | 'gif' | null>(null);
   const onClick = (): void => inputFileRef.current?.click();
+  const handlers: Record<string, (() => void) | undefined> = {
+    Media: onClick,
+    GIF: onGifFile ? () => setPicker(p => (p === 'gif' ? null : 'gif')) : undefined,
+    Emoji: onEmoji ? () => setPicker(p => (p === 'emoji' ? null : 'emoji')) : undefined
+  };
 
   let filteredOptions = options;
 
   if (reply)
     filteredOptions = filteredOptions.filter(
-      (_, index) => ![2, 4].includes(index)
+      (_, index) => ![3, 4].includes(index)
     );
 
   return (
     <motion.div className='flex justify-between' {...variants}>
+      <div className='relative'>
       <div
         className='flex text-main-accent xs:[&>button:nth-child(n+6)]:hidden 
                    md:[&>button]:!block [&>button:nth-child(n+4)]:hidden'
@@ -98,14 +110,23 @@ export function InputOptions({
           <Button
             className='accent-tab accent-bg-tab group relative rounded-full p-2 
                        hover:bg-main-accent/10 active:bg-main-accent/20'
-            onClick={index === 0 ? onClick : undefined}
-            disabled={disabled}
+            onClick={e => { e.preventDefault(); handlers[name]?.(); }}
+            disabled={disabled || !handlers[name]}
             key={name}
           >
             <HeroIcon className='h-5 w-5' iconName={iconName} />
             <ToolTip tip={name} modal={modal} />
           </Button>
         ))}
+      </div>
+      {picker && onEmoji && onGifFile && (
+        <EmojiGifPicker
+          mode={picker}
+          onEmoji={onEmoji}
+          onGif={onGifFile}
+          onClose={() => setPicker(null)}
+        />
+      )}
       </div>
       <div className='flex items-center gap-4'>
         <motion.div
