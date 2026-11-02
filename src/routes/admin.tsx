@@ -183,9 +183,24 @@ function Users({ adminsOnly = false }: { adminsOnly?: boolean }) {
     setBusy(null);
   };
 
+  const stats = useQuery({
+    queryKey: ['admin', 'stats'],
+    enabled: !adminsOnly,
+    queryFn: async () => {
+      const { data, error } = await supabase.rpc('admin_stats');
+      if (error) throw error;
+      return data as Record<string, number>;
+    }
+  });
+  const total = adminsOnly ? q.data?.length : stats.data?.users;
+
   return (
     <div>
       <div className='p-4'>
+        <p className='mb-3 text-sm'>
+          <span className='font-bold'>{total == null ? '…' : Number(total).toLocaleString()}</span>{' '}
+          <span className={muted}>{adminsOnly ? 'admins' : 'total users'}</span>
+        </p>
         <input className={inputCls} placeholder={adminsOnly ? 'Search admins' : 'Search by name or @username'} value={search} onChange={(e) => setSearch(e.target.value)} />
       </div>
       {q.isPending ? <Loading /> : !q.data?.length ? <p className={cn('p-5', muted)}>{adminsOnly ? 'No admins found.' : 'No users found.'}</p> : (
