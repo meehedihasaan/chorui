@@ -357,7 +357,7 @@ function Reports() {
   return (
     <div>
       <div className='flex gap-2 p-4'>
-        {(['pending', 'dismissed', 'actioned'] as const).map((s) => (
+        {(['pending', 'dismissed'] as const).map((s) => (
           <button key={s} onClick={() => setStatus(s)} className={cn(btn, 'capitalize', status === s && 'bg-light-primary text-main-background dark:bg-dark-primary')}>
             {s === 'pending' ? 'Open' : s}
           </button>
