@@ -111,7 +111,18 @@ function GifGrid({ onGif, onClose }: { onGif: (f: File) => void; onClose: () => 
                    focus:border-main-accent dark:border-dark-border'
       />
       <div className='h-72 overflow-y-auto'>
-        {error ? <p className='p-4 text-center text-sm text-light-secondary dark:text-dark-secondary'>{error}</p>
+        {error ? (
+          <div className='grid h-full place-items-center p-4 text-center text-sm text-light-secondary dark:text-dark-secondary'>
+            <div className='space-y-3'>
+              <p>GIF search isn't switched on yet. You can still add a GIF from your device.</p>
+              <label className='inline-block cursor-pointer rounded-full bg-main-accent px-4 py-2 font-bold text-main-accent-foreground'>
+                Choose a GIF
+                <input type='file' accept='image/gif' className='hidden'
+                  onChange={e => { const f = e.target.files?.[0]; if (f) { onGif(f); onClose(); } }} />
+              </label>
+            </div>
+          </div>
+        )
           : loading && !results.length ? <p className='p-4 text-center text-sm text-light-secondary'>Loading…</p>
           : !results.length ? <p className='p-4 text-center text-sm text-light-secondary'>No GIFs found</p>
           : (
