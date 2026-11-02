@@ -32,7 +32,7 @@ export function GeneralSettings(): JSX.Element {
   const pickLogo = (file?: File) => {
     if (!file) return;
     if (!file.type.startsWith('image/')) return void toast.error('Choose an image file');
-    if (file.size > 500 * 1024) return void toast.error('Logo must be under 500 KB');
+    if (file.size > 2 * 1024 * 1024) return void toast.error('Logo must be under 2 MB');
     const r = new FileReader();
     r.onload = () => setLogo(r.result as string);
     r.readAsDataURL(file);
