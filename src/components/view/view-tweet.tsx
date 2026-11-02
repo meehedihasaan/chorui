@@ -1,3 +1,4 @@
+import { PostText } from '@components/tweet/post-text';
 import Link from '@lib/router';
 import { motion } from 'framer-motion';
 import cn from 'clsx';
@@ -127,7 +128,7 @@ export function ViewTweet(tweet: ViewTweetProps): JSX.Element {
       )}
       <div>
         {text && (
-          <p className='whitespace-pre-line break-words text-2xl'>{text}</p>
+          <PostText className='whitespace-pre-line break-words text-2xl' text={text} />
         )}
         <PostLinkPreview text={text} />
         {images && (

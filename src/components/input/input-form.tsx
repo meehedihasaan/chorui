@@ -1,4 +1,5 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { MentionSuggest, currentMention } from './mention-suggest';
 import TextArea from 'react-textarea-autosize';
 import { motion } from 'framer-motion';
 import { useModal } from '@lib/hooks/useModal';
@@ -72,6 +73,22 @@ export function InputForm({
   handleImageUpload
 }: InputFormProps): JSX.Element {
   const { open, openModal, closeModal } = useModal();
+  const [mention, setMention] = useState<{ start: number; query: string } | null>(null);
+  const trackMention = (): void => {
+    const el = inputRef.current;
+    setMention(el ? currentMention(el.value, el.selectionStart ?? el.value.length) : null);
+  };
+  const pickMention = (username: string): void => {
+    const el = inputRef.current;
+    if (!el || !mention) return;
+    const end = el.selectionStart ?? el.value.length;
+    const insert = `@${username} `;
+    const value = el.value.slice(0, mention.start) + insert + el.value.slice(end);
+    handleChange({ target: { value } } as ChangeEvent<HTMLTextAreaElement>);
+    setMention(null);
+    const pos = mention.start + insert.length;
+    requestAnimationFrame(() => { el.focus(); el.setSelectionRange(pos, pos); });
+  };
 
   useEffect(() => handleShowHideNav(true), []);
 
@@ -143,7 +160,8 @@ export function InputForm({
             <HeroIcon className='h-4 w-4' iconName='ChevronDownIcon' />
           </motion.button>
         )}
-        <div className='flex items-center gap-3'>
+        <div className='relative flex items-center gap-3'>
+          {mention && <MentionSuggest query={mention.query} onPick={pickMention} />}
           <TextArea
             id={formId}
             className='w-full min-w-0 resize-none bg-transparent text-xl outline-none
@@ -152,13 +170,14 @@ export function InputForm({
             placeholder={
               reply || replyModal ? 'Post your reply' : "What's happening?"
             }
-            onBlur={handleShowHideNav(true)}
+            onBlur={() => { handleShowHideNav(true)(); setTimeout(() => setMention(null), 150); }}
+            onClick={trackMention}
             minRows={loading ? 1 : modal && !isUploadingImages ? 3 : 1}
             maxRows={isUploadingImages ? 5 : 15}
             onFocus={handleFormFocus}
             onPaste={handleImageUpload}
-            onKeyUp={handleKeyboardShortcut}
-            onChange={handleChange}
+            onKeyUp={e => { handleKeyboardShortcut(e); trackMention(); }}
+            onChange={e => { handleChange(e); trackMention(); }}
             ref={inputRef}
           />
           {reply && !visited && (
