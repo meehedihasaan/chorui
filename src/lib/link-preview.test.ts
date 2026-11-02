@@ -12,3 +12,11 @@ describe('post link previews', () => {
     for (const url of ['http://127.0.0.1', 'http://10.0.0.1', 'http://[::1]', 'http://localhost', 'https://x.internal', 'https://user:pass@bbc.com', 'file:///etc/passwd', 'https://bbc.com:8443']) expect(publicWebUrl(url)).toBeNull();
   });
 });
+describe('link detection without http', () => {
+  it('detects www and bare domains', async () => {
+    const { firstPostLink } = await import('./link-preview');
+    expect(firstPostLink('see www.bbc.com/news')).toBe('https://www.bbc.com/news');
+    expect(firstPostLink('watch youtube.com/watch?v=1.')).toBe('https://youtube.com/watch?v=1');
+    expect(firstPostLink('mail me@gmail.com')).toBeNull();
+  });
+});
