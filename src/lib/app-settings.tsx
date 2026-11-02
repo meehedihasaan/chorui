@@ -73,7 +73,7 @@ export function AppSettingsApplier(): null {
   const radius = s.buttonStyle === 'rounded' ? '0.75rem' : s.buttonStyle === 'square' ? '0.25rem' : null;
   let css = '';
   if (c) css += `:root, :root.dark, .dark, .dim { --accent-mono: ${c.rgb} !important; --accent-mono-foreground: ${c.fg} !important; }`;
-  if (radius) css += `:is(button, a):is(.custom-button, .rounded-full):not(.main-tab) { border-radius: ${radius} !important; }`;
+  if (radius) css += `:is(button, a):is(.custom-button, .rounded-full):is(.font-bold) { border-radius: ${radius} !important; }`;
   useEffect(() => {
     let el = document.getElementById('app-settings-style');
     if (!el) {
