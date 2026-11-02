@@ -92,6 +92,13 @@
       "when": 1793604357267,
       "tag": "0012_app_settings",
       "breakpoints": true
+    },
+    {
+      "idx": 13,
+      "version": "7",
+      "when": 1793606350613,
+      "tag": "0013_raise_logo_limit_2mb",
+      "breakpoints": true
     }
   ]
 }

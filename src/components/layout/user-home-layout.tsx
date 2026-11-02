@@ -42,14 +42,18 @@ export function UserHomeLayout({ children }: LayoutProps): JSX.Element {
 
   const isOwner = userData?.id === userId;
   const targetId = userData?.id;
-  const { data: suspended = false } = useQuery({
+  const { data: bannedData, isLoading: banLoading } = useQuery({
     queryKey: ['is-banned', targetId],
     enabled: !!targetId,
+    staleTime: 0,
+    refetchOnMount: 'always',
     queryFn: async () => {
       const { data } = await supabase.rpc('is_banned', { _user_id: targetId! });
       return !!data;
     }
   });
+  const suspended = !!bannedData;
+  const banChecked = !targetId || !banLoading;
 
   return (
     <>
@@ -123,7 +127,9 @@ export function UserHomeLayout({ children }: LayoutProps): JSX.Element {
       {userData && (
         <>
           <UserNav />
-          {suspended ? (
+          {!banChecked ? (
+            <Loading className='mt-5' />
+          ) : suspended ? (
             <div className='p-8 text-center'>
               <p className='text-3xl font-bold'>Account suspended</p>
               <p className='text-light-secondary dark:text-dark-secondary'>
