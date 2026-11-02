@@ -36,7 +36,7 @@ function UserMediaPage() {
       where("createdBy", "==", id),
       where("images", "!=", null)
     ),
-    { includeUser: true, allowNull: true }
+    { includeUser: true, allowNull: true, disabled: !id }
   );
 
   const sortedTweets = mergeData(true, data);
@@ -44,7 +44,7 @@ function UserMediaPage() {
   return (
     <UserHomeLayout>
       <section>
-        {loading ? (
+        {loading || !id ? (
           <Loading className="mt-5" />
         ) : !sortedTweets ? (
           <StatsEmpty
