@@ -21,8 +21,12 @@ export function publicWebUrl(value: string): string | null {
 }
 
 export function firstPostLink(text: string | null | undefined): string | null {
-  for (const match of text?.matchAll(/https?:\/\/[^\s<>"']+/gi) ?? []) {
-    const url = publicWebUrl(match[0].replace(/[.,!?;:)\]}]+$/, ''));
+  // Accept full links, www. links and bare domains such as youtube.com/watch.
+  const pattern = /(?:https?:\/\/|www\.)[^\s<>"']+|\b[a-z0-9-]+(?:\.[a-z0-9-]+)*\.[a-z]{2,24}(?:\/[^\s<>"']*)?/gi;
+  for (const match of text?.matchAll(pattern) ?? []) {
+    if (match.index && text?.[match.index - 1] === '@') continue;
+    const raw = match[0].replace(/[.,!?;:)\]}]+$/, '');
+    const url = publicWebUrl(/^https?:\/\//i.test(raw) ? raw : `https://${raw}`);
     if (url) return url;
   }
   return null;
