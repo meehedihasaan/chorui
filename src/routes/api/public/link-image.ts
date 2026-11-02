@@ -11,9 +11,10 @@ export const Route = createFileRoute('/api/public/link-image')({
       endpoint.searchParams.set('url', source);
       endpoint.searchParams.set('w', '800');
       endpoint.searchParams.set('output', 'webp');
-      const response = await fetch(endpoint, { redirect: 'error', signal: AbortSignal.timeout(10000) });
-      if (!response.ok || !response.headers.get('content-type')?.startsWith('image/')) return new Response('Image unavailable', { status: 404 });
-      return new Response(response.body, { headers: { 'Content-Type': 'image/webp', 'Cache-Control': 'public, max-age=86400', 'X-Content-Type-Options': 'nosniff' } });
-    } catch { return new Response('Image unavailable', { status: 404 }); }
+      const response = await fetch(endpoint, { redirect: 'error', signal: AbortSignal.timeout(20000) });
+      const contentType = response.headers.get('content-type');
+      if (!response.ok || !contentType?.startsWith('image/')) return new Response('Image unavailable', { status: 503, headers: { 'Cache-Control': 'no-store' } });
+      return new Response(response.body, { headers: { 'Content-Type': contentType, 'Cache-Control': 'public, max-age=86400', 'X-Content-Type-Options': 'nosniff' } });
+    } catch { return new Response('Image unavailable', { status: 503, headers: { 'Cache-Control': 'no-store' } }); }
   } } }
 });
