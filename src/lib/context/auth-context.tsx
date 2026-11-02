@@ -10,6 +10,8 @@ import {
 import { getRandomInt, getRandomId } from '@lib/random';
 import { mapProfile } from '@lib/firebase/db';
 import { resolveAvatarUrl } from '@lib/default-avatar';
+import { useQueryClient } from '@tanstack/react-query';
+import { forgetAccount } from '@lib/account-sessions';
 import type { ReactNode } from 'react';
 import type { User } from '@lib/types/user';
 import type { Bookmark } from '@lib/types/bookmark';
@@ -26,7 +28,8 @@ type AuthContext = {
   signInWithGoogle: () => Promise<void>;
   signInWithLovable: () => Promise<void>;
   signInWithEmail: (email: string, password: string) => Promise<void>;
-  signUpWithEmail: (email: string, password: string) => Promise<void>;
+  signUpWithEmail: (email: string, password: string, name?: string) => Promise<void>;
+  setFollowing: (targetId: string, followed: boolean) => void;
 };
 
 export const AuthContext = createContext<AuthContext | null>(null);
@@ -83,6 +86,7 @@ async function ensureProfile(
 export function AuthContextProvider({
   children
 }: AuthContextProviderProps): JSX.Element {
+  const queryClient = useQueryClient();
   const [user, setUser] = useState<User | null>(null);
   const [userBookmarks, setUserBookmarks] = useState<Bookmark[] | null>(null);
   const [error, setError] = useState<Error | null>(null);
@@ -113,6 +117,7 @@ export function AuthContextProvider({
       data: { subscription }
     } = supabase.auth.onAuthStateChange((event, session) => {
       if (event === 'SIGNED_OUT') {
+        queryClient.clear();
         setUser(null);
         setUserBookmarks(null);
         setLoading(false);
@@ -120,6 +125,9 @@ export function AuthContextProvider({
         (event === 'SIGNED_IN' || event === 'USER_UPDATED') &&
         session?.user
       ) {
+        queryClient.clear();
+        setUser(null);
+        setUserBookmarks(null);
         setLoading(true);
         void manageUser(
           session.user.id,
@@ -201,38 +209,43 @@ export function AuthContextProvider({
   };
 
   const signInWithEmail = async (email: string, password: string): Promise<void> => {
+    setError(null);
     try {
       const { error: signInError } = await supabase.auth.signInWithPassword({
         email,
         password
       });
 
-      if (signInError) setError(signInError);
+      if (signInError) { setError(signInError); throw signInError; }
     } catch (signInError) {
       setError(signInError as Error);
+      throw signInError;
     }
   };
 
-  const signUpWithEmail = async (email: string, password: string): Promise<void> => {
+  const signUpWithEmail = async (email: string, password: string, name?: string): Promise<void> => {
+    setError(null);
     try {
       const { error: signUpError, data } = await supabase.auth.signUp({
         email,
         password,
-        options: { emailRedirectTo: window.location.origin }
+        options: { emailRedirectTo: window.location.origin, data: { name: name?.trim() } }
       });
 
-      if (signUpError) setError(signUpError);
+      if (signUpError) { setError(signUpError); throw signUpError; }
       // With email confirmation enabled the session is null until the user
       // confirms; with auto-confirm a session comes back immediately.
-      else if (!data.session) setError(new Error('Check your email to confirm your account.'));
+      else if (!data.session) setError(null);
     } catch (signUpError) {
       setError(signUpError as Error);
+      throw signUpError;
     }
   };
 
   const signOut = async (): Promise<void> => {
     try {
-      await supabase.auth.signOut();
+      if (user) forgetAccount(user.id);
+      await supabase.auth.signOut({ scope: 'local' });
     } catch (signOutError) {
       setError(signOutError as Error);
     }
@@ -252,7 +265,10 @@ export function AuthContextProvider({
     signInWithGoogle,
     signInWithLovable,
     signInWithEmail,
-    signUpWithEmail
+    signUpWithEmail,
+    setFollowing: (targetId, followed) => setUser(current => current ? {
+      ...current, following: followed ? [...new Set([...current.following, targetId])] : current.following.filter(id => id !== targetId)
+    } : current)
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

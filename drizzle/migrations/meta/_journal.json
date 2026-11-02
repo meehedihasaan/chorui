@@ -43,6 +43,13 @@
       "when": 1793375657178,
       "tag": "0005_fix_mention_trigger_text_array",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1793598837893,
+      "tag": "0006_post_view_analytics",
+      "breakpoints": true
     }
   ]
 }

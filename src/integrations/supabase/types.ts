@@ -136,6 +136,32 @@ export type Database = {
         }
         Relationships: []
       }
+      post_views: {
+        Row: {
+          post_id: string
+          viewed_at: string
+          viewer_id: string
+        }
+        Insert: {
+          post_id: string
+          viewed_at?: string
+          viewer_id: string
+        }
+        Update: {
+          post_id?: string
+          viewed_at?: string
+          viewer_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "post_views_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "tweets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           accent: string | null
@@ -310,6 +336,7 @@ export type Database = {
           unread: number
         }[]
       }
+      get_post_analytics: { Args: { p_post_id?: string }; Returns: Json }
       get_suggested_users: {
         Args: { p_limit: number; p_seed: string }
         Returns: {
@@ -352,6 +379,7 @@ export type Database = {
         Args: { p_retweet: boolean; p_tweet_id: string }
         Returns: undefined
       }
+      record_post_view: { Args: { p_post_id: string }; Returns: undefined }
     }
     Enums: {
       [_ in never]: never

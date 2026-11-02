@@ -15,7 +15,7 @@ export function MobileSidebar(): JSX.Element {
   const { photoURL, name } = user as User;
 
   return (
-    <Button className='accent-tab p-0 xs:hidden' onClick={openDrawer}>
+    <Button aria-label='Open account menu' className='accent-tab p-0 xs:hidden' onClick={openDrawer}>
       <NextImage
         useSkeleton
         imgClassName='rounded-full'

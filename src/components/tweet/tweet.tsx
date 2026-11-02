@@ -15,6 +15,8 @@ import { TweetActions } from './tweet-actions';
 import { TweetStatus } from './tweet-status';
 import { TweetStats } from './tweet-stats';
 import { TweetDate } from './tweet-date';
+import { PostFollow } from './post-follow';
+import { supabase } from '@/integrations/supabase/client';
 import type { Variants } from 'framer-motion';
 import type { Tweet } from '@lib/types/tweet';
 import type { User } from '@lib/types/user';
@@ -25,6 +27,7 @@ export type TweetProps = Tweet & {
   pinned?: boolean;
   profile?: User | null;
   parentTweet?: boolean;
+  showFollow?: boolean;
 };
 
 export const variants: Variants = {
@@ -46,6 +49,7 @@ export function Tweet(tweet: TweetProps): JSX.Element {
     createdBy,
     createdAt,
     parentTweet,
+    showFollow,
     userReplies,
     userRetweets,
     user: tweetUserData
@@ -82,6 +86,10 @@ export function Tweet(tweet: TweetProps): JSX.Element {
         ...variants['animate'],
         ...(parentTweet && { transition: { duration: 0.2 } })
       }}
+      onViewportEnter={() => {
+        if (user && !isOwner && !modal) void supabase.rpc('record_post_view', { p_post_id: tweetId });
+      }}
+      viewport={{ once: true, amount: 0.5 }}
     >
       <Modal
         className='flex items-start justify-center'
@@ -155,8 +163,8 @@ export function Tweet(tweet: TweetProps): JSX.Element {
                   </UserTooltip>
                   <TweetDate tweetLink={tweetLink} createdAt={createdAt} />
                 </div>
-                <div className='px-4'>
-
+                <div className='flex shrink-0 items-center gap-1'>
+                  {showFollow && !modal && <PostFollow userId={ownerId} username={username} />}
                   {!modal && (
                     <TweetActions
                       isOwner={isOwner}

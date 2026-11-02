@@ -48,6 +48,9 @@ const navLinks: Readonly<NavLink[]> = [
     linkName: 'Bookmarks',
     iconName: 'BookmarkIcon',
     canBeHidden: true
+  },
+  {
+    href: '/analytics', linkName: 'Analytics', iconName: 'ChartBarIcon', canBeHidden: true
   }
 ];
 
@@ -99,7 +102,7 @@ export function Sidebar(): JSX.Element {
             />
             {!isMobile && <MoreSettings />}
           </nav>
-          {!hideCompose && (
+          {!hideCompose && !isMobile && (
             <Button
               className='accent-tab absolute right-4 -translate-y-[72px] bg-main-accent text-lg font-bold text-main-accent-foreground
                          outline-none transition hover:brightness-90 active:brightness-75 xs:static xs:translate-y-0

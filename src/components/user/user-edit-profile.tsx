@@ -4,7 +4,7 @@ import cn from 'clsx';
 import { useUser } from '@lib/context/user-context';
 import { useModal } from '@lib/hooks/useModal';
 import { updateUserData, uploadImages } from '@lib/firebase/utils';
-import { sleep } from '@lib/utils';
+import { DEFAULT_AVATAR_URL } from '@lib/default-avatar';
 import { getImagesData } from '@lib/validation';
 import { Modal } from '@components/modal/modal';
 import { EditProfileModal } from '@components/modal/edit-profile-modal';
@@ -64,7 +64,9 @@ export function UserEditProfile({ hide }: UserEditProfileProps): JSX.Element {
     : '';
 
   const updateData = async (): Promise<void> => {
+    if (loading || !user) return;
     setLoading(true);
+    try {
 
     const userId = user?.id as string;
 
@@ -100,8 +102,6 @@ export function UserEditProfile({ hide }: UserEditProfileProps): JSX.Element {
       ...newImages
     };
 
-    await sleep(500);
-
     await updateUserData(userId, newUserData);
 
     closeModal();
@@ -112,6 +112,8 @@ export function UserEditProfile({ hide }: UserEditProfileProps): JSX.Element {
     setEditUserData(newUserData);
 
     toast.success('Profile updated successfully');
+    } catch (error) { toast.error(error instanceof Error ? error.message : 'Could not save your profile.'); }
+    finally { setLoading(false); }
   };
 
   const editImage =
@@ -154,6 +156,12 @@ export function UserEditProfile({ hide }: UserEditProfileProps): JSX.Element {
     URL.revokeObjectURL(editUserData.coverPhotoURL ?? '');
   };
 
+  const removeProfileImage = (): void => {
+    if (editUserData.photoURL?.startsWith('blob:')) URL.revokeObjectURL(editUserData.photoURL);
+    setEditUserData(current => ({ ...current, photoURL: DEFAULT_AVATAR_URL }));
+    setUserImages(current => ({ ...current, photoURL: [] }));
+  };
+
   const cleanImage = (): void => {
     const imagesKey: Readonly<Partial<EditableData>[]> = [
       'photoURL',
@@ -170,7 +178,8 @@ export function UserEditProfile({ hide }: UserEditProfileProps): JSX.Element {
     });
   };
 
-  const resetUserEditData = (): void =>
+  const resetUserEditData = (): void => {
+    cleanImage();
     setEditUserData({
       bio,
       name,
@@ -179,6 +188,7 @@ export function UserEditProfile({ hide }: UserEditProfileProps): JSX.Element {
       location,
       coverPhotoURL
     });
+  };
 
   const handleChange =
     (key: EditableData) =>
@@ -230,7 +240,7 @@ export function UserEditProfile({ hide }: UserEditProfileProps): JSX.Element {
   return (
     <form className={cn(hide && 'hidden md:block')}>
       <Modal
-        modalClassName='relative bg-main-background rounded-2xl max-w-xl w-full h-[672px] overflow-hidden'
+        modalClassName='relative bg-main-background rounded-2xl max-w-xl w-full h-[min(672px,100dvh)] overflow-hidden'
         open={open}
         closeModal={closeModal}
       >
@@ -244,6 +254,7 @@ export function UserEditProfile({ hide }: UserEditProfileProps): JSX.Element {
           closeModal={closeModal}
           updateData={updateData}
           removeCoverImage={removeCoverImage}
+          removeProfileImage={removeProfileImage}
           resetUserEditData={resetUserEditData}
         >
           {inputFields.map((inputData) => (

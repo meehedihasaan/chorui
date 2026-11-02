@@ -10,11 +10,11 @@ import { orderBy, where } from "@lib/firebase/db";
 import { HomeLayout, ProtectedLayout } from "@components/layout/common-layout";
 import { MainLayout } from "@components/layout/main-layout";
 import { MainContainer } from "@components/home/main-container";
-import { Input } from "@components/input/input";
 import { UpdateUsername } from "@components/home/update-username";
 import { HeaderSearch } from "@components/home/header-search";
 import { MainHeader } from "@components/home/main-header";
 import { FeedTabs } from "@components/home/feed-tabs";
+import { ComposeEntry } from '@components/home/compose-entry';
 import { Tweet } from "@components/tweet/tweet";
 import { Loading } from "@components/ui/loading";
 import { Error } from "@components/ui/error";
@@ -52,7 +52,6 @@ function HomePage() {
 // The window provider mounts inside MainLayout, so window-aware UI must be a
 // child of it rather than read the context in the route component itself.
 function HomeFeed() {
-  const { isMobile } = useWindow();
   const { user } = useAuth();
   const { tab } = Route.useSearch() as { tab?: string };
 
@@ -91,7 +90,7 @@ function HomeFeed() {
         </div>
         <FeedTabs />
       </MainHeader>
-      {!isMobile && <Input />}
+      <ComposeEntry />
       <section className="mt-0.5 xs:mt-0">
         {loading ? (
           <Loading className="mt-5" />
@@ -105,7 +104,7 @@ function HomeFeed() {
           <>
             <AnimatePresence mode="popLayout">
               {data.map((tweet) => (
-                <Tweet {...tweet} key={tweet.id} />
+                <Tweet {...tweet} showFollow={!followingTab} key={tweet.id} />
               ))}
             </AnimatePresence>
             <LoadMore />

@@ -15,3 +15,6 @@
 - User-uploaded images live in the private `images` bucket and are served through the `/api/public/media/$userId/$id` server route (service-role read inside the handler); the bucket must stay private — the workspace rejects public buckets.
 - Twitter trends API was not migrated; trends are served by app server routes from curated data in `src/lib/trends-data.ts`.
 - Source Gmail notify-email cloud function was not migrated; if the user wants tweet notifications, use Lovable transactional email after a verified sender domain.
+- Post analytics are owner-only through authenticated RPC; unique signed-in non-author views are deduplicated per post/user and start when tracking is deployed.
+- Account switching keeps provider-issued sessions in tab-scoped sessionStorage only, validates through auth.setSession, and never treats saved identity metadata as authorization.
+- Shared optimistic follow/reaction controls roll back failed writes; Home timelines retain deterministic createdAt ordering.

@@ -32,6 +32,7 @@ export function TweetOption({
   return (
     <Button
       aria-label={tip}
+      disabled={disabled}
       className={cn(
         `group flex items-center gap-1.5 p-0 transition-none
          disabled:cursor-not-allowed inner:transition inner:duration-200`,

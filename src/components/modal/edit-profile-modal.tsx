@@ -21,6 +21,7 @@ type EditProfileModalProps = Pick<
   closeModal: () => void;
   updateData: () => Promise<void>;
   removeCoverImage: () => void;
+  removeProfileImage: () => void;
   resetUserEditData: () => void;
 };
 
@@ -35,6 +36,7 @@ export function EditProfileModal({
   closeModal,
   updateData,
   removeCoverImage,
+  removeProfileImage,
   resetUserEditData
 }: EditProfileModalProps): JSX.Element {
   const coverInputFileRef = useRef<HTMLInputElement>(null);
@@ -169,6 +171,10 @@ export function EditProfileModal({
                 <ToolTip groupInner tip='Add photo' />
               </Button>
             </div>
+          </div>
+          <div className='flex flex-wrap gap-3'>
+            <Button aria-label='Replace profile photo' onClick={handleClick('profile')} className='flex items-center gap-2 rounded-md border border-light-border px-3 py-2 text-sm font-bold dark:border-dark-border'><HeroIcon className='h-4 w-4' iconName='CameraIcon' />Change photo</Button>
+            <Button aria-label='Remove profile photo' onClick={removeProfileImage} className='flex items-center gap-2 rounded-md px-3 py-2 text-sm font-bold text-accent-red'><HeroIcon className='h-4 w-4' iconName='TrashIcon' />Remove photo</Button>
           </div>
           {children}
           <Button

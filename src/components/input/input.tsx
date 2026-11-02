@@ -9,7 +9,6 @@ import {
   uploadImages
 } from '@lib/firebase/utils';
 import { useAuth } from '@lib/context/auth-context';
-import { sleep } from '@lib/utils';
 import { getImagesData } from '@lib/validation';
 import { UserAvatar } from '@components/user/user-avatar';
 import { InputForm, fromTop } from './input-form';
@@ -71,17 +70,17 @@ export function Input({
   );
 
   const sendTweet = async (): Promise<void> => {
+    if (loading || !user) return;
     inputRef.current?.blur();
 
     setLoading(true);
+    try {
 
     const isReplying = reply ?? replyModal;
 
     const userId = user?.id as string;
 
     const images = await uploadImages(userId, selectedImages);
-
-    await sleep(500);
 
     const tweet = await createTweet(
       inputValue.trim() || null,
@@ -90,6 +89,7 @@ export function Input({
     );
 
     const tweetId = tweet?.id;
+    if (!tweetId) throw new Error('Your post could not be sent. Please try again.');
 
     if (!modal && !replyModal) {
       discardTweet();
@@ -109,6 +109,8 @@ export function Input({
       ),
       { duration: 6000 }
     );
+    } catch (error) { toast.error(error instanceof Error ? error.message : 'Your post could not be sent.'); }
+    finally { setLoading(false); }
   };
 
   const handleImageUpload = (
@@ -135,8 +137,9 @@ export function Input({
 
     const { imagesPreviewData, selectedImagesData } = imagesData;
 
-    setImagesPreview([...imagesPreview, ...imagesPreviewData]);
-    setSelectedImages([...selectedImages, ...selectedImagesData]);
+    setImagesPreview(previous => [...previous, ...imagesPreviewData]);
+    setSelectedImages(previous => [...previous, ...selectedImagesData]);
+    if (!isClipboardEvent) e.target.value = '';
 
     inputRef.current?.focus();
   };
@@ -228,7 +231,7 @@ export function Input({
         htmlFor={formId}
       >
         <UserAvatar src={photoURL} alt={name} username={username} />
-        <div className='flex w-full flex-col gap-4'>
+        <div className='flex w-full min-w-0 flex-col gap-4'>
           <InputForm
             modal={modal}
             reply={reply}

@@ -22,6 +22,7 @@ const topNavLinks: Readonly<MobileNavLink[]> = [
   { href: '/notifications', linkName: 'Notifications', iconName: 'BellIcon' },
   { href: '/bookmarks', linkName: 'Bookmarks', iconName: 'BookmarkIcon' },
   { href: '/trends', linkName: 'Topics', iconName: 'ChatBubbleBottomCenterTextIcon' }
+  ,{ href: '/analytics', linkName: 'Analytics', iconName: 'ChartBarIcon' }
 ];
 
 const bottomNavLinks: Readonly<MobileNavLink[]> = [
@@ -102,7 +103,7 @@ export function MobileSidebarModal({
       <section className='flex h-full flex-col px-4 pt-4 pb-4'>
         <div className='flex items-start justify-between'>
           <UserAvatar username={username} src={photoURL} alt={name} size={44} />
-          <Link href='/settings'>
+          <Link href='/accounts'>
             <a
               aria-label='Add account'
               className='flex h-8 w-8 items-center justify-center rounded-full border border-light-border
