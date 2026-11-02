@@ -51,6 +51,9 @@ const navLinks: Readonly<NavLink[]> = [
   },
   {
     href: '/analytics', linkName: 'Analytics', iconName: 'ChartBarIcon', canBeHidden: true
+  },
+  {
+    href: '/verified', linkName: 'Verified', iconName: 'CheckBadgeIcon', canBeHidden: true
   }
 ];
 

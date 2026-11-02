@@ -355,6 +355,24 @@ export type Database = {
         }
         Relationships: []
       }
+      user_roles: {
+        Row: {
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_stats: {
         Row: {
           likes: string[]
@@ -372,6 +390,45 @@ export type Database = {
           likes?: string[]
           tweets?: string[]
           updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      verification_requests: {
+        Row: {
+          category: string
+          created_at: string
+          full_name: string
+          id: string
+          id_photo_path: string
+          link: string
+          reason: string
+          reviewed_at: string | null
+          status: string
+          user_id: string
+        }
+        Insert: {
+          category: string
+          created_at?: string
+          full_name: string
+          id?: string
+          id_photo_path: string
+          link: string
+          reason?: string
+          reviewed_at?: string | null
+          status?: string
+          user_id: string
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          full_name?: string
+          id?: string
+          id_photo_path?: string
+          link?: string
+          reason?: string
+          reviewed_at?: string | null
+          status?: string
           user_id?: string
         }
         Relationships: []
@@ -450,6 +507,13 @@ export type Database = {
           isSetofReturn: true
         }
       }
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
       is_conversation_participant: { Args: { c: string }; Returns: boolean }
       manage_like: {
         Args: { p_like: boolean; p_tweet_id: string }
@@ -464,11 +528,15 @@ export type Database = {
         Returns: undefined
       }
       record_post_view: { Args: { p_post_id: string }; Returns: undefined }
+      review_verification: {
+        Args: { p_approve: boolean; p_request_id: string }
+        Returns: undefined
+      }
       username_taken: { Args: { p_username: string }; Returns: boolean }
       users_blocked: { Args: { a: string; b: string }; Returns: boolean }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "moderator" | "user"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -595,6 +663,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "moderator", "user"],
+    },
   },
 } as const

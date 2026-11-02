@@ -22,6 +22,7 @@ import { Route as PostRouteImport } from './routes/post'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as TrendsRouteImport } from './routes/trends'
+import { Route as VerifiedRouteImport } from './routes/verified'
 import { Route as MessagesIdRouteImport } from './routes/messages.$id'
 import { Route as TweetIdRouteImport } from './routes/tweet.$id'
 import { Route as UserIdRouteImport } from './routes/user.$id'
@@ -99,6 +100,11 @@ const SettingsRoute = SettingsRouteImport.update({
 const TrendsRoute = TrendsRouteImport.update({
   id: '/trends',
   path: '/trends',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const VerifiedRoute = VerifiedRouteImport.update({
+  id: '/verified',
+  path: '/verified',
   getParentRoute: () => rootRouteImport,
 } as any)
 const MessagesIdRoute = MessagesIdRouteImport.update({
@@ -182,6 +188,7 @@ export interface FileRoutesByFullPath {
   '/reset-password': typeof ResetPasswordRoute
   '/settings': typeof SettingsRoute
   '/trends': typeof TrendsRoute
+  '/verified': typeof VerifiedRoute
   '/messages/$id': typeof MessagesIdRoute
   '/tweet/$id': typeof TweetIdRoute
   '/user/$id': typeof UserIdRouteWithChildren
@@ -210,6 +217,7 @@ export interface FileRoutesByTo {
   '/reset-password': typeof ResetPasswordRoute
   '/settings': typeof SettingsRoute
   '/trends': typeof TrendsRoute
+  '/verified': typeof VerifiedRoute
   '/messages/$id': typeof MessagesIdRoute
   '/tweet/$id': typeof TweetIdRoute
   '/api/public/link-image': typeof ApiPublicLinkImageRoute
@@ -238,6 +246,7 @@ export interface FileRoutesById {
   '/reset-password': typeof ResetPasswordRoute
   '/settings': typeof SettingsRoute
   '/trends': typeof TrendsRoute
+  '/verified': typeof VerifiedRoute
   '/messages/$id': typeof MessagesIdRoute
   '/tweet/$id': typeof TweetIdRoute
   '/user/$id': typeof UserIdRouteWithChildren
@@ -268,6 +277,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/settings'
     | '/trends'
+    | '/verified'
     | '/messages/$id'
     | '/tweet/$id'
     | '/user/$id'
@@ -296,6 +306,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/settings'
     | '/trends'
+    | '/verified'
     | '/messages/$id'
     | '/tweet/$id'
     | '/api/public/link-image'
@@ -323,6 +334,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/settings'
     | '/trends'
+    | '/verified'
     | '/messages/$id'
     | '/tweet/$id'
     | '/user/$id'
@@ -352,6 +364,7 @@ export interface RootRouteChildren {
   ResetPasswordRoute: typeof ResetPasswordRoute
   SettingsRoute: typeof SettingsRoute
   TrendsRoute: typeof TrendsRoute
+  VerifiedRoute: typeof VerifiedRoute
   TweetIdRoute: typeof TweetIdRoute
   UserIdRoute: typeof UserIdRouteWithChildren
   ApiPublicLinkImageRoute: typeof ApiPublicLinkImageRoute
@@ -451,6 +464,13 @@ declare module '@tanstack/react-router' {
       path: '/trends'
       fullPath: '/trends'
       preLoaderRoute: typeof TrendsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/verified': {
+      id: '/verified'
+      path: '/verified'
+      fullPath: '/verified'
+      preLoaderRoute: typeof VerifiedRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/messages/$id': {
@@ -594,6 +614,7 @@ const rootRouteChildren: RootRouteChildren = {
   ResetPasswordRoute: ResetPasswordRoute,
   SettingsRoute: SettingsRoute,
   TrendsRoute: TrendsRoute,
+  VerifiedRoute: VerifiedRoute,
   TweetIdRoute: TweetIdRoute,
   UserIdRoute: UserIdRouteWithChildren,
   ApiPublicLinkImageRoute: ApiPublicLinkImageRoute,
