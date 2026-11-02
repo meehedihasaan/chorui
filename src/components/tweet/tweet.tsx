@@ -151,8 +151,8 @@ export function Tweet(tweet: TweetProps): JSX.Element {
               )}
             </div>
             <div className='flex min-w-0 flex-col'>
-              <div className='flex justify-between gap-2 text-light-secondary dark:text-dark-secondary'>
-                <div className='flex items-baseline gap-1 truncate xs:overflow-visible xs:whitespace-normal'>
+              <div className='flex items-center justify-between gap-2 text-light-secondary dark:text-dark-secondary'>
+                <div className='flex min-w-0 items-center gap-1 truncate xs:overflow-visible xs:whitespace-normal'>
                   <UserTooltip modal={modal} {...tweetUserData}>
                     <UserName
                       name={name}
