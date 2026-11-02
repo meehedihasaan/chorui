@@ -1,5 +1,7 @@
 import { MobileSidebar } from "@components/sidebar/mobile-sidebar";
 import { ChoruiLogo } from "@components/ui/chorui-logo";
+import cn from "clsx";
+import { useEffect, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { AnimatePresence } from "framer-motion";
 import { useWindow } from "@lib/context/window-context";
