@@ -88,6 +88,8 @@ export function TweetActions({
     closeModal: pinCloseModal
   } = useModal();
 
+  const { open: activityOpen, openModal: activityOpenModal, closeModal: activityCloseModal } = useModal();
+
   const { id: userId, following, pinnedTweet } = user as User;
 
   const isInAdminControl = isAdmin && !isOwner;
@@ -205,23 +207,12 @@ export function TweetActions({
             <AnimatePresence>
               {open && (
                 <Popover.Panel
-                  className='menu-container group absolute top-[50px] right-2 whitespace-nowrap text-light-primary 
+                  className='menu-container group absolute top-[50px] right-0 z-20 w-64 max-w-[calc(100vw-32px)] text-light-primary 
                              dark:text-dark-primary'
                   as={motion.div}
                   {...variants}
                   static
                 >
-                  {(isAdmin || isOwner) && (
-                    <Popover.Button
-                      className='accent-tab flex w-full gap-3 rounded-md rounded-b-none p-4 text-accent-red
-                                 hover:bg-main-sidebar-background'
-                      as={Button}
-                      onClick={preventBubbling(removeOpenModal)}
-                    >
-                      <HeroIcon iconName='TrashIcon' />
-                      Delete
-                    </Popover.Button>
-                  )}
                   {isOwner ? (
                     <Popover.Button
                       className='accent-tab flex w-full gap-3 rounded-md rounded-t-none p-4 hover:bg-main-sidebar-background'
@@ -263,12 +254,34 @@ export function TweetActions({
                       Follow @{username}
                     </Popover.Button>
                   )}
+                  {isOwner && <>
+                    <Popover.Button as={Button} className='accent-tab flex w-full items-center gap-3 rounded-none p-4 text-left text-accent-red hover:bg-main-sidebar-background' onClick={preventBubbling(removeOpenModal)}>
+                      <HeroIcon iconName='TrashIcon' />Delete Post
+                    </Popover.Button>
+                    <Button disabled title='Post editing is not available yet' className='flex w-full items-center gap-3 rounded-none p-4 text-left disabled:opacity-50'><HeroIcon iconName='PencilSquareIcon' />Edit Post</Button>
+                    <Button disabled title='Reply permissions are not available yet' className='flex w-full items-center gap-3 rounded-none p-4 text-left disabled:opacity-50'><HeroIcon iconName='ChatBubbleLeftRightIcon' /><span>Change who can reply</span></Button>
+                  </>}
+                  {!isOwner && <>
+                    <Button disabled title='Muting is not available yet' className='flex w-full items-center gap-3 rounded-none p-4 text-left disabled:opacity-50'><HeroIcon iconName='SpeakerXMarkIcon' />Mute</Button>
+                    <Button disabled title='Blocking is not available yet' className='flex w-full items-center gap-3 rounded-none p-4 text-left disabled:opacity-50'><HeroIcon iconName='NoSymbolIcon' /><span className='break-all'>Block @{username}</span></Button>
+                  </>}
+                  <Popover.Button as={Button} className='accent-tab flex w-full items-center gap-3 rounded-none p-4 text-left hover:bg-main-sidebar-background' onClick={preventBubbling(() => { close(); if (isOwner) void push(`/analytics?post=${tweetId}`); else activityOpenModal(); })}>
+                    <HeroIcon iconName='ChartBarIcon' />View post activity
+                  </Popover.Button>
+                  {!isOwner && <Button disabled title='Reporting is not available yet' className='flex w-full items-center gap-3 rounded-none p-4 text-left disabled:opacity-50'><HeroIcon iconName='FlagIcon' />Report post</Button>}
                 </Popover.Panel>
               )}
             </AnimatePresence>
           </>
         )}
       </Popover>
+      <Modal open={activityOpen} closeModal={activityCloseModal} modalClassName='w-full max-w-sm rounded-lg bg-main-background p-6'>
+        <div className='space-y-4 text-light-primary dark:text-dark-primary'>
+          <h2 className='text-xl font-bold'>Post activity</h2>
+          <p className='text-light-secondary dark:text-dark-secondary'>Detailed analytics are only available to the author. Public likes, replies, and repost counts appear below the post.</p>
+          <Button onClick={activityCloseModal} className='w-full bg-main-accent py-2 font-bold text-main-accent-foreground'>Close</Button>
+        </div>
+      </Modal>
     </>
   );
 }
