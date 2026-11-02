@@ -14,7 +14,6 @@ import { MainLayout } from "@components/layout/main-layout";
 import { MainContainer } from "@components/home/main-container";
 import { UpdateUsername } from "@components/home/update-username";
 import { HeaderSearch } from "@components/home/header-search";
-import { MainHeader } from "@components/home/main-header";
 import { FeedTabs } from "@components/home/feed-tabs";
 import { ComposeEntry } from '@components/home/compose-entry';
 import { Tweet } from "@components/tweet/tweet";
