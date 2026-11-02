@@ -71,6 +71,13 @@
       "when": 1793602113002,
       "tag": "0009_username_change_support",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1793603648882,
+      "tag": "0010_verification_requests",
+      "breakpoints": true
     }
   ]
 }
