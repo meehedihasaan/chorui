@@ -1,6 +1,8 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
+import { toast } from 'react-hot-toast';
+import { useNavigate } from '@tanstack/react-router';
 import cn from 'clsx';
 import { manageRetweet, manageLike } from '@lib/firebase/utils';
 import { ViewTweetStats } from '@components/view/view-tweet-stats';
@@ -34,13 +36,20 @@ export function TweetStats({
 }: TweetStatsProps): JSX.Element {
   const totalLikes = userLikes.length;
   const totalTweets = userRetweets.length;
+  const navigate = useNavigate();
+  const likeBusy = useRef(false);
+  const repostBusy = useRef(false);
+  const [likedOverride, setLikedOverride] = useState<boolean | null>(null);
+  const [repostedOverride, setRepostedOverride] = useState<boolean | null>(null);
 
   const [{ currentReplies, currentTweets, currentLikes }, setCurrentStats] =
     useState({
       currentReplies: totalReplies,
-      currentLikes: totalLikes,
-      currentTweets: totalTweets
+      currentLikes: likeBusy.current ? currentLikes : totalLikes,
+      currentTweets: repostBusy.current ? currentTweets : totalTweets
     });
+    if (!likeBusy.current) setLikedOverride(null);
+    if (!repostBusy.current) setRepostedOverride(null);
 
   useEffect(() => {
     setCurrentStats({
@@ -65,8 +74,30 @@ export function TweetStats({
     [totalTweets]
   );
 
-  const tweetIsLiked = userLikes.includes(userId);
-  const tweetIsRetweeted = userRetweets.includes(userId);
+  const tweetIsLiked = likedOverride ?? userLikes.includes(userId);
+  const tweetIsRetweeted = repostedOverride ?? userRetweets.includes(userId);
+  const toggleLike = async () => {
+    if (likeBusy.current || !userId) return;
+    const next = !tweetIsLiked;
+    const previous = currentLikes;
+    likeBusy.current = true;
+    setLikedOverride(next);
+    setCurrentStats(s => ({ ...s, currentLikes: Math.max(0, previous + (next ? 1 : -1)) }));
+    try { await manageLike(next ? 'like' : 'unlike', userId, tweetId)(); }
+    catch { setLikedOverride(!next); setCurrentStats(s => ({ ...s, currentLikes: previous })); toast.error('Could not update your reaction.'); }
+    finally { likeBusy.current = false; }
+  };
+  const toggleRepost = async () => {
+    if (repostBusy.current || !userId) return;
+    const next = !tweetIsRetweeted;
+    const previous = currentTweets;
+    repostBusy.current = true;
+    setRepostedOverride(next);
+    setCurrentStats(s => ({ ...s, currentTweets: Math.max(0, previous + (next ? 1 : -1)) }));
+    try { await manageRetweet(next ? 'retweet' : 'unretweet', userId, tweetId)(); }
+    catch { setRepostedOverride(!next); setCurrentStats(s => ({ ...s, currentTweets: previous })); toast.error('Could not update your repost.'); }
+    finally { repostBusy.current = false; }
+  };
 
   const isStatsVisible = !!(totalReplies || totalTweets || totalLikes);
 
@@ -103,11 +134,7 @@ export function TweetStats({
           stats={currentLikes}
           iconName='HeartIcon'
           viewTweet={viewTweet}
-          onClick={manageLike(
-            tweetIsLiked ? 'unlike' : 'like',
-            userId,
-            tweetId
-          )}
+          onClick={toggleLike}
         />
 
         <TweetOption
@@ -134,11 +161,7 @@ export function TweetStats({
           stats={currentTweets}
           iconName='ArrowPathRoundedSquareIcon'
           viewTweet={viewTweet}
-          onClick={manageRetweet(
-            tweetIsRetweeted ? 'unretweet' : 'retweet',
-            userId,
-            tweetId
-          )}
+          onClick={toggleRepost}
         />
         <TweetShare userId={userId} tweetId={tweetId} viewTweet={viewTweet} />
         {isOwner && (
@@ -148,7 +171,7 @@ export function TweetStats({
                            group-focus-visible:bg-accent-blue/10 group-focus-visible:ring-accent-blue/80'
             tip='Analytics'
             iconName='ChartPieIcon'
-            disabled
+            onClick={() => navigate({ to: '/analytics', search: { post: tweetId } })}
           />
         )}
       </div>

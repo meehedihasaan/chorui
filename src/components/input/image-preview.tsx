@@ -56,9 +56,9 @@ export function ImagePreview({
 
   useEffect(() => {
     const imageData = imagesPreview[selectedIndex];
-    setSelectedImage(imageData);
+    setSelectedImage(imageData ?? null);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedIndex]);
+  }, [selectedIndex, imagesPreview]);
 
   const handleVideoStop = (): void => {
     if (videoRef.current) videoRef.current.pause();
@@ -89,10 +89,8 @@ export function ImagePreview({
   return (
     <div
       className={cn(
-        'grid grid-cols-2 grid-rows-2 rounded-2xl',
-        viewTweet
-          ? 'h-[51vw] xs:h-[42vw] md:h-[305px]'
-          : 'h-[42vw] xs:h-[37vw] md:h-[271px]',
+        'grid w-full min-w-0 grid-cols-2 grid-rows-2 rounded-lg',
+        previewCount === 1 ? 'aspect-[4/3] max-h-96' : 'aspect-[4/3]',
         isTweet ? 'mt-2 gap-0.5' : 'gap-3'
       )}
     >
@@ -105,23 +103,26 @@ export function ImagePreview({
         closeModal={closeModal}
         closePanelOnClick
       >
-        <ImageModal
+        {selectedImage && <ImageModal
           tweet={isTweet}
           imageData={selectedImage as ImageData}
           previewCount={previewCount}
           selectedIndex={selectedIndex}
           handleNextIndex={handleNextIndex}
-        />
+        />}
       </Modal>
       <AnimatePresence mode='popLayout'>
         {imagesPreview.map(({ id, src, alt }, index) => {
           const isVideo = imagesPreview[index].type?.includes('video');
 
           return (
-            <motion.button
-              type='button'
+            <motion.div
+              role='button'
+              tabIndex={0}
+              aria-label={`Preview ${alt}`}
+              onKeyDown={e => { if (e.key === 'Enter') handleSelectedImage(index, isVideo)(); }}
               className={cn(
-                'accent-tab group relative transition-shadow',
+                'accent-tab group relative min-h-0 min-w-0 overflow-hidden transition-shadow',
                 isTweet
                   ? postImageBorderRadius[previewCount][index]
                   : 'rounded-2xl',
@@ -177,6 +178,7 @@ export function ImagePreview({
               )}
               {removeImage && (
                 <Button
+                  aria-label='Remove photo'
                   className='group absolute top-0 left-0 translate-x-1 translate-y-1
                            bg-light-primary/75 p-1 backdrop-blur-sm 
                            hover:bg-image-preview-hover/75'
@@ -189,7 +191,7 @@ export function ImagePreview({
                   <ToolTip className='translate-y-2' tip='Remove' />
                 </Button>
               )}
-            </motion.button>
+            </motion.div>
           );
         })}
       </AnimatePresence>

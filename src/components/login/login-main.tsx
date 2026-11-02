@@ -5,8 +5,13 @@ import { NextImage } from '@components/ui/next-image';
 import { CustomIcon } from '@components/ui/custom-icon';
 import { ChoruiLogo } from '@components/ui/chorui-logo';
 import { Button } from '@components/ui/button';
+import { AccountForm } from './account-form';
 
 export function LoginMain(): JSX.Element {
+  return <main className='flex min-h-screen items-start justify-center bg-main-background px-6 py-10 sm:items-center'><AccountForm /></main>;
+}
+
+function LegacyLoginMain(): JSX.Element {
   const {
     signInWithGoogle,
     signInWithLovable,

@@ -32,11 +32,13 @@ export function NextImage({
   imgClassName,
   previewCount,
   blurClassName,
+  layout,
+  onLoadingComplete,
   ...rest
 }: NextImageProps): JSX.Element {
   const [loading, setLoading] = useState(!!useSkeleton);
 
-  const handleLoad = (): void => setLoading(false);
+  const handleLoad = (): void => { setLoading(false); onLoadingComplete?.(); };
 
   return (
     <figure style={{ width }} className={className}>
@@ -44,12 +46,11 @@ export function NextImage({
       <img
         className={cn(
           imgClassName,
+          layout === 'fill' && 'absolute inset-0 h-full w-full',
           loading
             ? blurClassName ??
                 'animate-pulse bg-light-secondary dark:bg-dark-secondary'
-            : previewCount === 1
-            ? '!h-auto min-h-0! w-auto! min-w-0! rounded-lg object-contain'
-            : 'object-cover'
+            : previewCount === 1 ? 'object-contain' : 'object-cover'
         )}
         src={src}
         width={width as number | undefined}
