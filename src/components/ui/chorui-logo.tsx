@@ -1,3 +1,4 @@
+import { resolveMediaUrl } from "@/lib/media-url";
 import cn from 'clsx';
 import logoAsset from '@/assets/chorui-logo.png.asset.json';
 import { useAppSettings } from '@lib/app-settings';
@@ -11,7 +12,7 @@ export function ChoruiLogo({ className }: ChoruiLogoProps): JSX.Element {
   const { logoUrl, appName } = useAppSettings();
   return (
     <img
-      src={logoUrl || logoAsset.url}
+      src={resolveMediaUrl(logoUrl || logoAsset.url)}
       alt={appName}
       draggable={false}
       className={cn('h-6 w-6 object-contain', className)}
