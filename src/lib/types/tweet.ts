@@ -1,7 +1,10 @@
 import type { ImagesPreview } from './file';
 import type { User } from './user';
 
+export type PostPlace = { name: string; address: string | null };
+
 export type Tweet = {
+  place?: PostPlace | null;
   id: string;
   text: string | null;
   images: ImagesPreview | null;

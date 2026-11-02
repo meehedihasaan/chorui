@@ -33,6 +33,11 @@ const options: Readonly<Options> = [
     disabled: false
   },
   {
+    name: 'Location',
+    iconName: 'MapPinIcon',
+    disabled: false
+  },
+  {
     name: 'Poll',
     iconName: 'ChartBarIcon',
     disabled: true
@@ -40,11 +45,6 @@ const options: Readonly<Options> = [
   {
     name: 'Schedule',
     iconName: 'CalendarDaysIcon',
-    disabled: true
-  },
-  {
-    name: 'Location',
-    iconName: 'MapPinIcon',
     disabled: true
   }
 ];
@@ -61,6 +61,7 @@ type InputOptionsProps = {
   ) => void;
   onEmoji?: (emoji: string) => void;
   onGifFile?: (file: File) => void;
+  onLocation?: () => void;
 };
 
 export function InputOptions({
@@ -72,7 +73,8 @@ export function InputOptions({
   isCharLimitExceeded,
   handleImageUpload,
   onEmoji,
-  onGifFile
+  onGifFile,
+  onLocation
 }: InputOptionsProps): JSX.Element {
   const inputFileRef = useRef<HTMLInputElement>(null);
 
@@ -81,6 +83,7 @@ export function InputOptions({
   const handlers: Record<string, (() => void) | undefined> = {
     Media: onClick,
     GIF: onGifFile ? () => setPicker(p => (p === 'gif' ? null : 'gif')) : undefined,
+    Location: onLocation,
     Emoji: onEmoji ? () => setPicker(p => (p === 'emoji' ? null : 'emoji')) : undefined
   };
 
@@ -88,15 +91,15 @@ export function InputOptions({
 
   if (reply)
     filteredOptions = filteredOptions.filter(
-      (_, index) => ![3, 4].includes(index)
+      ({ name }) => !['Poll', 'Schedule', 'Location'].includes(name)
     );
 
   return (
     <motion.div className='flex justify-between' {...variants}>
       <div className='relative'>
       <div
-        className='flex text-main-accent xs:[&>button:nth-child(n+6)]:hidden 
-                   md:[&>button]:!block [&>button:nth-child(n+4)]:hidden'
+        className='flex text-main-accent xs:[&>button:nth-child(n+7)]:hidden 
+                   md:[&>button]:!block [&>button:nth-child(n+6)]:hidden'
       >
         <input
           className='hidden'

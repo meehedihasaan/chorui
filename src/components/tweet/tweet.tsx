@@ -17,6 +17,7 @@ import { TweetStatus } from './tweet-status';
 import { TweetStats } from './tweet-stats';
 import { TweetDate } from './tweet-date';
 import { PostFollow } from './post-follow';
+import { PostPlaceCard } from '@components/tweet/post-place';
 import { PostLinkPreview } from './link-preview';
 import { HighlightedReply } from './highlighted-reply';
 import { supabase } from '@/integrations/supabase/client';
@@ -200,6 +201,7 @@ export function Tweet(tweet: TweetProps): JSX.Element {
                 <PostText className='whitespace-pre-line break-words' text={text} />
               )}
               <div className='mt-1 flex flex-col gap-2'>
+                {tweet.place?.name && <PostPlaceCard place={tweet.place} />}
                 <PostLinkPreview text={text} />
                 {images && (
                   <ImagePreview

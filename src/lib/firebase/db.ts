@@ -144,6 +144,7 @@ export function mapTweet(row: RawRow | null): Tweet | null {
     id: row.id as string,
     text: (row.text as string | null) ?? null,
     images: (row.images as Tweet['images']) ?? null,
+    place: (row.place as Tweet['place']) ?? null,
     parent: row.parent_id
       ? { id: row.parent_id as string, username: (row.parent_username as string) ?? '' }
       : null,
