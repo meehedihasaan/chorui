@@ -299,6 +299,7 @@ export type Database = {
           images: Json | null
           parent_id: string | null
           parent_username: string | null
+          place: Json | null
           reply_permission: string
           text: string | null
           updated_at: string | null
@@ -314,6 +315,7 @@ export type Database = {
           images?: Json | null
           parent_id?: string | null
           parent_username?: string | null
+          place?: Json | null
           reply_permission?: string
           text?: string | null
           updated_at?: string | null
@@ -329,6 +331,7 @@ export type Database = {
           images?: Json | null
           parent_id?: string | null
           parent_username?: string | null
+          place?: Json | null
           reply_permission?: string
           text?: string | null
           updated_at?: string | null
@@ -530,30 +533,62 @@ export type Database = {
         Returns: undefined
       }
       can_reply_to_post: { Args: { p_post_id: string }; Returns: boolean }
-      create_tweet: {
-        Args: { p_images: Json; p_parent_id: string; p_text: string }
-        Returns: {
-          created_at: string
-          created_by: string
-          edited_at: string | null
-          id: string
-          images: Json | null
-          parent_id: string | null
-          parent_username: string | null
-          reply_permission: string
-          text: string | null
-          updated_at: string | null
-          user_likes: string[]
-          user_replies: number
-          user_retweets: string[]
-        }
-        SetofOptions: {
-          from: "*"
-          to: "tweets"
-          isOneToOne: true
-          isSetofReturn: false
-        }
-      }
+      create_tweet:
+        | {
+            Args: { p_images: Json; p_parent_id: string; p_text: string }
+            Returns: {
+              created_at: string
+              created_by: string
+              edited_at: string | null
+              id: string
+              images: Json | null
+              parent_id: string | null
+              parent_username: string | null
+              place: Json | null
+              reply_permission: string
+              text: string | null
+              updated_at: string | null
+              user_likes: string[]
+              user_replies: number
+              user_retweets: string[]
+            }
+            SetofOptions: {
+              from: "*"
+              to: "tweets"
+              isOneToOne: true
+              isSetofReturn: false
+            }
+          }
+        | {
+            Args: {
+              p_images: Json
+              p_parent_id: string
+              p_place: Json
+              p_text: string
+            }
+            Returns: {
+              created_at: string
+              created_by: string
+              edited_at: string | null
+              id: string
+              images: Json | null
+              parent_id: string | null
+              parent_username: string | null
+              place: Json | null
+              reply_permission: string
+              text: string | null
+              updated_at: string | null
+              user_likes: string[]
+              user_replies: number
+              user_retweets: string[]
+            }
+            SetofOptions: {
+              from: "*"
+              to: "tweets"
+              isOneToOne: true
+              isSetofReturn: false
+            }
+          }
       get_conversations: {
         Args: never
         Returns: {
