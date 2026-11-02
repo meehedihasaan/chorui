@@ -54,7 +54,7 @@ export function EditProfileModal({
         disableSticky
         iconName='XMarkIcon'
         tip='Close'
-        className='absolute flex w-full items-center gap-6 rounded-tl-2xl'
+        className='relative flex w-full shrink-0 items-center gap-3 sm:gap-6'
         title='Edit profile'
         action={closeModal}
       >
@@ -84,11 +84,11 @@ export function EditProfileModal({
       </MainHeader>
       <section
         className={cn(
-          'h-full overflow-y-auto transition-opacity',
+          'min-h-0 flex-1 overflow-y-auto overscroll-contain transition-opacity',
           loading && 'pointer-events-none opacity-50'
         )}
       >
-        <div className='group relative mt-[52px] h-36 xs:h-44 sm:h-48'>
+        <div className='group relative h-36 xs:h-44 sm:h-48'>
           <input
             className='hidden'
             type='file'
