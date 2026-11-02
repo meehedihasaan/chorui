@@ -16,6 +16,7 @@ import { HeroIcon } from '@components/ui/hero-icon';
 import { AdminReview } from '@components/admin/verification-review';
 import { GeneralSettings } from '@components/admin/general-settings';
 import { AuthSetup } from '@components/admin/auth-setup';
+import { GoogleSignInSetup } from '@components/admin/google-signin-setup';
 
 export const Route = createFileRoute('/admin')({
   ssr: false,
@@ -113,7 +114,7 @@ function AdminContent() {
       {tab === 'Posts' && <Posts />}
       {tab === 'Reports' && <Reports />}
       {tab === 'Verification' && <AdminReview />}
-      {tab === 'Settings' && <><GeneralSettings /><AuthSetup /></>}
+      {tab === 'Settings' && <><GeneralSettings /><GoogleSignInSetup /><AuthSetup /></>}
     </MainContainer>
   );
 }

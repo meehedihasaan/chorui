@@ -1,10 +1,5 @@
 const items = [
   {
-    title: 'Google sign-in',
-    status: 'On',
-    steps: 'Works already. To use your own Google app, open More → Users → Auth settings → Sign In Methods → Google and add your client ID and secret.'
-  },
-  {
     title: 'Phone sign-in (SMS)',
     status: 'Needs setup',
     steps: 'Open More → Users → Auth settings → Phone settings, turn it on and add a text-message service such as Twilio.'
