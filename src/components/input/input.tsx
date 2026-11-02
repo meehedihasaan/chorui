@@ -1,4 +1,5 @@
 import Link from '@lib/router';
+import { supabase } from '@/integrations/supabase/client';
 import { useState, useEffect, useRef, useId } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import cn from 'clsx';
