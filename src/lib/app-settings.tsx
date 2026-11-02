@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 
@@ -14,8 +14,12 @@ export const DEFAULT_SETTINGS: AppSettings = { appName: 'Chorui', logoUrl: null,
 export const APP_SETTINGS_KEY = ['app-settings'];
 
 export function useAppSettings(): AppSettings {
+  // read on the client only: the server render has no reliable session/storage and would cache defaults
+  const [ready, setReady] = useState(false);
+  useEffect(() => setReady(true), []);
   const { data } = useQuery({
     queryKey: APP_SETTINGS_KEY,
+    enabled: ready,
     staleTime: 60_000,
     queryFn: async (): Promise<AppSettings> => {
       const { data } = await supabase.from('app_settings').select('*').eq('id', 1).maybeSingle();
