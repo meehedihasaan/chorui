@@ -141,7 +141,8 @@ export function TweetActions({
       const [type] = args;
 
       closeMenu();
-      await toggleFollow();
+      const updated = await toggleFollow();
+      if (!updated) return;
 
       toast.success(
         `You ${type === 'follow' ? 'followed' : 'unfollowed'} @${username}`
