@@ -3,6 +3,7 @@ import Link from '@lib/router';
 import cn from 'clsx';
 import { preventBubbling } from '@lib/utils';
 import { HeroIcon } from '@components/ui/hero-icon';
+import { TwitterHomeIcon } from '@components/ui/custom-icon';
 import { useUnreadNotifications } from '@lib/hooks/useNotifications';
 import type { NavLink } from './sidebar';
 
