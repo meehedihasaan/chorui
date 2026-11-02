@@ -111,6 +111,7 @@ export function InputOptions({
             className='accent-tab accent-bg-tab group relative rounded-full p-2 
                        hover:bg-main-accent/10 active:bg-main-accent/20'
             onClick={e => { e.preventDefault(); handlers[name]?.(); }}
+            aria-label={name}
             disabled={disabled || !handlers[name]}
             key={name}
           >
