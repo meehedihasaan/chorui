@@ -89,7 +89,7 @@ export async function updateUserData(
 ): Promise<void> {
   const { photoURL, coverPhotoURL, ...rest } = userData;
 
-  await client
+  const { error } = await client
     .from('profiles')
     .update({
       ...rest,
@@ -100,7 +100,7 @@ export async function updateUserData(
       updated_at: new Date().toISOString()
     })
     .eq('id', userId);
-
+  if (error) throw error;
   notifyProfileUpdated();
 }
 
@@ -147,16 +147,19 @@ export async function manageFollow(
   userId: string,
   targetUserId: string
 ): Promise<void> {
-  if (type === 'follow')
-    await client
+  if (type === 'follow') {
+    const { error } = await client
       .from('follows')
-      .insert({ follower_id: userId, following_id: targetUserId });
-  else
-    await client
+      .upsert({ follower_id: userId, following_id: targetUserId }, { onConflict: 'follower_id,following_id', ignoreDuplicates: true });
+    if (error) throw error;
+  } else {
+    const { error } = await client
       .from('follows')
       .delete()
       .eq('follower_id', userId)
       .eq('following_id', targetUserId);
+    if (error) throw error;
+  }
   notifyDataChanged();
 }
 
@@ -202,7 +205,7 @@ export async function uploadImages(
           contentType: file.type || 'application/octet-stream'
         });
 
-      if (error) console.error('image upload failed', error.message);
+      if (error) throw new Error('Photo upload failed. Please try again.');
 
       return {
         id,
@@ -253,19 +256,23 @@ export function manageRetweet(
   tweetId: string
 ) {
   return async (): Promise<void> => {
-    await supabase.rpc('manage_retweet', {
+    const { error } = await supabase.rpc('manage_retweet', {
       p_tweet_id: tweetId,
       p_retweet: type === 'retweet'
-    }).then(() => notifyDataChanged());
+    });
+    if (error) throw error;
+    notifyDataChanged();
   };
 }
 
 export function manageLike(type: 'like' | 'unlike', userId: string, tweetId: string) {
   return async (): Promise<void> => {
-    await supabase.rpc('manage_like', {
+    const { error } = await supabase.rpc('manage_like', {
       p_tweet_id: tweetId,
       p_like: type === 'like'
-    }).then(() => notifyDataChanged());
+    });
+    if (error) throw error;
+    notifyDataChanged();
   };
 }
 

@@ -5,6 +5,7 @@ import { preventBubbling } from '@lib/utils';
 import { Modal } from '@components/modal/modal';
 import { ActionModal } from '@components/modal/action-modal';
 import { Button } from '@components/ui/button';
+import { useFollowAction } from '@lib/hooks/useFollowAction';
 
 type FollowButtonProps = {
   userTargetId: string;
@@ -17,20 +18,18 @@ export function FollowButton({
 }: FollowButtonProps): JSX.Element | null {
   const { user } = useAuth();
   const { open, openModal, closeModal } = useModal();
+  const { followed: userIsFollowed, pending, toggle } = useFollowAction(userTargetId);
 
   if (user?.id === userTargetId) return null;
 
-  const { id: userId, following } = user ?? {};
-
-  const handleFollow = (): Promise<void> =>
-    manageFollow('follow', userId as string, userTargetId);
+  const handleFollow = toggle;
 
   const handleUnfollow = async (): Promise<void> => {
-    await manageFollow('unfollow', userId as string, userTargetId);
+    closeModal();
+    await toggle();
     closeModal();
   };
 
-  const userIsFollowed = !!following?.includes(userTargetId ?? '');
 
   return (
     <>
@@ -49,6 +48,7 @@ export function FollowButton({
       </Modal>
       {userIsFollowed ? (
         <Button
+          disabled={pending}
           className='dark-bg-tab min-w-[106px] self-start border border-light-line-reply px-4 py-1.5 
                      font-bold hover:border-accent-red hover:bg-accent-red/10 hover:text-accent-red
                      hover:before:content-["Unfollow"] inner:hover:hidden dark:border-light-secondary'
@@ -58,6 +58,7 @@ export function FollowButton({
         </Button>
       ) : (
         <Button
+          disabled={pending}
           className='self-start border bg-light-primary px-4 py-1.5 font-bold text-white hover:bg-light-primary/90 
                      focus-visible:bg-light-primary/90 active:bg-light-border/75 dark:bg-light-border 
                      dark:text-light-primary dark:hover:bg-light-border/90 dark:focus-visible:bg-light-border/90 

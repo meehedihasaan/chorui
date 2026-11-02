@@ -26,7 +26,8 @@ type AuthContext = {
   signInWithGoogle: () => Promise<void>;
   signInWithLovable: () => Promise<void>;
   signInWithEmail: (email: string, password: string) => Promise<void>;
-  signUpWithEmail: (email: string, password: string) => Promise<void>;
+  signUpWithEmail: (email: string, password: string, name?: string) => Promise<void>;
+  setFollowing: (targetId: string, followed: boolean) => void;
 };
 
 export const AuthContext = createContext<AuthContext | null>(null);
@@ -201,32 +202,36 @@ export function AuthContextProvider({
   };
 
   const signInWithEmail = async (email: string, password: string): Promise<void> => {
+    setError(null);
     try {
       const { error: signInError } = await supabase.auth.signInWithPassword({
         email,
         password
       });
 
-      if (signInError) setError(signInError);
+      if (signInError) { setError(signInError); throw signInError; }
     } catch (signInError) {
       setError(signInError as Error);
+      throw signInError;
     }
   };
 
-  const signUpWithEmail = async (email: string, password: string): Promise<void> => {
+  const signUpWithEmail = async (email: string, password: string, name?: string): Promise<void> => {
+    setError(null);
     try {
       const { error: signUpError, data } = await supabase.auth.signUp({
         email,
         password,
-        options: { emailRedirectTo: window.location.origin }
+        options: { emailRedirectTo: window.location.origin, data: { name: name?.trim() } }
       });
 
-      if (signUpError) setError(signUpError);
+      if (signUpError) { setError(signUpError); throw signUpError; }
       // With email confirmation enabled the session is null until the user
       // confirms; with auto-confirm a session comes back immediately.
-      else if (!data.session) setError(new Error('Check your email to confirm your account.'));
+      else if (!data.session) setError(null);
     } catch (signUpError) {
       setError(signUpError as Error);
+      throw signUpError;
     }
   };
 
@@ -252,7 +257,10 @@ export function AuthContextProvider({
     signInWithGoogle,
     signInWithLovable,
     signInWithEmail,
-    signUpWithEmail
+    signUpWithEmail,
+    setFollowing: (targetId, followed) => setUser(current => current ? {
+      ...current, following: followed ? [...new Set([...current.following, targetId])] : current.following.filter(id => id !== targetId)
+    } : current)
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

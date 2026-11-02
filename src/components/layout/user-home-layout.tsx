@@ -10,6 +10,7 @@ import { UserHomeCover } from '@components/user/user-home-cover';
 import { UserHomeAvatar } from '@components/user/user-home-avatar';
 import { UserDetails } from '@components/user/user-details';
 import { UserNav } from '@components/user/user-nav';
+import { ComposeEntry } from '@components/home/compose-entry';
 import { Button } from '@components/ui/button';
 import { Loading } from '@components/ui/loading';
 import { HeroIcon } from '@components/ui/hero-icon';
@@ -105,6 +106,7 @@ export function UserHomeLayout({ children }: LayoutProps): JSX.Element {
       {userData && (
         <>
           <UserNav />
+          <ComposeEntry />
           {children}
         </>
       )}
