@@ -3,6 +3,7 @@ import Link from '@lib/router';
 import cn from 'clsx';
 import { preventBubbling } from '@lib/utils';
 import { HeroIcon } from '@components/ui/hero-icon';
+import { TwitterHomeIcon } from '@components/ui/custom-icon';
 import { useUnreadNotifications } from '@lib/hooks/useNotifications';
 import type { NavLink } from './sidebar';
 
@@ -49,16 +50,23 @@ export function SidebarLink({
               {unread > 9 ? '9+' : unread}
             </span>
           )}
-          <HeroIcon
-            className={cn(
-              iconClassName ?? 'h-7 w-7',
-              isActive &&
-                ['Explore', 'Lists'].includes(linkName) &&
-                'stroke-white'
-            )}
-            iconName={iconName}
-            solid={isActive}
-          />
+          {iconName === 'HomeIcon' ? (
+            <TwitterHomeIcon
+              className={iconClassName ?? 'h-7 w-7'}
+              solid={isActive}
+            />
+          ) : (
+            <HeroIcon
+              className={cn(
+                iconClassName ?? 'h-7 w-7',
+                isActive &&
+                  ['Explore', 'Lists'].includes(linkName) &&
+                  'stroke-white'
+              )}
+              iconName={iconName}
+              solid={isActive}
+            />
+          )}
           </span>
           <p className='hidden xl:block'>{linkName}</p>
         </div>

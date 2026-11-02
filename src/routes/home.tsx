@@ -1,5 +1,7 @@
 import { MobileSidebar } from "@components/sidebar/mobile-sidebar";
 import { ChoruiLogo } from "@components/ui/chorui-logo";
+import cn from "clsx";
+import { useEffect, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { AnimatePresence } from "framer-motion";
 import { useWindow } from "@lib/context/window-context";
@@ -12,7 +14,6 @@ import { MainLayout } from "@components/layout/main-layout";
 import { MainContainer } from "@components/home/main-container";
 import { UpdateUsername } from "@components/home/update-username";
 import { HeaderSearch } from "@components/home/header-search";
-import { MainHeader } from "@components/home/main-header";
 import { FeedTabs } from "@components/home/feed-tabs";
 import { ComposeEntry } from '@components/home/compose-entry';
 import { Tweet } from "@components/tweet/tweet";
@@ -51,9 +52,27 @@ function HomePage() {
 
 // The window provider mounts inside MainLayout, so window-aware UI must be a
 // child of it rather than read the context in the route component itself.
+// Height of the top header row (logo / search); the tab bar stays pinned
+// while this row slides away on scroll down.
+const HEADER_ROW_HEIGHT = 52;
+
 function HomeFeed() {
   const { user } = useAuth();
   const { tab } = Route.useSearch() as { tab?: string };
+
+  const [headerHidden, setHeaderHidden] = useState(false);
+
+  useEffect(() => {
+    let lastY = window.scrollY;
+    const onScroll = (): void => {
+      const y = window.scrollY;
+      if (y > 80 && y > lastY + 4) setHeaderHidden(true);
+      else if (y < lastY - 4 || y <= 80) setHeaderHidden(false);
+      lastY = y;
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   const followingTab = tab === "following";
 
@@ -78,8 +97,16 @@ function HomeFeed() {
 
   return (
     <MainContainer>
-      <MainHeader useMobileSidebar className="flex flex-col border-b border-light-border pb-0 dark:border-dark-border">
-        <div className="grid w-full grid-cols-[1fr_auto_1fr] items-center gap-3 xs:flex xs:justify-between">
+      <header
+        className={cn(
+          "hover-animation sticky top-0 z-10 border-b border-light-border bg-main-background/60 backdrop-blur-md transition-transform duration-300 dark:border-dark-border"
+        )}
+        style={headerHidden ? { transform: `translateY(-${HEADER_ROW_HEIGHT}px)` } : undefined}
+      >
+        <div
+          className="grid w-full grid-cols-[1fr_auto_1fr] items-center gap-3 px-4 xs:flex xs:justify-between"
+          style={{ height: HEADER_ROW_HEIGHT }}
+        >
           <div className="xs:hidden"><MobileSidebar /></div>
           <h2 className="hidden text-xl font-bold xs:block">Home</h2>
           <ChoruiLogo className="h-7 w-7 xs:hidden" />
@@ -88,8 +115,10 @@ function HomeFeed() {
             <UpdateUsername hideTrigger />
           </div>
         </div>
-        <FeedTabs />
-      </MainHeader>
+        <div className="px-4">
+          <FeedTabs />
+        </div>
+      </header>
       <ComposeEntry />
       <section className="mt-0.5 xs:mt-0">
         {loading ? (
