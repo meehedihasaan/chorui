@@ -30,11 +30,11 @@ export function CustomIcon({
   return <Icon className={className ?? 'h-6 w-6'} />;
 }
 
-// The classic Twitter home glyph (house with a round window). The user asked
-// for the same filled shape in both active and inactive states, so the solid
-// prop is accepted for API compatibility but both render the filled path.
+// The classic Twitter home glyph (house with a round window): outline when
+// inactive, filled when active.
 export function TwitterHomeIcon({
-  className
+  className,
+  solid
 }: IconProps & { solid?: boolean }): JSX.Element {
   return (
     <svg
@@ -43,7 +43,11 @@ export function TwitterHomeIcon({
       aria-hidden='true'
     >
       <g>
-        <path d='M22.58 7.35L12.475 1.897c-.297-.16-.654-.16-.95 0L1.425 7.35c-.486.264-.667.87-.405 1.356.18.335.525.525.88.525.16 0 .324-.038.475-.12l.734-.396 1.59 11.25c.216 1.214 1.31 2.062 2.66 2.062h9.282c1.35 0 2.444-.848 2.662-2.088l1.588-11.225.737.398c.485.263 1.092.082 1.354-.404.263-.486.08-1.093-.404-1.355zM12 15.435c-1.795 0-3.25-1.455-3.25-3.25s1.455-3.25 3.25-3.25 3.25 1.455 3.25 3.25-1.455 3.25-3.25 3.25z' />
+        {solid ? (
+          <path d='M22.58 7.35L12.475 1.897c-.297-.16-.654-.16-.95 0L1.425 7.35c-.486.264-.667.87-.405 1.356.18.335.525.525.88.525.16 0 .324-.038.475-.12l.734-.396 1.59 11.25c.216 1.214 1.31 2.062 2.66 2.062h9.282c1.35 0 2.444-.848 2.662-2.088l1.588-11.225.737.398c.485.263 1.092.082 1.354-.404.263-.486.08-1.093-.404-1.355zM12 15.435c-1.795 0-3.25-1.455-3.25-3.25s1.455-3.25 3.25-3.25 3.25 1.455 3.25 3.25-1.455 3.25-3.25 3.25z' />
+        ) : (
+          <path d='M12 9c-2.209 0-4 1.791-4 4s1.791 4 4 4 4-1.791 4-4-1.791-4-4-4zm0 6c-1.105 0-2-.895-2-2s.895-2 2-2 2 .895 2 2-.895 2-2 2zm0-13.304L.622 8.807l1.06 1.696 3-1.88V19c0 1.103.897 2 2 2h10.638c1.103 0 2-.897 2-2V10.523l3 1.88 1.06-1.696L12 1.696zM17.318 19H6.682V8.268L12 4.09l5.318 4.177V19z' />
+        )}
       </g>
     </svg>
   );
