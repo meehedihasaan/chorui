@@ -42,14 +42,18 @@ export function UserHomeLayout({ children }: LayoutProps): JSX.Element {
 
   const isOwner = userData?.id === userId;
   const targetId = userData?.id;
-  const { data: suspended = false } = useQuery({
+  const { data: bannedData, isLoading: banLoading } = useQuery({
     queryKey: ['is-banned', targetId],
     enabled: !!targetId,
+    staleTime: 0,
+    refetchOnMount: 'always',
     queryFn: async () => {
       const { data } = await supabase.rpc('is_banned', { _user_id: targetId! });
       return !!data;
     }
   });
+  const suspended = !!bannedData;
+  const banChecked = !targetId || !banLoading;
 
   return (
     <>
