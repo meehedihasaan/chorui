@@ -40,3 +40,7 @@
 ## Handle editing
 - [x] Change username from Edit profile with live availability, case-insensitive uniqueness, and profile URL following the new handle.
 - [x] Stop profile tabs querying posts before the viewed account is known.
+
+## Admin panel
+- [x] General settings: colour + button style apply across app
+- [x] Separate Admins list tab in admin panel
