@@ -22,6 +22,7 @@ const topNavLinks: Readonly<MobileNavLink[]> = [
   { href: '/notifications', linkName: 'Notifications', iconName: 'BellIcon' },
   { href: '/bookmarks', linkName: 'Bookmarks', iconName: 'BookmarkIcon' },
   { href: '/trends', linkName: 'Topics', iconName: 'ChatBubbleBottomCenterTextIcon' }
+  ,{ href: '/analytics', linkName: 'Analytics', iconName: 'ChartBarIcon' }
 ];
 
 const bottomNavLinks: Readonly<MobileNavLink[]> = [

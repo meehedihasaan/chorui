@@ -45,18 +45,18 @@ export function TweetStats({
   const [{ currentReplies, currentTweets, currentLikes }, setCurrentStats] =
     useState({
       currentReplies: totalReplies,
-      currentLikes: likeBusy.current ? currentLikes : totalLikes,
-      currentTweets: repostBusy.current ? currentTweets : totalTweets
-    });
-    if (!likeBusy.current) setLikedOverride(null);
-    if (!repostBusy.current) setRepostedOverride(null);
-
-  useEffect(() => {
-    setCurrentStats({
-      currentReplies: totalReplies,
       currentLikes: totalLikes,
       currentTweets: totalTweets
     });
+
+  useEffect(() => {
+    setCurrentStats(previous => ({
+      currentReplies: totalReplies,
+      currentLikes: likeBusy.current ? previous.currentLikes : totalLikes,
+      currentTweets: repostBusy.current ? previous.currentTweets : totalTweets
+    }));
+    if (!likeBusy.current) setLikedOverride(null);
+    if (!repostBusy.current) setRepostedOverride(null);
   }, [totalReplies, totalLikes, totalTweets]);
 
   const replyMove = useMemo(

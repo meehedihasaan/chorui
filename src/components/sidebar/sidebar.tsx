@@ -48,6 +48,9 @@ const navLinks: Readonly<NavLink[]> = [
     linkName: 'Bookmarks',
     iconName: 'BookmarkIcon',
     canBeHidden: true
+  },
+  {
+    href: '/analytics', linkName: 'Analytics', iconName: 'ChartBarIcon', canBeHidden: true
   }
 ];
 

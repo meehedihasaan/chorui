@@ -10,7 +10,6 @@ import { orderBy, where } from "@lib/firebase/db";
 import { HomeLayout, ProtectedLayout } from "@components/layout/common-layout";
 import { MainLayout } from "@components/layout/main-layout";
 import { MainContainer } from "@components/home/main-container";
-import { Input } from "@components/input/input";
 import { UpdateUsername } from "@components/home/update-username";
 import { HeaderSearch } from "@components/home/header-search";
 import { MainHeader } from "@components/home/main-header";
@@ -53,7 +52,6 @@ function HomePage() {
 // The window provider mounts inside MainLayout, so window-aware UI must be a
 // child of it rather than read the context in the route component itself.
 function HomeFeed() {
-  const { isMobile } = useWindow();
   const { user } = useAuth();
   const { tab } = Route.useSearch() as { tab?: string };
 

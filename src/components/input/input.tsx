@@ -137,8 +137,8 @@ export function Input({
 
     const { imagesPreviewData, selectedImagesData } = imagesData;
 
-    setImagesPreview([...imagesPreview, ...imagesPreviewData]);
-    setSelectedImages([...selectedImages, ...selectedImagesData]);
+    setImagesPreview(previous => [...previous, ...imagesPreviewData]);
+    setSelectedImages(previous => [...previous, ...selectedImagesData]);
     if (!isClipboardEvent) e.target.value = '';
 
     inputRef.current?.focus();
