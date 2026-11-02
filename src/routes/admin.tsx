@@ -14,6 +14,7 @@ import { MainHeader } from '@components/home/main-header';
 import { Loading } from '@components/ui/loading';
 import { HeroIcon } from '@components/ui/hero-icon';
 import { AdminReview } from '@components/admin/verification-review';
+import { GeneralSettings } from '@components/admin/general-settings';
 
 export const Route = createFileRoute('/admin')({
   ssr: false,
@@ -31,7 +32,7 @@ export const Route = createFileRoute('/admin')({
   component: AdminPage
 });
 
-const TABS = ['Overview', 'Users', 'Posts', 'Reports', 'Verification'] as const;
+const TABS = ['Overview', 'Users', 'Posts', 'Reports', 'Verification', 'Settings'] as const;
 type Tab = (typeof TABS)[number];
 
 const btn = 'rounded-full border border-light-line-reply px-3 py-1 text-sm font-bold transition hover:bg-light-primary/10 dark:border-dark-line-reply dark:hover:bg-dark-primary/10 disabled:opacity-50';
@@ -110,6 +111,7 @@ function AdminContent() {
       {tab === 'Posts' && <Posts />}
       {tab === 'Reports' && <Reports />}
       {tab === 'Verification' && <AdminReview />}
+      {tab === 'Settings' && <GeneralSettings />}
     </MainContainer>
   );
 }

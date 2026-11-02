@@ -14,6 +14,7 @@ import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { AuthContextProvider } from "@lib/context/auth-context";
 import { ThemeContextProvider } from "@lib/context/theme-context";
+import { AppSettingsApplier } from "@lib/app-settings";
 
 function NotFoundComponent() {
   return (
@@ -129,6 +130,7 @@ function RootComponent() {
     <QueryClientProvider client={queryClient}>
       <AuthContextProvider>
         <ThemeContextProvider>
+          <AppSettingsApplier />
           {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
           <Outlet />
         </ThemeContextProvider>
