@@ -203,7 +203,7 @@ export function TweetActions({
               }}
               as={Button}
               className={cn(
-                `main-tab group p-2 ${viewTweet ? 'absolute top-2 right-2' : 'relative'}
+                `main-tab group p-2 ${viewTweet ? 'absolute top-2 right-2' : 'relative -my-3'}
                  hover:bg-accent-blue/10 focus-visible:bg-accent-blue/10
                  focus-visible:ring-accent-blue/80! active:bg-accent-blue/20`,
                 open && 'bg-accent-blue/10 [&>div>svg]:text-accent-blue'

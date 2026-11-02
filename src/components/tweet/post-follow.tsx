@@ -12,7 +12,7 @@ export function PostFollow({ userId, username }: { userId: string; username: str
   return <Button title={followed ? `Unfollow @${username}` : `Follow @${username}`}
     aria-label={followed ? `Unfollow @${username}` : `Follow @${username}`} disabled={pending}
     onClick={preventBubbling(toggle)}
-    className='flex h-8 w-8 shrink-0 items-center justify-center rounded-full p-0 hover:bg-main-accent/10'>
+    className='-my-1 flex h-8 w-8 shrink-0 items-center justify-center rounded-full p-0 hover:bg-main-accent/10'>
     <Icon className='h-[18px] w-[18px]' strokeWidth={1.8} />
   </Button>;
 }
