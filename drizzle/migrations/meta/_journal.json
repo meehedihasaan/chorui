@@ -99,6 +99,13 @@
       "when": 1793606350613,
       "tag": "0013_raise_logo_limit_2mb",
       "breakpoints": true
+    },
+    {
+      "idx": 14,
+      "version": "7",
+      "when": 1793607633962,
+      "tag": "0014_migration",
+      "breakpoints": true
     }
   ]
 }
