@@ -71,6 +71,10 @@ export function Input({
 
   const sendTweet = async (): Promise<void> => {
     if (loading || !user || disabled) return;
+    if (parent?.id) {
+      const { data: allowed, error } = await supabase.rpc('can_reply_to_post', { p_post_id: parent.id });
+      if (error || !allowed) { toast.error('You cannot reply to this post.'); return; }
+    }
     inputRef.current?.blur();
 
     setLoading(true);
