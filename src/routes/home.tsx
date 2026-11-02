@@ -99,8 +99,7 @@ function HomeFeed() {
     <MainContainer>
       <header
         className={cn(
-          "hover-animation sticky top-0 z-10 border-b border-light-border bg-main-background/60 backdrop-blur-md transition-transform duration-300 dark:border-dark-border",
-          headerHidden && `-translate-y-[${HEADER_ROW_HEIGHT}px]`
+          "hover-animation sticky top-0 z-10 border-b border-light-border bg-main-background/60 backdrop-blur-md transition-transform duration-300 dark:border-dark-border"
         )}
         style={headerHidden ? { transform: `translateY(-${HEADER_ROW_HEIGHT}px)` } : undefined}
       >
