@@ -1,3 +1,4 @@
+import { useIsAdmin } from '@lib/hooks/useIsAdmin';
 import Link from '@lib/router';
 import { useAuth } from '@lib/context/auth-context';
 import { useModal } from '@lib/hooks/useModal';
@@ -56,6 +57,7 @@ export function MobileSidebarModal({
   closeModal
 }: MobileSidebarModalProps): JSX.Element {
   const { signOut } = useAuth();
+  const isAdmin = useIsAdmin();
 
   const {
     open: displayOpen,
@@ -134,6 +136,7 @@ export function MobileSidebarModal({
           {topNavLinks.map((linkData) => (
             <MobileSidebarLink {...linkData} key={linkData.href} />
           ))}
+          {isAdmin && <MobileSidebarLink href='/admin' iconName='ShieldCheckIcon' linkName='Admin panel' />}
         </nav>
         <i className='my-2 h-px bg-light-border dark:bg-dark-border' />
         <nav className='flex flex-col gap-1'>
