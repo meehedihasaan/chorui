@@ -1,3 +1,4 @@
+import { useIsAdmin } from '@lib/hooks/useIsAdmin';
 import Link from '@lib/router';
 import { useAuth } from '@lib/context/auth-context';
 import { useWindow } from '@lib/context/window-context';
@@ -60,6 +61,7 @@ const navLinks: Readonly<NavLink[]> = [
 export function Sidebar(): JSX.Element {
   const { user } = useAuth();
   const { isMobile } = useWindow();
+  const isAdmin = useIsAdmin();
 
   const navigate = useNavigate();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
@@ -97,6 +99,9 @@ export function Sidebar(): JSX.Element {
             {navLinks.map(({ ...linkData }) => (
               <SidebarLink {...linkData} key={linkData.href} />
             ))}
+            {isAdmin && (
+              <SidebarLink href='/admin' linkName='Admin panel' iconName='ShieldCheckIcon' canBeHidden />
+            )}
             <SidebarLink
               href={`/user/${username}`}
               username={username}
