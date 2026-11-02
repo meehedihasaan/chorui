@@ -46,7 +46,7 @@ function UserTweetsPage() {
       where("createdBy", "==", id),
       where("parent_id", "==", null)
     ),
-    { includeUser: true, allowNull: true }
+    { includeUser: true, allowNull: true, disabled: !id }
   );
 
   const { data: peopleTweets, loading: peopleLoading } = useCollection(
@@ -55,7 +55,7 @@ function UserTweetsPage() {
       where("createdBy", "!=", id),
       where("userRetweets", "array-contains", id)
     ),
-    { includeUser: true, allowNull: true }
+    { includeUser: true, allowNull: true, disabled: !id }
   );
 
   const mergedTweets = mergeData(true, ownerTweets, peopleTweets);
@@ -63,7 +63,7 @@ function UserTweetsPage() {
   return (
     <UserHomeLayout>
       <section>
-        {ownerLoading || peopleLoading ? (
+        {ownerLoading || peopleLoading || !id ? (
           <Loading className="mt-5" />
         ) : !mergedTweets ? (
           <StatsEmpty

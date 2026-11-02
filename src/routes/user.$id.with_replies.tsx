@@ -49,13 +49,13 @@ function UserWithRepliesPage() {
       where("createdBy", "==", id),
       orderBy("createdAt", "desc")
     ),
-    { includeUser: true, allowNull: true }
+    { includeUser: true, allowNull: true, disabled: !id }
   );
 
   return (
     <UserHomeLayout>
       <section>
-        {loading ? (
+        {loading || !id ? (
           <Loading className="mt-5" />
         ) : !data ? (
           <StatsEmpty
