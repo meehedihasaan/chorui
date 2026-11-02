@@ -5,6 +5,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import cn from 'clsx';
 import { toast } from 'react-hot-toast';
 import { useAuth } from '@lib/context/auth-context';
+import { useFollowAction } from '@lib/hooks/useFollowAction';
 import { useModal } from '@lib/hooks/useModal';
 import {
   getTweetById,
@@ -73,6 +74,7 @@ export function TweetActions({
 }: TweetActionsProps): JSX.Element {
   const { user, isAdmin } = useAuth();
   const { push } = useRouter();
+  const { followed: userIsFollowed, toggle: toggleFollow } = useFollowAction(createdBy);
 
   const {
     open: removeOpen,
@@ -128,14 +130,13 @@ export function TweetActions({
       const [type] = args;
 
       closeMenu();
-      await manageFollow(...args);
+      await toggleFollow();
 
       toast.success(
         `You ${type === 'follow' ? 'followed' : 'unfollowed'} @${username}`
       );
     };
 
-  const userIsFollowed = following.includes(createdBy);
 
   const currentPinModalData = useMemo(
     () => pinModalData[+tweetIsPinned],
@@ -179,13 +180,13 @@ export function TweetActions({
           closeModal={pinCloseModal}
         />
       </Modal>
-      <Popover>
+      <Popover className='relative' as='div'>
         {({ open, close }): JSX.Element => (
           <>
             <Popover.Button
               as={Button}
               className={cn(
-                `main-tab group group absolute top-2 right-2 p-2 
+                `main-tab group p-2 ${viewTweet ? 'absolute top-2 right-2' : 'relative'}
                  hover:bg-accent-blue/10 focus-visible:bg-accent-blue/10
                  focus-visible:ring-accent-blue/80! active:bg-accent-blue/20`,
                 open && 'bg-accent-blue/10 [&>div>svg]:text-accent-blue'
