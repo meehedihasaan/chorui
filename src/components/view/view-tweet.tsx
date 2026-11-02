@@ -16,6 +16,7 @@ import { TweetActions } from '@components/tweet/tweet-actions';
 import { TweetStats } from '@components/tweet/tweet-stats';
 import { TweetDate } from '@components/tweet/tweet-date';
 import { Input } from '@components/input/input';
+import { PostPlaceCard } from '@components/tweet/post-place';
 import { PostLinkPreview } from '@components/tweet/link-preview';
 import type { RefObject } from 'react';
 import type { User } from '@lib/types/user';
@@ -130,7 +131,8 @@ export function ViewTweet(tweet: ViewTweetProps): JSX.Element {
         {text && (
           <PostText className='whitespace-pre-line break-words text-2xl' text={text} />
         )}
-        <PostLinkPreview text={text} />
+        {tweet.place?.name && <PostPlaceCard place={tweet.place} />}
+                <PostLinkPreview text={text} />
         {images && (
           <ImagePreview
             viewTweet

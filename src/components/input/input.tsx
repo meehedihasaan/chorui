@@ -15,6 +15,8 @@ import { UserAvatar } from '@components/user/user-avatar';
 import { InputForm, fromTop } from './input-form';
 import { ImagePreview } from './image-preview';
 import { InputOptions } from './input-options';
+import { PlacePicker } from './place-picker';
+import type { PostPlace } from '@lib/types/tweet';
 import type { ReactNode, FormEvent, ChangeEvent, ClipboardEvent } from 'react';
 import type { Variants } from 'framer-motion';
 import type { User } from '@lib/types/user';
@@ -52,6 +54,8 @@ export function Input({
   const [inputValue, setInputValue] = useState('');
   const [loading, setLoading] = useState(false);
   const [visited, setVisited] = useState(false);
+  const [place, setPlace] = useState<PostPlace | null>(null);
+  const [placeOpen, setPlaceOpen] = useState(false);
 
   const { user, isAdmin } = useAuth();
   const { name, username, photoURL } = user as User;
@@ -90,7 +94,8 @@ export function Input({
     const tweet = await createTweet(
       inputValue.trim() || null,
       images,
-      isReplying && parent ? parent.id : undefined
+      isReplying && parent ? parent.id : undefined,
+      isReplying ? null : place
     );
 
     const tweetId = tweet?.id;
@@ -194,6 +199,8 @@ export function Input({
   const discardTweet = (): void => {
     setInputValue('');
     setVisited(false);
+    setPlace(null);
+    setPlaceOpen(false);
     cleanImage();
 
     inputRef.current?.blur();
@@ -287,6 +294,15 @@ export function Input({
               />
             )}
           </InputForm>
+          {!reply && !replyModal && (placeOpen || place) && (
+            <PlacePicker
+              value={place}
+              onChange={setPlace}
+              onClose={() => setPlaceOpen(false)}
+              editing={placeOpen}
+              onEdit={() => setPlaceOpen(true)}
+            />
+          )}
           <AnimatePresence initial={false}>
             {(reply ? reply && visited && !loading : !loading) && (
               <InputOptions
@@ -299,6 +315,7 @@ export function Input({
                 handleImageUpload={handleImageUpload}
                 onEmoji={insertEmoji}
                 onGifFile={file => addFiles([file])}
+                onLocation={reply || replyModal ? undefined : () => { setPlaceOpen(true); setVisited(true); }}
               />
             )}
           </AnimatePresence>

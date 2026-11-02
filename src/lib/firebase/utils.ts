@@ -183,12 +183,14 @@ export async function removeTweet(tweetId: string): Promise<void> {
 export async function createTweet(
   text: string | null,
   images: ImagesPreview | null,
-  parentId?: string
+  parentId?: string,
+  place?: { name: string; address: string | null } | null
 ): Promise<Tweet | null> {
   const { data, error } = await supabase.rpc('create_tweet', {
     p_text: text,
     p_images: images ? JSON.parse(JSON.stringify(images)) : null,
-    p_parent_id: parentId ?? null
+    p_parent_id: parentId ?? null,
+    ...(place?.name ? { p_place: place } : {})
   } as never);
 
   if (error) {
