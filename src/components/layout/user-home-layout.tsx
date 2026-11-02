@@ -127,7 +127,9 @@ export function UserHomeLayout({ children }: LayoutProps): JSX.Element {
       {userData && (
         <>
           <UserNav />
-          {suspended ? (
+          {!banChecked ? (
+            <Loading className='mt-5' />
+          ) : suspended ? (
             <div className='p-8 text-center'>
               <p className='text-3xl font-bold'>Account suspended</p>
               <p className='text-light-secondary dark:text-dark-secondary'>
