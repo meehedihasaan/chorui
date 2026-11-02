@@ -24,3 +24,4 @@
 - The verified badge is granted only through the admin-checked review_verification RPC; a profiles trigger blocks users setting verified themselves, and ID photos stay in the private verification-ids bucket (owner + admins only).
 - Admin panel (/admin) actions run only through admin_* SECURITY DEFINER RPCs that call admin_guard(); suspensions live in user_bans and are enforced by insert triggers on posts, messages and follows.
 - Admin sign-in setup screens are read-only instructions plus a live sign-in test: auth providers are switched on or off only in Lovable's user settings, so never add app-side toggles that pretend to change them.
+- Post places are typed name/area text stored on the post (no map provider); the card links out to a maps search, so no map API key is needed.
