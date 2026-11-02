@@ -1,6 +1,6 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { useRouter } from '@lib/router';
-import { Popover } from '@headlessui/react';
+import { Popover, Portal } from '@headlessui/react';
 import { AnimatePresence, motion } from 'framer-motion';
 import cn from 'clsx';
 import { toast } from 'react-hot-toast';
@@ -74,6 +74,7 @@ export function TweetActions({
 }: TweetActionsProps): JSX.Element {
   const { user, isAdmin } = useAuth();
   const { push } = useRouter();
+  const [menuTop, setMenuTop] = useState(16);
   const { followed: userIsFollowed, toggle: toggleFollow } = useFollowAction(createdBy);
 
   const {
@@ -87,6 +88,8 @@ export function TweetActions({
     openModal: pinOpenModal,
     closeModal: pinCloseModal
   } = useModal();
+
+  const { open: activityOpen, openModal: activityOpenModal, closeModal: activityCloseModal } = useModal();
 
   const { id: userId, following, pinnedTweet } = user as User;
 
@@ -185,6 +188,10 @@ export function TweetActions({
           <>
             <Popover.Button
               aria-label='More post options'
+              onClick={(event: React.MouseEvent<HTMLButtonElement>) => {
+                const rect = event.currentTarget.getBoundingClientRect();
+                setMenuTop(Math.max(16, Math.min(rect.bottom + 8, window.innerHeight - 350)));
+              }}
               as={Button}
               className={cn(
                 `main-tab group p-2 ${viewTweet ? 'absolute top-2 right-2' : 'relative'}
@@ -204,24 +211,15 @@ export function TweetActions({
             </Popover.Button>
             <AnimatePresence>
               {open && (
+                <Portal>
                 <Popover.Panel
-                  className='menu-container group absolute top-[50px] right-2 whitespace-nowrap text-light-primary 
+                  style={{ top: menuTop }}
+                  className='menu-container group fixed right-4 z-50 max-h-[calc(100dvh-32px)] w-64 max-w-[calc(100vw-32px)] overflow-y-auto bg-main-background text-light-primary 
                              dark:text-dark-primary'
                   as={motion.div}
                   {...variants}
                   static
                 >
-                  {(isAdmin || isOwner) && (
-                    <Popover.Button
-                      className='accent-tab flex w-full gap-3 rounded-md rounded-b-none p-4 text-accent-red
-                                 hover:bg-main-sidebar-background'
-                      as={Button}
-                      onClick={preventBubbling(removeOpenModal)}
-                    >
-                      <HeroIcon iconName='TrashIcon' />
-                      Delete
-                    </Popover.Button>
-                  )}
                   {isOwner ? (
                     <Popover.Button
                       className='accent-tab flex w-full gap-3 rounded-md rounded-t-none p-4 hover:bg-main-sidebar-background'
@@ -263,12 +261,35 @@ export function TweetActions({
                       Follow @{username}
                     </Popover.Button>
                   )}
+                  {isOwner && <>
+                    <Popover.Button as={Button} className='accent-tab flex w-full items-center gap-3 rounded-none p-4 text-left text-accent-red hover:bg-main-sidebar-background' onClick={preventBubbling(removeOpenModal)}>
+                      <HeroIcon iconName='TrashIcon' />Delete Post
+                    </Popover.Button>
+                    <Button disabled title='Post editing is not available yet' className='flex w-full items-center gap-3 rounded-none p-4 text-left disabled:opacity-50'><HeroIcon iconName='PencilSquareIcon' />Edit Post</Button>
+                    <Button disabled title='Reply permissions are not available yet' className='flex w-full items-center gap-3 rounded-none p-4 text-left disabled:opacity-50'><HeroIcon iconName='ChatBubbleLeftRightIcon' /><span>Change who can reply</span></Button>
+                  </>}
+                  {!isOwner && <>
+                    <Button disabled title='Muting is not available yet' className='flex w-full items-center gap-3 rounded-none p-4 text-left disabled:opacity-50'><HeroIcon iconName='SpeakerXMarkIcon' />Mute</Button>
+                    <Button disabled title='Blocking is not available yet' className='flex w-full items-center gap-3 rounded-none p-4 text-left disabled:opacity-50'><HeroIcon iconName='NoSymbolIcon' /><span className='break-all'>Block @{username}</span></Button>
+                  </>}
+                  <Popover.Button as={Button} className='accent-tab flex w-full items-center gap-3 rounded-none p-4 text-left hover:bg-main-sidebar-background' onClick={preventBubbling(() => { close(); if (isOwner) void push(`/analytics?post=${tweetId}`); else activityOpenModal(); })}>
+                    <HeroIcon iconName='ChartBarIcon' />View post activity
+                  </Popover.Button>
+                  {!isOwner && <Button disabled title='Reporting is not available yet' className='flex w-full items-center gap-3 rounded-none p-4 text-left disabled:opacity-50'><HeroIcon iconName='FlagIcon' />Report post</Button>}
                 </Popover.Panel>
+                </Portal>
               )}
             </AnimatePresence>
           </>
         )}
       </Popover>
+      <Modal open={activityOpen} closeModal={activityCloseModal} modalClassName='w-full max-w-sm rounded-lg bg-main-background p-6'>
+        <div className='space-y-4 text-light-primary dark:text-dark-primary'>
+          <h2 className='text-xl font-bold'>Post activity</h2>
+          <p className='text-light-secondary dark:text-dark-secondary'>Detailed analytics are only available to the author. Public likes, replies, and repost counts appear below the post.</p>
+          <Button onClick={activityCloseModal} className='w-full bg-main-accent py-2 font-bold text-main-accent-foreground'>Close</Button>
+        </div>
+      </Modal>
     </>
   );
 }
