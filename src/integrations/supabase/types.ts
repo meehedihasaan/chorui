@@ -464,6 +464,7 @@ export type Database = {
         Returns: undefined
       }
       record_post_view: { Args: { p_post_id: string }; Returns: undefined }
+      username_taken: { Args: { p_username: string }; Returns: boolean }
       users_blocked: { Args: { a: string; b: string }; Returns: boolean }
     }
     Enums: {
