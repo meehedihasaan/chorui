@@ -1,3 +1,4 @@
+import type React from 'react';
 import { useState, useEffect, useContext, createContext, useMemo } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { lovable } from '@/integrations/lovable/index';
@@ -32,7 +33,11 @@ type AuthContext = {
   setFollowing: (targetId: string, followed: boolean) => void;
 };
 
-export const AuthContext = createContext<AuthContext | null>(null);
+const authContextStore = globalThis as unknown as { __choruiAuthContext?: React.Context<AuthContext | null> };
+// Reuse one context across hot reloads so mounted providers keep matching consumers.
+export const AuthContext =
+  authContextStore.__choruiAuthContext ??
+  (authContextStore.__choruiAuthContext = createContext<AuthContext | null>(null));
 
 type AuthContextProviderProps = {
   children: ReactNode;
