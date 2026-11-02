@@ -54,7 +54,7 @@ export function hexToRgbTriplet(hex: string): { rgb: string; fg: string } | null
 }
 
 /** Applies admin-chosen brand colour, button style and app name across the app. */
-export function AppSettingsApplier(): JSX.Element | null {
+export function AppSettingsApplier(): null {
   const s = useAppSettings();
 
   useEffect(() => {
@@ -69,12 +69,19 @@ export function AppSettingsApplier(): JSX.Element | null {
     return () => obs.disconnect();
   }, [s.appName]);
 
-  if (typeof window !== 'undefined') console.log('APPSET', s.brandColor, s.buttonStyle);
   const c = s.brandColor ? hexToRgbTriplet(s.brandColor) : null;
   const radius = s.buttonStyle === 'rounded' ? '0.75rem' : s.buttonStyle === 'square' ? '0.25rem' : null;
   let css = '';
   if (c) css += `:root, :root.dark, .dark, .dim { --accent-mono: ${c.rgb} !important; --accent-mono-foreground: ${c.fg} !important; }`;
   if (radius) css += `:is(button, a[role='button'], .custom-button).rounded-full { border-radius: ${radius} !important; }`;
-  if (!css) return null;
-  return <style data-app-settings=''>{css}</style>;
+  useEffect(() => {
+    let el = document.getElementById('app-settings-style');
+    if (!el) {
+      el = document.createElement('style');
+      el.id = 'app-settings-style';
+      document.head.appendChild(el);
+    }
+    el.textContent = css;
+  }, [css]);
+  return null;
 }
