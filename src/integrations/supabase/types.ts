@@ -319,6 +319,27 @@ export type Database = {
           },
         ]
       }
+      user_bans: {
+        Row: {
+          banned_by: string
+          created_at: string
+          reason: string
+          user_id: string
+        }
+        Insert: {
+          banned_by: string
+          created_at?: string
+          reason?: string
+          user_id: string
+        }
+        Update: {
+          banned_by?: string
+          created_at?: string
+          reason?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_blocks: {
         Row: {
           created_at: string
@@ -438,6 +459,40 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      admin_delete_post: { Args: { p_post: string }; Returns: undefined }
+      admin_guard: { Args: never; Returns: undefined }
+      admin_list_users: {
+        Args: { p_limit?: number; p_offset?: number; p_query?: string }
+        Returns: {
+          created_at: string
+          followers: number
+          id: string
+          is_admin: boolean
+          is_banned: boolean
+          name: string
+          photo_url: string
+          total_tweets: number
+          username: string
+          verified: boolean
+        }[]
+      }
+      admin_resolve_report: {
+        Args: { p_report: string; p_status: string }
+        Returns: undefined
+      }
+      admin_set_admin: {
+        Args: { p_user: string; p_value: boolean }
+        Returns: undefined
+      }
+      admin_set_ban: {
+        Args: { p_reason?: string; p_user: string; p_value: boolean }
+        Returns: undefined
+      }
+      admin_set_verified: {
+        Args: { p_user: string; p_value: boolean }
+        Returns: undefined
+      }
+      admin_stats: { Args: never; Returns: Json }
       can_reply_to_post: { Args: { p_post_id: string }; Returns: boolean }
       create_tweet: {
         Args: { p_images: Json; p_parent_id: string; p_text: string }
@@ -514,6 +569,7 @@ export type Database = {
         }
         Returns: boolean
       }
+      is_banned: { Args: { _user_id: string }; Returns: boolean }
       is_conversation_participant: { Args: { c: string }; Returns: boolean }
       manage_like: {
         Args: { p_like: boolean; p_tweet_id: string }
