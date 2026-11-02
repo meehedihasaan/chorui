@@ -98,8 +98,8 @@ export function InputOptions({
     <motion.div className='flex justify-between' {...variants}>
       <div className='relative'>
       <div
-        className='flex text-main-accent xs:[&>button:nth-child(n+6)]:hidden 
-                   md:[&>button]:!block [&>button:nth-child(n+4)]:hidden'
+        className='flex text-main-accent xs:[&>button:nth-child(n+7)]:hidden 
+                   md:[&>button]:!block [&>button:nth-child(n+6)]:hidden'
       >
         <input
           className='hidden'
