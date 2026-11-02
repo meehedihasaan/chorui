@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 
 export type ButtonStyle = 'pill' | 'rounded' | 'square';
@@ -11,30 +10,38 @@ export type AppSettings = {
 };
 
 export const DEFAULT_SETTINGS: AppSettings = { appName: 'Chorui', logoUrl: null, brandColor: null, buttonStyle: 'pill' };
-export const APP_SETTINGS_KEY = ['app-settings'];
+
+let current: AppSettings = DEFAULT_SETTINGS;
+let loading: Promise<void> | null = null;
+const listeners = new Set<() => void>();
+
+/** Re-reads settings from the backend and updates every subscriber. */
+export function refreshAppSettings(): Promise<void> {
+  loading = (async () => {
+    const { data } = await supabase.from('app_settings').select('*').eq('id', 1).maybeSingle();
+    current = data
+      ? {
+          appName: data.app_name || 'Chorui',
+          logoUrl: data.logo_url,
+          brandColor: data.brand_color,
+          buttonStyle: (data.button_style as ButtonStyle) ?? 'pill'
+        }
+      : DEFAULT_SETTINGS;
+    listeners.forEach((l) => l());
+  })();
+  return loading;
+}
 
 export function useAppSettings(): AppSettings {
-  // read on the client only: the server render has no reliable session/storage and would cache defaults
-  const [ready, setReady] = useState(false);
-  useEffect(() => setReady(true), []);
-  const { data } = useQuery({
-    queryKey: APP_SETTINGS_KEY,
-    enabled: ready,
-    staleTime: 60_000,
-    queryFn: async (): Promise<AppSettings> => {
-      console.log('APPSET-START');
-      const { data, error } = await supabase.from('app_settings').select('*').eq('id', 1).maybeSingle();
-      console.log('APPSET-FETCH', JSON.stringify({ data: data && { ...data, logo_url: !!data.logo_url }, error }));
-      if (!data) return DEFAULT_SETTINGS;
-      return {
-        appName: data.app_name || 'Chorui',
-        logoUrl: data.logo_url,
-        brandColor: data.brand_color,
-        buttonStyle: (data.button_style as ButtonStyle) ?? 'pill'
-      };
-    }
-  });
-  return data ?? DEFAULT_SETTINGS;
+  const [s, setS] = useState<AppSettings>(DEFAULT_SETTINGS);
+  useEffect(() => {
+    const l = () => setS(current);
+    listeners.add(l);
+    if (!loading) void refreshAppSettings();
+    else l();
+    return () => void listeners.delete(l);
+  }, []);
+  return s;
 }
 
 /** "#rrggbb" → "r g b" plus a readable text colour for on-accent content. */
@@ -62,7 +69,6 @@ export function AppSettingsApplier(): JSX.Element | null {
     return () => obs.disconnect();
   }, [s.appName]);
 
-  if (typeof window !== 'undefined') console.log('APPSET', JSON.stringify(s));
   const c = s.brandColor ? hexToRgbTriplet(s.brandColor) : null;
   const radius = s.buttonStyle === 'rounded' ? '0.75rem' : s.buttonStyle === 'square' ? '0.25rem' : null;
   let css = '';

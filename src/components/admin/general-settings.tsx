@@ -1,10 +1,9 @@
 import { useEffect, useState } from 'react';
-import { useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import cn from 'clsx';
 import { supabase } from '@/integrations/supabase/client';
 import logoAsset from '@/assets/chorui-logo.png.asset.json';
-import { APP_SETTINGS_KEY, useAppSettings, type ButtonStyle } from '@lib/app-settings';
+import { refreshAppSettings, useAppSettings, type ButtonStyle } from '@lib/app-settings';
 
 const PRESETS = ['#000000', '#1d9bf0', '#00ba7c', '#f91880', '#7856ff', '#ff7a00', '#e0245e'];
 const STYLES: { id: ButtonStyle; label: string; radius: string }[] = [
@@ -16,7 +15,6 @@ const muted = 'text-light-secondary dark:text-dark-secondary';
 const inputCls = 'w-full rounded-md border border-light-line-reply bg-transparent px-3 py-2 outline-none focus:border-main-accent dark:border-dark-line-reply';
 
 export function GeneralSettings(): JSX.Element {
-  const qc = useQueryClient();
   const current = useAppSettings();
   const [name, setName] = useState(current.appName);
   const [logo, setLogo] = useState<string | null>(current.logoUrl);
@@ -51,7 +49,7 @@ export function GeneralSettings(): JSX.Element {
     setBusy(false);
     if (error) return void toast.error(error.message);
     toast.success('Settings saved');
-    void qc.invalidateQueries({ queryKey: APP_SETTINGS_KEY });
+    void refreshAppSettings();
   };
 
   const dirty =
