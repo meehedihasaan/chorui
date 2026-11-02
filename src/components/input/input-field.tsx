@@ -7,6 +7,7 @@ export type InputFieldProps = {
   inputId: EditableData | Extract<keyof User, 'username'>;
   inputValue: string | null;
   inputLimit?: number;
+  hint?: string;
   useTextArea?: boolean;
   errorMessage?: string;
   handleChange: (
@@ -23,6 +24,7 @@ export function InputField({
   inputId,
   inputValue,
   inputLimit,
+  hint,
   useTextArea,
   errorMessage,
   handleChange,
@@ -93,9 +95,13 @@ export function InputField({
           </span>
         )}
       </div>
-      {errorMessage && (
+      {errorMessage ? (
         <p className='text-sm text-accent-red'>{errorMessage}</p>
-      )}
+      ) : hint ? (
+        <p className='text-sm text-light-secondary dark:text-dark-secondary'>
+          {hint}
+        </p>
+      ) : null}
     </div>
   );
 }
