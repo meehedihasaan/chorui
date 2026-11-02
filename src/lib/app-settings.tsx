@@ -69,6 +69,7 @@ export function AppSettingsApplier(): JSX.Element | null {
     return () => obs.disconnect();
   }, [s.appName]);
 
+  if (typeof window !== 'undefined') console.log('APPSET', s.brandColor, s.buttonStyle);
   const c = s.brandColor ? hexToRgbTriplet(s.brandColor) : null;
   const radius = s.buttonStyle === 'rounded' ? '0.75rem' : s.buttonStyle === 'square' ? '0.25rem' : null;
   let css = '';
