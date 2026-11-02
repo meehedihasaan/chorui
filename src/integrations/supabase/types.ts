@@ -14,6 +14,33 @@ export type Database = {
   }
   public: {
     Tables: {
+      app_settings: {
+        Row: {
+          app_name: string
+          brand_color: string | null
+          button_style: string
+          id: number
+          logo_url: string | null
+          updated_at: string
+        }
+        Insert: {
+          app_name?: string
+          brand_color?: string | null
+          button_style?: string
+          id?: number
+          logo_url?: string | null
+          updated_at?: string
+        }
+        Update: {
+          app_name?: string
+          brand_color?: string | null
+          button_style?: string
+          id?: number
+          logo_url?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       bookmarks: {
         Row: {
           created_at: string
@@ -493,6 +520,15 @@ export type Database = {
         Returns: undefined
       }
       admin_stats: { Args: never; Returns: Json }
+      admin_update_settings: {
+        Args: {
+          p_app_name: string
+          p_brand_color: string
+          p_button_style: string
+          p_logo_url: string
+        }
+        Returns: undefined
+      }
       can_reply_to_post: { Args: { p_post_id: string }; Returns: boolean }
       create_tweet: {
         Args: { p_images: Json; p_parent_id: string; p_text: string }

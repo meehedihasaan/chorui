@@ -85,6 +85,13 @@
       "when": 1793603931903,
       "tag": "0011_admin_panel",
       "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "7",
+      "when": 1793604357267,
+      "tag": "0012_app_settings",
+      "breakpoints": true
     }
   ]
 }
