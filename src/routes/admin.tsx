@@ -32,7 +32,7 @@ export const Route = createFileRoute('/admin')({
   component: AdminPage
 });
 
-const TABS = ['Overview', 'Users', 'Posts', 'Reports', 'Verification', 'Settings'] as const;
+const TABS = ['Overview', 'Users', 'Admins', 'Posts', 'Reports', 'Verification', 'Settings'] as const;
 type Tab = (typeof TABS)[number];
 
 const btn = 'rounded-full border border-light-line-reply px-3 py-1 text-sm font-bold transition hover:bg-light-primary/10 dark:border-dark-line-reply dark:hover:bg-dark-primary/10 disabled:opacity-50';
@@ -108,6 +108,7 @@ function AdminContent() {
       </nav>
       {tab === 'Overview' && <Overview go={setTab} />}
       {tab === 'Users' && <Users />}
+      {tab === 'Admins' && <Users adminsOnly />}
       {tab === 'Posts' && <Posts />}
       {tab === 'Reports' && <Reports />}
       {tab === 'Verification' && <AdminReview />}
@@ -160,18 +161,19 @@ function Overview({ go }: { go: (t: Tab) => void }) {
 
 type AdminUser = { id: string; name: string; username: string; photo_url: string; verified: boolean; total_tweets: number; followers: number; created_at: string; is_admin: boolean; is_banned: boolean };
 
-function Users() {
+function Users({ adminsOnly = false }: { adminsOnly?: boolean }) {
   const qc = useQueryClient();
   const { user } = useAuth();
   const [search, setSearch] = useState('');
   const [limit, setLimit] = useState(30);
   const term = useDebounced(search.trim());
   const q = useQuery({
-    queryKey: ['admin', 'users', term, limit],
+    queryKey: ['admin', 'users', term, limit, adminsOnly],
     queryFn: async () => {
-      const { data, error } = await supabase.rpc('admin_list_users', { p_query: term, p_limit: limit, p_offset: 0 });
+      const { data, error } = await supabase.rpc('admin_list_users', { p_query: term, p_limit: adminsOnly ? 100 : limit, p_offset: 0 });
       if (error) throw error;
-      return data as AdminUser[];
+      const rows = data as AdminUser[];
+      return adminsOnly ? rows.filter((u) => u.is_admin) : rows;
     }
   });
   const [busy, setBusy] = useState<string | null>(null);
@@ -184,9 +186,9 @@ function Users() {
   return (
     <div>
       <div className='p-4'>
-        <input className={inputCls} placeholder='Search by name or @username' value={search} onChange={(e) => setSearch(e.target.value)} />
+        <input className={inputCls} placeholder={adminsOnly ? 'Search admins' : 'Search by name or @username'} value={search} onChange={(e) => setSearch(e.target.value)} />
       </div>
-      {q.isPending ? <Loading /> : !q.data?.length ? <p className={cn('p-5', muted)}>No users found.</p> : (
+      {q.isPending ? <Loading /> : !q.data?.length ? <p className={cn('p-5', muted)}>{adminsOnly ? 'No admins found.' : 'No users found.'}</p> : (
         <div className='divide-y divide-light-border dark:divide-dark-border'>
           {q.data.map((u) => {
             const self = u.id === user?.id;
@@ -238,7 +240,7 @@ function Users() {
               </div>
             );
           })}
-          {q.data.length >= limit && limit < 100 && (
+          {!adminsOnly && q.data.length >= limit && limit < 100 && (
             <button className='w-full p-4 font-bold text-main-accent hover:underline' onClick={() => setLimit((l) => Math.min(l + 30, 100))}>
               Show more
             </button>

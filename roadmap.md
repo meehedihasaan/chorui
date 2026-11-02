@@ -42,5 +42,5 @@
 - [x] Stop profile tabs querying posts before the viewed account is known.
 
 ## Admin panel
-- [ ] General settings: colour + button style apply across app
-- [ ] Separate Admins list tab in admin panel
+- [x] General settings: colour + button style apply across app
+- [x] Separate Admins list tab in admin panel
