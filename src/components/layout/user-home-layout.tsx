@@ -20,6 +20,8 @@ import { variants } from '@components/user/user-header';
 import { UserEditProfile } from '@components/user/user-edit-profile';
 import { UserShare } from '@components/user/user-share';
 import type { LayoutProps } from './common-layout';
+import { useQuery } from '@tanstack/react-query';
+import { supabase } from '@/integrations/supabase/client';
 
 export function UserHomeLayout({ children }: LayoutProps): JSX.Element {
   const { user, isAdmin } = useAuth();
@@ -39,6 +41,15 @@ export function UserHomeLayout({ children }: LayoutProps): JSX.Element {
   const { id: userId } = user ?? {};
 
   const isOwner = userData?.id === userId;
+  const targetId = userData?.id;
+  const { data: suspended = false } = useQuery({
+    queryKey: ['is-banned', targetId],
+    enabled: !!targetId,
+    queryFn: async () => {
+      const { data } = await supabase.rpc('is_banned', { _user_id: targetId! });
+      return !!data;
+    }
+  });
 
   return (
     <>
@@ -77,7 +88,12 @@ export function UserHomeLayout({ children }: LayoutProps): JSX.Element {
                 ) : (
                   <div className='flex gap-2 self-start'>
                     <UserShare username={userData.username} />
+                    <div
+                      aria-disabled={suspended}
+                      className={suspended ? 'pointer-events-none flex gap-2 opacity-50' : 'contents'}
+                    >
                     <Button
+                      disabled={suspended}
                       onClick={async () => {
                         if (!userId) return;
                         const cid = await createConversation(userId, userData.id);
@@ -94,6 +110,7 @@ export function UserHomeLayout({ children }: LayoutProps): JSX.Element {
                       userTargetId={userData.id}
                       userTargetUsername={userData.username}
                     />
+                    </div>
                     {isAdmin && <UserEditProfile hide />}
                   </div>
                 )}
@@ -106,8 +123,19 @@ export function UserHomeLayout({ children }: LayoutProps): JSX.Element {
       {userData && (
         <>
           <UserNav />
-          <ComposeEntry />
-          {children}
+          {suspended && !isOwner ? (
+            <div className='p-8 text-center'>
+              <p className='text-3xl font-bold'>Account suspended</p>
+              <p className='text-light-secondary dark:text-dark-secondary'>
+                This account has been suspended, so its posts aren’t available.
+              </p>
+            </div>
+          ) : (
+            <>
+              <ComposeEntry />
+              {children}
+            </>
+          )}
         </>
       )}
     </>
