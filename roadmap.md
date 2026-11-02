@@ -1,5 +1,11 @@
 # Roadmap
 
+## Working post menus
+- [ ] Saved post edits and reply permissions.
+- [ ] Account-level mute/block with undo and enforced interaction restrictions.
+- [ ] Saved reports and real public activity counts; private analytics remain owner-only.
+- [ ] Verify menu flows and permission rules.
+
 ## Link previews
 - [x] Show clickable link metadata in feed cards and post details, with safe fallbacks.
 
