@@ -52,9 +52,27 @@ function HomePage() {
 
 // The window provider mounts inside MainLayout, so window-aware UI must be a
 // child of it rather than read the context in the route component itself.
+// Height of the top header row (logo / search); the tab bar stays pinned
+// while this row slides away on scroll down.
+const HEADER_ROW_HEIGHT = 52;
+
 function HomeFeed() {
   const { user } = useAuth();
   const { tab } = Route.useSearch() as { tab?: string };
+
+  const [headerHidden, setHeaderHidden] = useState(false);
+
+  useEffect(() => {
+    let lastY = window.scrollY;
+    const onScroll = (): void => {
+      const y = window.scrollY;
+      if (y > 80 && y > lastY + 4) setHeaderHidden(true);
+      else if (y < lastY - 4 || y <= 80) setHeaderHidden(false);
+      lastY = y;
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   const followingTab = tab === "following";
 
