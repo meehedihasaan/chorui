@@ -22,6 +22,7 @@ export function useAppSettings(): AppSettings {
     enabled: ready,
     staleTime: 60_000,
     queryFn: async (): Promise<AppSettings> => {
+      console.log('APPSET-START');
       const { data, error } = await supabase.from('app_settings').select('*').eq('id', 1).maybeSingle();
       console.log('APPSET-FETCH', JSON.stringify({ data: data && { ...data, logo_url: !!data.logo_url }, error }));
       if (!data) return DEFAULT_SETTINGS;
