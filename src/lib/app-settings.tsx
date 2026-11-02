@@ -22,7 +22,8 @@ export function useAppSettings(): AppSettings {
     enabled: ready,
     staleTime: 60_000,
     queryFn: async (): Promise<AppSettings> => {
-      const { data } = await supabase.from('app_settings').select('*').eq('id', 1).maybeSingle();
+      const { data, error } = await supabase.from('app_settings').select('*').eq('id', 1).maybeSingle();
+      console.log('APPSET-FETCH', JSON.stringify({ data: data && { ...data, logo_url: !!data.logo_url }, error }));
       if (!data) return DEFAULT_SETTINGS;
       return {
         appName: data.app_name || 'Chorui',
