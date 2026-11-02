@@ -6,7 +6,7 @@ import { useModal } from '@lib/hooks/useModal';
 import { updateUserData, uploadImages } from '@lib/firebase/utils';
 import { DEFAULT_AVATAR_URL } from '@lib/default-avatar';
 import { getImagesData } from '@lib/validation';
-import { Modal } from '@components/modal/modal';
+import { Modal, backdrop } from '@components/modal/modal';
 import { EditProfileModal } from '@components/modal/edit-profile-modal';
 import { Button } from '@components/ui/button';
 import { InputField } from '@components/input/input-field';
@@ -240,7 +240,9 @@ export function UserEditProfile({ hide }: UserEditProfileProps): JSX.Element {
   return (
     <form className={cn(hide && 'hidden md:block')}>
       <Modal
-        modalClassName='relative bg-main-background rounded-2xl max-w-xl w-full h-[min(672px,100dvh)] overflow-hidden'
+        className='flex items-stretch p-0 overflow-hidden'
+        modalClassName='relative flex h-dvh w-full flex-col overflow-hidden bg-main-background'
+        modalAnimation={backdrop}
         open={open}
         closeModal={closeModal}
       >
