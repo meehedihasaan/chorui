@@ -41,25 +41,8 @@ export function hexToRgbTriplet(hex: string): { rgb: string; fg: string } | null
 }
 
 /** Applies admin-chosen brand colour, button style and app name across the app. */
-export function AppSettingsApplier(): null {
+export function AppSettingsApplier(): JSX.Element | null {
   const s = useAppSettings();
-
-  useEffect(() => {
-    const root = document.documentElement;
-    root.dataset.buttonStyle = s.buttonStyle;
-    const c = s.brandColor ? hexToRgbTriplet(s.brandColor) : null;
-    let el = document.getElementById('brand-color-style');
-    if (!c) {
-      el?.remove();
-      return;
-    }
-    if (!el) {
-      el = document.createElement('style');
-      el.id = 'brand-color-style';
-      document.head.appendChild(el);
-    }
-    el.textContent = `:root, :root.dark, .dark, .dim, :root.dim { --accent-mono: ${c.rgb} !important; --accent-mono-foreground: ${c.fg} !important; }`;
-  }, [s.buttonStyle, s.brandColor]);
 
   useEffect(() => {
     if (s.appName === 'Chorui') return;
@@ -73,5 +56,11 @@ export function AppSettingsApplier(): null {
     return () => obs.disconnect();
   }, [s.appName]);
 
-  return null;
+  const c = s.brandColor ? hexToRgbTriplet(s.brandColor) : null;
+  const radius = s.buttonStyle === 'rounded' ? '0.75rem' : s.buttonStyle === 'square' ? '0.25rem' : null;
+  let css = '';
+  if (c) css += `:root, :root.dark, .dark, .dim { --accent-mono: ${c.rgb} !important; --accent-mono-foreground: ${c.fg} !important; }`;
+  if (radius) css += `:is(button, a[role='button'], .custom-button).rounded-full { border-radius: ${radius} !important; }`;
+  if (!css) return null;
+  return <style data-app-settings=''>{css}</style>;
 }

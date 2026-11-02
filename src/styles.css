@@ -204,6 +204,3 @@
   transition-duration: 0.01ms !important;
 }
 
-/* Admin-selectable button shapes (General settings). Pill is the default look. */
-html[data-button-style='rounded'] :is(button, a[role='button'], .custom-button).rounded-full { border-radius: 0.75rem; }
-html[data-button-style='square'] :is(button, a[role='button'], .custom-button).rounded-full { border-radius: 0.25rem; }
