@@ -13,6 +13,7 @@ import {
 import type { CollectionRef, QueryConstraint, RawRow } from '@lib/firebase/db';
 import { onDataChanged } from '@lib/firebase/utils';
 import type { User } from '@lib/types/user';
+import { supabase } from '@/integrations/supabase/client';
 
 type UseCollection<T> = {
   data: T[] | null;
@@ -76,12 +77,18 @@ export function useCollection<T>(
 
       if (!rows) return null;
 
+      let visibleRows = rows;
+      if (ref.table === 'tweets') {
+        const { data: mutes } = await supabase.from('user_mutes').select('target_id');
+        const hidden = new Set(mutes?.map(m => m.target_id) ?? []);
+        visibleRows = rows.filter(row => !hidden.has((row as { createdBy?: string }).createdBy ?? ''));
+      }
       if (includeUser)
         return (await populateUsers(
-          rows as unknown as (T & { createdBy: string })[]
+          visibleRows as unknown as (T & { createdBy: string })[]
         )) as unknown as (T & { user: User })[];
 
-      return rows;
+      return visibleRows;
     },
     enabled: !disabled,
     placeholderData: preserve ? (previous) => previous : undefined,

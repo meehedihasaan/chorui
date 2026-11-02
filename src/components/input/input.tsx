@@ -70,7 +70,7 @@ export function Input({
   );
 
   const sendTweet = async (): Promise<void> => {
-    if (loading || !user) return;
+    if (loading || !user || disabled) return;
     inputRef.current?.blur();
 
     setLoading(true);
