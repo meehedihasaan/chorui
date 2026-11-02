@@ -1,7 +1,7 @@
 # Roadmap
 
 ## Link previews
-- [ ] Show clickable link metadata in feed cards and post details, with safe fallbacks.
+- [x] Show clickable link metadata in feed cards and post details, with safe fallbacks.
 
 ## November 2 improvements
 - [x] Small follow/following control before the post menu.
