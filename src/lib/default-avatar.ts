@@ -1,4 +1,5 @@
 import defaultAvatar from '@/assets/default-avatar.png.asset.json';
+import { resolveMediaUrl } from '@/lib/media-url';
 
 const LEGACY_DEFAULT_AVATAR = '/assets/twitter-avatar.jpg';
 
@@ -12,6 +13,6 @@ export const DEFAULT_AVATAR_URL: string = defaultAvatar.url;
 export function resolveAvatarUrl(
   value: string | null | undefined
 ): string {
-  if (!value || value === LEGACY_DEFAULT_AVATAR) return DEFAULT_AVATAR_URL;
-  return value;
+  if (!value || value === LEGACY_DEFAULT_AVATAR) return resolveMediaUrl(DEFAULT_AVATAR_URL);
+  return resolveMediaUrl(value);
 }

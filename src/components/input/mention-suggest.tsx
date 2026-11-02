@@ -1,3 +1,4 @@
+import { resolveMediaUrl } from "@/lib/media-url";
 import { useEffect, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { DEFAULT_AVATAR_URL } from '@lib/default-avatar';
@@ -30,7 +31,7 @@ export function MentionSuggest({ query, onPick }: { query: string; onPick: (user
         <button key={p.id} type='button' role='option' aria-selected='false'
           onMouseDown={e => { e.preventDefault(); onPick(p.username); }}
           className='flex w-full items-center gap-3 px-4 py-2 text-left hover:bg-main-accent/10'>
-          <img src={p.photo_url || DEFAULT_AVATAR_URL} alt='' className='h-9 w-9 shrink-0 rounded-full object-cover' />
+          <img src={resolveMediaUrl(p.photo_url || DEFAULT_AVATAR_URL)} alt='' className='h-9 w-9 shrink-0 rounded-full object-cover' />
           <span className='min-w-0'>
             <span className='block truncate font-bold'>{p.name || p.username}</span>
             <span className='block truncate text-sm text-light-secondary dark:text-dark-secondary'>@{p.username}</span>

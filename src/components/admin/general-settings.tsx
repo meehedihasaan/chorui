@@ -1,3 +1,4 @@
+import { resolveMediaUrl } from "@/lib/media-url";
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import cn from 'clsx';
@@ -67,7 +68,7 @@ export function GeneralSettings(): JSX.Element {
       <section className='flex flex-col gap-2'>
         <h3 className='text-lg font-bold'>Logo</h3>
         <div className='flex items-center gap-4'>
-          <img src={logo || logoAsset.url} alt='Logo preview' className='h-16 w-16 rounded-xl border border-light-border object-contain p-1 dark:border-dark-border' />
+          <img src={resolveMediaUrl(logo || logoAsset.url)} alt='Logo preview' className='h-16 w-16 rounded-xl border border-light-border object-contain p-1 dark:border-dark-border' />
           <label className='cursor-pointer rounded-full border border-light-line-reply px-4 py-1.5 text-sm font-bold dark:border-dark-line-reply'>
             Upload logo
             <input type='file' accept='image/png,image/jpeg,image/webp,image/svg+xml,image/gif' className='hidden' onChange={(e) => pickLogo(e.target.files?.[0])} />
@@ -126,7 +127,7 @@ export function GeneralSettings(): JSX.Element {
       </section>
 
       <section className='flex items-center gap-3 rounded-xl border border-light-border p-4 dark:border-dark-border'>
-        <img src={logo || logoAsset.url} alt='' className='h-8 w-8 object-contain' />
+        <img src={resolveMediaUrl(logo || logoAsset.url)} alt='' className='h-8 w-8 object-contain' />
         <span className='text-lg font-bold'>{name.trim() || 'App name'}</span>
         <span style={{ borderRadius: radius, backgroundColor: color ?? undefined }} className={cn('ml-auto px-4 py-1.5 text-sm font-bold', color ? 'text-white' : 'bg-main-accent text-main-accent-foreground')}>
           Follow
