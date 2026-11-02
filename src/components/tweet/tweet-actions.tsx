@@ -184,6 +184,7 @@ export function TweetActions({
         {({ open, close }): JSX.Element => (
           <>
             <Popover.Button
+              aria-label='More post options'
               as={Button}
               className={cn(
                 `main-tab group p-2 ${viewTweet ? 'absolute top-2 right-2' : 'relative'}
