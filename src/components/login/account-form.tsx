@@ -4,6 +4,7 @@ import { Button } from '@components/ui/button';
 import { HeroIcon } from '@components/ui/hero-icon';
 import { CustomIcon } from '@components/ui/custom-icon';
 import { ChoruiLogo } from '@components/ui/chorui-logo';
+import { PhoneForm } from './phone-form';
 
 export function AccountForm({ onSignedIn }: { onSignedIn?: () => void }) {
   const { signInWithEmail, signUpWithEmail, signInWithGoogle, signInWithLovable } = useAuth();
@@ -16,6 +17,7 @@ export function AccountForm({ onSignedIn }: { onSignedIn?: () => void }) {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
   const [confirmed, setConfirmed] = useState(false);
+  const [usePhone, setUsePhone] = useState(false);
   const signup = mode === 'signup';
   const field = 'w-full rounded-md border border-light-border bg-main-background px-4 py-3 text-light-primary outline-none focus:ring-2 focus:ring-main-accent dark:border-dark-border dark:text-dark-primary';
   const changeMode = () => { setMode(signup ? 'signin' : 'signup'); setStep(1); setError(''); setConfirmed(false); };
@@ -27,8 +29,10 @@ export function AccountForm({ onSignedIn }: { onSignedIn?: () => void }) {
       <div className='grid gap-3'>
         <Button className={`${field} flex items-center justify-center gap-2 font-bold`} onClick={signInWithGoogle}><CustomIcon iconName='GoogleIcon' />Continue with Google</Button>
         <Button className={`${field} flex items-center justify-center gap-2 font-bold`} onClick={signInWithLovable}><ChoruiLogo className='h-5 w-5' />Continue with Lovable</Button>
+        {!usePhone && <Button className={`${field} flex items-center justify-center gap-2 font-bold`} onClick={() => setUsePhone(true)}><HeroIcon className='h-5 w-5' iconName='DevicePhoneMobileIcon' />Continue with phone</Button>}
       </div>
       <div className='flex items-center gap-3 text-sm text-light-secondary dark:text-dark-secondary'><i className='flex-1 border-t border-light-border dark:border-dark-border' />or<i className='flex-1 border-t border-light-border dark:border-dark-border' /></div>
+      {usePhone ? <PhoneForm field={field} onSignedIn={onSignedIn} onCancel={() => setUsePhone(false)} /> : <>
       <form className='space-y-4' onSubmit={async e => {
         e.preventDefault(); setError('');
         if (signup && step === 1) { setStep(2); return; }
@@ -50,6 +54,7 @@ export function AccountForm({ onSignedIn }: { onSignedIn?: () => void }) {
         {signup && step === 2 && <Button className='w-full py-2' onClick={() => setStep(1)}>Back</Button>}
       </form>
       <Button className='w-full py-2 font-bold text-main-accent' onClick={changeMode}>{signup ? 'Already have an account? Sign in' : 'Create a new account'}</Button>
+      </>}
     </>}
   </div>;
 }
