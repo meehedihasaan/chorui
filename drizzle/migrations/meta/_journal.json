@@ -64,6 +64,13 @@
       "when": 1793600667607,
       "tag": "0008_harden_post_control_identity",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1793602113002,
+      "tag": "0009_username_change_support",
+      "breakpoints": true
     }
   ]
 }
