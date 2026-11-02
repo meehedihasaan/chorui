@@ -1,10 +1,3 @@
-import { useState } from 'react';
-import { toast } from 'react-hot-toast';
-import { useAuth } from '@lib/context/auth-context';
-import { NextImage } from '@components/ui/next-image';
-import { CustomIcon } from '@components/ui/custom-icon';
-import { ChoruiLogo } from '@components/ui/chorui-logo';
-import { Button } from '@components/ui/button';
 import { AccountForm } from './account-form';
 
 export function LoginMain(): JSX.Element {

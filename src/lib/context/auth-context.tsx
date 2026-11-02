@@ -10,6 +10,8 @@ import {
 import { getRandomInt, getRandomId } from '@lib/random';
 import { mapProfile } from '@lib/firebase/db';
 import { resolveAvatarUrl } from '@lib/default-avatar';
+import { useQueryClient } from '@tanstack/react-query';
+import { forgetAccount } from '@lib/account-sessions';
 import type { ReactNode } from 'react';
 import type { User } from '@lib/types/user';
 import type { Bookmark } from '@lib/types/bookmark';
@@ -84,6 +86,7 @@ async function ensureProfile(
 export function AuthContextProvider({
   children
 }: AuthContextProviderProps): JSX.Element {
+  const queryClient = useQueryClient();
   const [user, setUser] = useState<User | null>(null);
   const [userBookmarks, setUserBookmarks] = useState<Bookmark[] | null>(null);
   const [error, setError] = useState<Error | null>(null);
@@ -114,6 +117,7 @@ export function AuthContextProvider({
       data: { subscription }
     } = supabase.auth.onAuthStateChange((event, session) => {
       if (event === 'SIGNED_OUT') {
+        queryClient.clear();
         setUser(null);
         setUserBookmarks(null);
         setLoading(false);
@@ -121,6 +125,9 @@ export function AuthContextProvider({
         (event === 'SIGNED_IN' || event === 'USER_UPDATED') &&
         session?.user
       ) {
+        queryClient.clear();
+        setUser(null);
+        setUserBookmarks(null);
         setLoading(true);
         void manageUser(
           session.user.id,
@@ -237,7 +244,8 @@ export function AuthContextProvider({
 
   const signOut = async (): Promise<void> => {
     try {
-      await supabase.auth.signOut();
+      if (user) forgetAccount(user.id);
+      await supabase.auth.signOut({ scope: 'local' });
     } catch (signOutError) {
       setError(signOutError as Error);
     }
