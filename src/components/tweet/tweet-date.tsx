@@ -7,15 +7,17 @@ import type { Tweet } from '@lib/types/tweet';
 type TweetDateProps = Pick<Tweet, 'createdAt'> & {
   tweetLink: string;
   viewTweet?: boolean;
+  className?: string;
 };
 
 export function TweetDate({
   createdAt,
   tweetLink,
-  viewTweet
+  viewTweet,
+  className
 }: TweetDateProps): JSX.Element {
   return (
-    <div className={cn('flex gap-1', viewTweet && 'py-4')}>
+    <div className={cn('flex gap-1', viewTweet && 'py-4', className)}>
       {!viewTweet && <i>·</i>}
 
       <div className='group relative'>
