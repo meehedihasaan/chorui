@@ -51,7 +51,6 @@ export function AccountForm({ onSignedIn }: { onSignedIn?: () => void }) {
     {confirmed ? <div role='status' className='space-y-4'><h2 className='text-xl font-bold'>Check your email</h2><p>We sent a confirmation link to {email}.</p><Button className={field} onClick={changeMode}>Back to sign in</Button></div> : <>
       <div className='grid gap-3'>
         {!usePhone && <Button className={`${field} flex items-center justify-center gap-2 font-bold`} onClick={() => setUsePhone(true)}><HeroIcon className='h-5 w-5' iconName='DevicePhoneMobileIcon' />Continue with phone</Button>}
-        {usePhone && null}
       </div>
       <div className='flex items-center gap-3 text-sm text-light-secondary dark:text-dark-secondary'><i className='flex-1 border-t border-light-border dark:border-dark-border' />or<i className='flex-1 border-t border-light-border dark:border-dark-border' /></div>
       {usePhone ? <PhoneForm field={field} onSignedIn={onSignedIn} onCancel={() => setUsePhone(false)} /> : <>
