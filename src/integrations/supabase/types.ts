@@ -499,6 +499,7 @@ export type Database = {
           id: string
           is_admin: boolean
           is_banned: boolean
+          is_moderator: boolean
           name: string
           photo_url: string
           total_tweets: number
@@ -518,11 +519,19 @@ export type Database = {
         Args: { p_reason?: string; p_user: string; p_value: boolean }
         Returns: undefined
       }
+      admin_set_moderator: {
+        Args: { p_user: string; p_value: boolean }
+        Returns: undefined
+      }
       admin_set_verified: {
         Args: { p_user: string; p_value: boolean }
         Returns: undefined
       }
       admin_stats: { Args: never; Returns: Json }
+      admin_update_profile: {
+        Args: { p_name: string; p_user: string; p_username: string }
+        Returns: undefined
+      }
       admin_update_settings: {
         Args: {
           p_app_name: string
