@@ -2,12 +2,11 @@ import { useState } from 'react';
 import { useAuth } from '@lib/context/auth-context';
 import { Button } from '@components/ui/button';
 import { HeroIcon } from '@components/ui/hero-icon';
-import { CustomIcon } from '@components/ui/custom-icon';
 import { ChoruiLogo } from '@components/ui/chorui-logo';
 import { PhoneForm } from './phone-form';
 
 export function AccountForm({ onSignedIn }: { onSignedIn?: () => void }) {
-  const { signInWithEmail, signUpWithEmail, signInWithGoogle, signInWithLovable } = useAuth();
+  const { signInWithEmail, signUpWithEmail } = useAuth();
   const [mode, setMode] = useState<'signin' | 'signup'>('signup');
   const [step, setStep] = useState(1);
   const [name, setName] = useState('');
@@ -27,8 +26,6 @@ export function AccountForm({ onSignedIn }: { onSignedIn?: () => void }) {
       {signup && !confirmed && <p className='mt-2 text-sm text-light-secondary dark:text-dark-secondary'>Step {step} of 2</p>}</div>
     {confirmed ? <div role='status' className='space-y-4'><h2 className='text-xl font-bold'>Check your email</h2><p>We sent a confirmation link to {email}.</p><Button className={field} onClick={changeMode}>Back to sign in</Button></div> : <>
       <div className='grid gap-3'>
-        <Button className={`${field} flex items-center justify-center gap-2 font-bold`} onClick={signInWithGoogle}><CustomIcon iconName='GoogleIcon' />Continue with Google</Button>
-        <Button className={`${field} flex items-center justify-center gap-2 font-bold`} onClick={signInWithLovable}><ChoruiLogo className='h-5 w-5' />Continue with Lovable</Button>
         {!usePhone && <Button className={`${field} flex items-center justify-center gap-2 font-bold`} onClick={() => setUsePhone(true)}><HeroIcon className='h-5 w-5' iconName='DevicePhoneMobileIcon' />Continue with phone</Button>}
       </div>
       <div className='flex items-center gap-3 text-sm text-light-secondary dark:text-dark-secondary'><i className='flex-1 border-t border-light-border dark:border-dark-border' />or<i className='flex-1 border-t border-light-border dark:border-dark-border' /></div>
