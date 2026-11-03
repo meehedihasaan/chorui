@@ -62,7 +62,7 @@ export function EditUserForm({ user, onDone }: { user: { id: string; name: strin
         e.preventDefault(); setBusy(true);
         const { error } = await supabase.rpc('admin_update_profile', { p_user: user.id, p_name: name, p_username: username });
         setBusy(false);
-        if (error) return toast.error(error.message);
+        if (error) { toast.error(error.message); return; }
         toast.success('Profile updated');
         void qc.invalidateQueries();
         onDone();
