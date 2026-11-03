@@ -16,7 +16,7 @@ import { HeroIcon } from '@components/ui/hero-icon';
 import { AdminReview } from '@components/admin/verification-review';
 import { GeneralSettings } from '@components/admin/general-settings';
 import { AuthSetup } from '@components/admin/auth-setup';
-import { GoogleSignInSetup } from '@components/admin/google-signin-setup';
+import { AddUserForm, EditUserForm } from '@components/admin/user-forms';
 
 export const Route = createFileRoute('/admin')({
   ssr: false,
@@ -114,7 +114,7 @@ function AdminContent() {
       {tab === 'Posts' && <Posts />}
       {tab === 'Reports' && <Reports />}
       {tab === 'Verification' && <AdminReview />}
-      {tab === 'Settings' && <><GeneralSettings /><GoogleSignInSetup /><AuthSetup /></>}
+      {tab === 'Settings' && <><GeneralSettings /><AuthSetup /></>}
     </MainContainer>
   );
 }
@@ -161,7 +161,7 @@ function Overview({ go }: { go: (t: Tab) => void }) {
   );
 }
 
-type AdminUser = { id: string; name: string; username: string; photo_url: string; verified: boolean; total_tweets: number; followers: number; created_at: string; is_admin: boolean; is_banned: boolean };
+type AdminUser = { id: string; name: string; username: string; photo_url: string; verified: boolean; total_tweets: number; followers: number; created_at: string; is_admin: boolean; is_banned: boolean; is_moderator: boolean };
 
 function Users({ adminsOnly = false }: { adminsOnly?: boolean }) {
   const qc = useQueryClient();
@@ -179,6 +179,7 @@ function Users({ adminsOnly = false }: { adminsOnly?: boolean }) {
     }
   });
   const [busy, setBusy] = useState<string | null>(null);
+  const [editing, setEditing] = useState<string | null>(null);
   const act = async (id: string, fn: () => Promise<boolean>) => {
     setBusy(id);
     await fn();
@@ -203,6 +204,7 @@ function Users({ adminsOnly = false }: { adminsOnly?: boolean }) {
           <span className='font-bold'>{total == null ? '…' : Number(total).toLocaleString()}</span>{' '}
           <span className={muted}>{adminsOnly ? 'admins' : 'total users'}</span>
         </p>
+        {!adminsOnly && <AddUserForm />}
         <input className={inputCls} placeholder={adminsOnly ? 'Search admins' : 'Search by name or @username'} value={search} onChange={(e) => setSearch(e.target.value)} />
       </div>
       {q.isPending ? <Loading /> : !q.data?.length ? <p className={cn('p-5', muted)}>{adminsOnly ? 'No admins found.' : 'No users found.'}</p> : (
@@ -228,11 +230,16 @@ function Users({ adminsOnly = false }: { adminsOnly?: boolean }) {
                 </div>
                 <div className='flex flex-wrap gap-2 text-xs'>
                   {u.is_admin && <span className='rounded-full bg-main-accent/15 px-2 py-0.5 font-bold'>Admin</span>}
+                  {u.is_moderator && <span className='rounded-full bg-accent-blue/15 px-2 py-0.5 font-bold text-accent-blue'>Moderator</span>}
                   {u.is_banned && <span className='rounded-full bg-accent-red/15 px-2 py-0.5 font-bold text-accent-red'>Suspended</span>}
                 </div>
                 <div className='flex flex-wrap gap-2'>
                   <button className={btn} disabled={b} onClick={() => act(u.id, () => rpc('admin_set_verified', { p_user: u.id, p_value: !u.verified }, u.verified ? 'Badge removed' : 'Badge given', qc))}>
                     {u.verified ? 'Remove badge' : 'Give badge'}
+                  </button>
+                  <button className={btn} disabled={b} onClick={() => setEditing(editing === u.id ? null : u.id)}>Edit</button>
+                  <button className={btn} disabled={b} onClick={() => act(u.id, () => rpc('admin_set_moderator', { p_user: u.id, p_value: !u.is_moderator }, u.is_moderator ? 'Moderator removed' : 'Made moderator', qc))}>
+                    {u.is_moderator ? 'Remove moderator' : 'Make moderator'}
                   </button>
                   {!self && (
                     <button className={btn} disabled={b} onClick={() => act(u.id, () => rpc('admin_set_admin', { p_user: u.id, p_value: !u.is_admin }, u.is_admin ? 'Admin removed' : 'Made admin', qc))}>
@@ -254,6 +261,7 @@ function Users({ adminsOnly = false }: { adminsOnly?: boolean }) {
                     </button>
                   )}
                 </div>
+                {editing === u.id && <EditUserForm user={u} onDone={() => setEditing(null)} />}
               </div>
             );
           })}

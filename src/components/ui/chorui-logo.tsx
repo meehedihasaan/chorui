@@ -15,7 +15,7 @@ export function ChoruiLogo({ className }: ChoruiLogoProps): JSX.Element {
       src={resolveMediaUrl(logoUrl || logoAsset.url)}
       alt={appName}
       draggable={false}
-      className={cn('h-6 w-6 object-contain', className)}
+      className={cn('h-6 w-6 object-contain', !logoUrl && 'dark:invert', className)}
     />
   );
 }

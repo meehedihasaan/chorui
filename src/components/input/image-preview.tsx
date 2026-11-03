@@ -89,9 +89,12 @@ export function ImagePreview({
   return (
     <div
       className={cn(
-        'grid w-full min-w-0 grid-cols-2 grid-rows-2 rounded-lg',
-        previewCount === 1 ? 'aspect-[4/3] max-h-96' : 'aspect-[4/3]',
-        isTweet ? 'mt-2 gap-0.5' : 'gap-3'
+        'w-full min-w-0',
+        isTweet && previewCount === 1
+          ? 'mt-3 block overflow-hidden rounded-2xl border border-light-border dark:border-dark-border'
+          : 'grid grid-cols-2 grid-rows-2 rounded-2xl',
+        isTweet && previewCount > 1 && 'mt-3 aspect-video gap-0.5 overflow-hidden border border-light-border dark:border-dark-border',
+        !isTweet && (previewCount === 1 ? 'aspect-[4/3] max-h-96 gap-3' : 'aspect-[4/3] gap-3')
       )}
     >
       <Modal
@@ -123,9 +126,7 @@ export function ImagePreview({
               onKeyDown={e => { if (e.key === 'Enter') handleSelectedImage(index, isVideo)(); }}
               className={cn(
                 'accent-tab group relative min-h-0 min-w-0 overflow-hidden transition-shadow',
-                isTweet
-                  ? postImageBorderRadius[previewCount][index]
-                  : 'rounded-2xl',
+                isTweet ? '' : 'rounded-2xl',
                 {
                   'col-span-2 row-span-2': previewCount === 1,
                   'row-span-2':
@@ -160,15 +161,18 @@ export function ImagePreview({
                     muted
                   />
                 </>
+              ) : isTweet && previewCount === 1 ? (
+                <img
+                  src={src}
+                  alt={alt}
+                  loading='lazy'
+                  className='block max-h-[510px] w-full cursor-pointer object-cover transition hover:brightness-90'
+                />
               ) : (
                 <NextImage
                   className='relative h-full w-full cursor-pointer transition 
                              hover:brightness-75 hover:duration-200'
-                  imgClassName={cn(
-                    isTweet
-                      ? postImageBorderRadius[previewCount][index]
-                      : 'rounded-2xl'
-                  )}
+                  imgClassName={cn(!isTweet && 'rounded-2xl')}
                   previewCount={previewCount}
                   layout='fill'
                   src={src}

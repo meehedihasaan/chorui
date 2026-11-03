@@ -120,6 +120,13 @@
       "when": 1793615584113,
       "tag": "0016_post_place",
       "breakpoints": true
+    },
+    {
+      "idx": 17,
+      "version": "7",
+      "when": 1793687280523,
+      "tag": "0017_admin_user_permissions",
+      "breakpoints": true
     }
   ]
 }
