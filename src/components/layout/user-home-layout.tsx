@@ -138,7 +138,7 @@ export function UserHomeLayout({ children }: LayoutProps): JSX.Element {
             </div>
           ) : (
             <>
-              <ComposeEntry />
+              {isOwner && <ComposeEntry />}
               {children}
             </>
           )}
