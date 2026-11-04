@@ -24,7 +24,7 @@ function AnalyticsContent() {
   const { user } = useAuth();
   const { post } = Route.useSearch();
   const { back } = useRouter();
-  const load = useServerFn(getAnalytics);
+  const load = getAnalytics;
   const query = useQuery({ queryKey: ['analytics', user?.id, post], queryFn: () => load({ data: { postId: post } }), enabled: !!user, refetchInterval: 30000 });
   const totals = analyticsTotals(query.data ?? []);
   return <MainContainer><MainHeader title='Post analytics' useActionButton action={back}>
