@@ -10,6 +10,7 @@ import { Loading } from '@components/ui/loading';
 import { backdrop, modal } from './modal';
 import type { VariantLabels } from 'framer-motion';
 import type { ImageData } from '@lib/types/file';
+import { resolveMediaUrl } from '@/lib/media-url';
 import type { IconName } from '@components/ui/hero-icon';
 
 type ImageModalProps = {
@@ -37,7 +38,8 @@ export function ImageModal({
   const [indexes, setIndexes] = useState<number[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const { src, alt, type } = imageData;
+  const { src: rawSrc, alt, type } = imageData;
+  const src = resolveMediaUrl(rawSrc);
 
   const isVideo = type?.includes('video');
 
