@@ -6,6 +6,7 @@ import { preventBubbling } from '@lib/utils';
 import { ImageModal } from '@components/modal/image-modal';
 import { Modal } from '@components/modal/modal';
 import { NextImage } from '@components/ui/next-image';
+import { resolveMediaUrl } from '@/lib/media-url';
 import { Button } from '@components/ui/button';
 import { HeroIcon } from '@components/ui/hero-icon';
 import { ToolTip } from '@components/ui/tooltip';
@@ -115,7 +116,8 @@ export function ImagePreview({
         />}
       </Modal>
       <AnimatePresence mode='popLayout'>
-        {imagesPreview.map(({ id, src, alt }, index) => {
+        {imagesPreview.map(({ id, src: rawSrc, alt }, index) => {
+          const src = resolveMediaUrl(rawSrc);
           const isVideo = imagesPreview[index].type?.includes('video');
 
           return (

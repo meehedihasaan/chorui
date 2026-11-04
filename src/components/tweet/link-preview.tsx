@@ -1,3 +1,4 @@
+import { resolveMediaUrl } from '@/lib/media-url';
 import { useEffect, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useServerFn } from '@tanstack/react-start';
@@ -25,7 +26,7 @@ function LinkPreviewCard({ url }: { url: string }) {
   const preview = data ?? linkFallback(url);
   useEffect(() => { setImageAttempt(0); }, [preview.image]);
   const imageSrc = preview.image
-    ? `/api/public/link-image?url=${encodeURIComponent(preview.image)}&attempt=${imageAttempt}`
+    ? resolveMediaUrl(`/api/public/link-image?url=${encodeURIComponent(preview.image)}&attempt=${imageAttempt}`)
     : null;
   return <a href={url} target='_blank' rel='noopener noreferrer' aria-label={`Open link: ${preview.title}`}
     onClick={e => e.stopPropagation()}
