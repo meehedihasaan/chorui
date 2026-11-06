@@ -6,8 +6,8 @@ import { supabase } from '@/integrations/supabase/client';
 import { adminCreateUser } from '@lib/admin-users.functions';
 
 const field = 'w-full rounded-lg border border-light-line-reply bg-transparent px-3 py-2 text-sm outline-none focus:border-main-accent dark:border-dark-line-reply';
-const primary = 'btn-solid text-sm';
-const plain = 'btn-mint text-sm';
+const primary = 'btn-solid px-4 py-1.5 text-sm';
+const plain = 'btn-mint px-4 py-1.5 text-sm';
 
 export function AddUserForm(): JSX.Element {
   const qc = useQueryClient();
