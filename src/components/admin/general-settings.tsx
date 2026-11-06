@@ -137,7 +137,7 @@ export function GeneralSettings(): JSX.Element {
       <button
         disabled={!dirty || busy || !name.trim()}
         onClick={save}
-        className='rounded-full bg-main-accent py-3 font-bold text-main-accent-foreground disabled:opacity-50'
+        className='btn-solid py-3'
       >
         {busy ? 'Saving…' : 'Save changes'}
       </button>
