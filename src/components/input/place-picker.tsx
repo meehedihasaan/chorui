@@ -56,8 +56,8 @@ export function PlacePicker({ value, editing, onChange, onClose, onEdit }: Props
         className='rounded-lg border border-light-border bg-transparent px-3 py-2 outline-none focus:border-main-accent dark:border-dark-border'
       />
       <div className='flex justify-end gap-2'>
-        <button type='button' onClick={onClose} className='rounded-full px-3 py-1 text-sm font-bold hover:bg-main-accent/10'>Cancel</button>
-        <button type='button' onClick={save} className='rounded-full bg-main-accent px-4 py-1 text-sm font-bold text-main-accent-foreground'>Add place</button>
+        <button type='button' onClick={onClose} className='btn-mint px-3 py-1 text-sm'>Cancel</button>
+        <button type='button' onClick={save} className='btn-solid px-4 py-1 text-sm'>Add place</button>
       </div>
     </div>
   );

@@ -76,7 +76,7 @@ function ResetPasswordPage() {
         <button
           type="submit"
           disabled={loading}
-          className="rounded-full bg-main-accent py-2 font-bold text-main-accent-foreground transition hover:brightness-90 disabled:opacity-50"
+          className="btn-solid py-2"
         >
           {loading ? "Updating…" : "Update password"}
         </button>

@@ -39,7 +39,7 @@ export const Route = createFileRoute('/settings')({
 const muted = 'text-light-secondary dark:text-dark-secondary';
 const rowCls = 'flex w-full items-center justify-between gap-4 px-4 py-4 text-left transition hover:bg-light-primary/5 dark:hover:bg-dark-primary/5';
 const inputCls = 'w-full rounded-md border border-light-line-reply bg-transparent px-3 py-2 outline-none focus:border-main-accent dark:border-dark-border';
-const btnCls = 'self-end rounded-full bg-main-accent px-4 py-1.5 font-bold text-main-accent-foreground disabled:opacity-50';
+const btnCls = 'btn-solid self-end';
 
 function Header({ title, subtitle, onBack }: { title: string; subtitle?: string; onBack: () => void }) {
   return (
