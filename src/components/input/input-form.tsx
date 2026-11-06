@@ -182,7 +182,7 @@ export function InputForm({
           />
           {reply && !visited && (
             <Button
-              className='cursor-pointer bg-main-accent px-4 py-1.5 font-bold text-main-accent-foreground opacity-50'
+              className='btn-solid cursor-pointer opacity-50'
               onClick={handleFocus}
             >
               Reply

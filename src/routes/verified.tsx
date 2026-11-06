@@ -199,7 +199,7 @@ function ApplyForm({ rejected }: { rejected: boolean }) {
       <button
         type='submit'
         disabled={!canSubmit}
-        className='rounded-full bg-light-primary py-3 font-bold text-main-background disabled:opacity-50 dark:bg-light-border'
+        className='btn-solid py-3'
       >
         {busy ? 'Sending…' : 'Submit application'}
       </button>

@@ -31,7 +31,7 @@ function AccountsPage() {
             {a.id !== user?.id && <Button aria-label={`Remove ${a.name} from account switcher`} title='Remove account' className='p-2' onClick={() => { forgetAccount(a.id); setAccounts(savedAccounts()); }}><HeroIcon className='h-4 w-4' iconName='XMarkIcon' /></Button>}
           </div>)}
         </div>
-        <Button className='mt-6 flex w-full items-center justify-center gap-2 bg-main-accent py-3 font-bold text-main-accent-foreground' onClick={() => setAdding(true)}><HeroIcon className='h-5 w-5' iconName='PlusIcon' />Add an existing or new account</Button>
+        <Button className='btn-solid mt-6 flex w-full items-center justify-center gap-2 py-3' onClick={() => setAdding(true)}><HeroIcon className='h-5 w-5' iconName='PlusIcon' />Add an existing or new account</Button>
       </>}
       {error && <p role='alert' className='mt-4 text-sm text-accent-red'>{error}</p>}
     </div>

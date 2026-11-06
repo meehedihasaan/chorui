@@ -72,10 +72,7 @@ export function EditProfileModal({
             <ToolTip tip='Reset' />
           </Button>
           <Button
-            className='bg-light-primary py-1 px-4 font-bold text-white focus-visible:bg-light-primary/90 
-                       enabled:hover:bg-light-primary/90 enabled:active:bg-light-primary/80 disabled:brightness-75
-                       dark:bg-light-border dark:text-light-primary dark:focus-visible:bg-light-border/90
-                       dark:enabled:hover:bg-light-border/90 dark:enabled:active:bg-light-border/75'
+            className='btn-solid py-1 px-4'
             onClick={updateData}
             disabled={!!inputNameError || !!saveDisabled}
             loading={loading}
