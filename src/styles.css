@@ -79,6 +79,13 @@
   /* The Love reaction's red. */
   --color-like-red: #e0245e;
 
+  /* Button style: pale mint default with an ink outline, solid green when active. */
+  --color-btn-mint: #a3dcb1;
+  --color-btn-green: #41a54d;
+  --color-btn-green-foreground: #ffffff;
+  --color-btn-ink: #1a1a1a;
+  --color-compose-background: #e2e2e2;
+
   --color-accent-red: #f4212e;
   --color-dark-primary: #e7e9ea;
   --color-dark-secondary: #71767b;
@@ -148,6 +155,20 @@
 
 @utility custom-button {
   @apply hover-animation rounded-full p-3 disabled:cursor-not-allowed disabled:opacity-50;
+}
+
+/* Pill button: pale mint fill with an ink outline. */
+@utility btn-mint {
+  @apply hover-animation rounded-full border-2 border-light-primary bg-btn-mint px-4 py-1.5
+    font-bold text-btn-ink hover:brightness-95 active:brightness-90
+    disabled:cursor-not-allowed disabled:opacity-50 dark:border-dark-primary;
+}
+
+/* Pill button: solid green fill, white label — the active/primary state. */
+@utility btn-solid {
+  @apply hover-animation rounded-full bg-btn-green px-4 py-1.5 font-bold
+    text-btn-green-foreground hover:brightness-95 active:brightness-90
+    disabled:cursor-not-allowed disabled:opacity-50;
 }
 
 @utility custom-underline {
