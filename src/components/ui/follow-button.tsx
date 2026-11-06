@@ -48,7 +48,7 @@ export function FollowButton({
       {userIsFollowed ? (
         <Button
           disabled={pending}
-          className='dark-bg-tab btn-mint min-w-[106px] self-start
+          className='dark-bg-tab btn-mint min-w-[106px] self-start px-4 py-1.5
                      hover:border-accent-red hover:bg-accent-red/10 hover:text-accent-red
                      hover:before:content-["Unfollow"] inner:hover:hidden'
           onClick={preventBubbling(openModal)}
@@ -58,7 +58,7 @@ export function FollowButton({
       ) : (
         <Button
           disabled={pending}
-          className='btn-solid min-w-[106px] self-start'
+          className='btn-solid min-w-[106px] self-start px-4 py-1.5'
           onClick={preventBubbling(handleFollow)}
         >
           Follow

@@ -161,7 +161,7 @@ export function InputOptions({
         </motion.div>
         <Button
           type='submit'
-          className='accent-tab btn-solid'
+          className='accent-tab btn-solid px-4 py-1.5'
           disabled={!isValidTweet}
         >
           {reply ? 'Reply' : 'Post'}
