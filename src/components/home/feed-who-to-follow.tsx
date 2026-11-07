@@ -6,6 +6,7 @@ import { useAuth } from '@lib/context/auth-context';
 import { mapProfile } from '@lib/firebase/db';
 import { UserAvatar } from '@components/user/user-avatar';
 import { UserName } from '@components/user/user-name';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { FollowButton } from '@components/ui/follow-button';
 import { HeroIcon } from '@components/ui/hero-icon';
 import type { User } from '@lib/types/user';
@@ -95,16 +96,12 @@ export function FeedWhoToFollow(): JSX.Element | null {
               size={64}
             />
             <div className='flex w-full min-w-0 flex-col items-center'>
-              <Link href={`/user/${person.username}`}>
-                <a className='flex max-w-full min-w-0 justify-center'>
-                  <UserName
-                    className='max-w-full justify-center truncate'
-                    name={person.name}
-                    username={person.username}
-                    verified={person.verified}
-                  />
-                </a>
-              </Link>
+              <UserName
+                className='max-w-full justify-center truncate'
+                name={person.name}
+                username={person.username}
+                verified={person.verified}
+              />
               <p className='max-w-full truncate text-sm text-light-secondary dark:text-dark-secondary'>
                 @{person.username}
               </p>

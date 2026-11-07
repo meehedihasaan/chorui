@@ -1,7 +1,7 @@
 import { MobileSidebar } from "@components/sidebar/mobile-sidebar";
 import { ChoruiLogo } from "@components/ui/chorui-logo";
 import cn from "clsx";
-import { Fragment, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { FeedWhoToFollow } from "@components/home/feed-who-to-follow";
 import { createFileRoute } from "@tanstack/react-router";
 import { AnimatePresence } from "framer-motion";
@@ -56,6 +56,8 @@ function HomePage() {
 // Height of the top header row (logo / search); the tab bar stays pinned
 // while this row slides away on scroll down.
 const HEADER_ROW_HEIGHT = 52;
+// Number of For you posts shown before the "Who to follow" row.
+const SUGGESTIONS_AFTER = 3;
 
 function HomeFeed() {
   const { user } = useAuth();
@@ -132,16 +134,20 @@ function HomeFeed() {
           </p>
         ) : (
           <>
+            {/* "Who to follow" sits after the first few posts on For you. */}
             <AnimatePresence mode="popLayout">
-              {data.map((tweet, index) => (
-                <Fragment key={tweet.id}>
-                  <Tweet {...tweet} showFollow={!followingTab} />
-                  {!followingTab && index === Math.min(2, data.length - 1) && (
-                    <FeedWhoToFollow />
-                  )}
-                </Fragment>
+              {data.slice(0, followingTab ? data.length : SUGGESTIONS_AFTER).map((tweet) => (
+                <Tweet {...tweet} showFollow={!followingTab} key={tweet.id} />
               ))}
             </AnimatePresence>
+            {!followingTab && <FeedWhoToFollow />}
+            {!followingTab && (
+              <AnimatePresence mode="popLayout">
+                {data.slice(SUGGESTIONS_AFTER).map((tweet) => (
+                  <Tweet {...tweet} showFollow key={tweet.id} />
+                ))}
+              </AnimatePresence>
+            )}
             <LoadMore />
           </>
         )}
