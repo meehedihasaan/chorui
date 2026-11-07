@@ -157,11 +157,20 @@
   @apply hover-animation rounded-full p-3 disabled:cursor-not-allowed disabled:opacity-50;
 }
 
-/* Pill button: pale mint fill with an ink outline. */
+/* Secondary pill: now looks the same as the active button (solid green,
+   white label). The 2px border is kept, in the fill colour, so these
+   buttons keep their existing size. */
 @utility btn-mint {
-  @apply hover-animation rounded-full border-2 border-light-primary bg-btn-mint
-    font-bold text-btn-ink hover:brightness-95 active:brightness-90
-    disabled:cursor-not-allowed disabled:opacity-50 dark:border-dark-primary;
+  @apply hover-animation rounded-full border-2 border-btn-green bg-btn-green
+    font-bold text-btn-green-foreground hover:brightness-95 active:brightness-90
+    disabled:cursor-not-allowed disabled:opacity-50;
+}
+
+@utility no-scrollbar {
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
 }
 
 /* Pill button: solid green fill, white label — the active/primary state. */
