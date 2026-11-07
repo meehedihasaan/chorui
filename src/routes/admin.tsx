@@ -220,7 +220,7 @@ function Users({ adminsOnly = false }: { adminsOnly?: boolean }) {
                     <Link href={`/user/${u.username}`}>
                       <a className='flex items-center gap-1 truncate font-bold hover:underline'>
                         {u.name || u.username}
-                        {u.verified && <HeroIcon iconName='CheckBadgeIcon' solid className='h-4 w-4 text-accent-blue' />}
+                        {u.verified && <HeroIcon iconName='CheckBadgeIcon' solid className='h-4 w-4 text-verified' />}
                       </a>
                     </Link>
                     <p className={cn('truncate text-sm', muted)}>

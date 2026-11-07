@@ -92,7 +92,7 @@ function VerifiedContent() {
         <Loading />
       ) : user?.verified ? (
         <div className='flex flex-col items-center gap-3 p-8 text-center'>
-          <HeroIcon iconName='CheckBadgeIcon' solid className='h-14 w-14 text-accent-blue' />
+          <HeroIcon iconName='CheckBadgeIcon' solid className='h-14 w-14 text-verified' />
           <h2 className='text-xl font-bold'>You're verified</h2>
           <p className='text-light-secondary dark:text-dark-secondary'>The blue badge shows next to your name.</p>
         </div>
@@ -153,7 +153,7 @@ function ApplyForm({ rejected }: { rejected: boolean }) {
   return (
     <form onSubmit={submit} className='flex flex-col gap-4 p-5'>
       <div className='flex items-center gap-3'>
-        <HeroIcon iconName='CheckBadgeIcon' solid className='h-10 w-10 text-accent-blue' />
+        <HeroIcon iconName='CheckBadgeIcon' solid className='h-10 w-10 text-verified' />
         <div>
           <h2 className='text-xl font-bold'>Apply for the blue badge</h2>
           <p className='text-sm text-light-secondary dark:text-dark-secondary'>
