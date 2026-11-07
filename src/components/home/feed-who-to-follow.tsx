@@ -6,7 +6,6 @@ import { useAuth } from '@lib/context/auth-context';
 import { mapProfile } from '@lib/firebase/db';
 import { UserAvatar } from '@components/user/user-avatar';
 import { UserName } from '@components/user/user-name';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { FollowButton } from '@components/ui/follow-button';
 import { HeroIcon } from '@components/ui/hero-icon';
 import type { User } from '@lib/types/user';
