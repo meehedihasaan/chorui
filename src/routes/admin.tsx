@@ -37,7 +37,7 @@ export const Route = createFileRoute('/admin')({
 const TABS = ['Overview', 'Users', 'Admins', 'Posts', 'Reports', 'Verification', 'Settings'] as const;
 type Tab = (typeof TABS)[number];
 
-const btn = 'rounded-full border border-light-line-reply px-3 py-1 text-sm font-bold transition hover:bg-light-primary/10 dark:border-dark-line-reply dark:hover:bg-dark-primary/10 disabled:opacity-50';
+const btn = 'btn-mint px-3 py-1 text-sm';
 const danger = 'rounded-full bg-accent-red px-3 py-1 text-sm font-bold text-white transition hover:brightness-110 disabled:opacity-50';
 const muted = 'text-light-secondary dark:text-dark-secondary';
 const inputCls = 'w-full rounded-full border border-light-line-reply bg-transparent px-4 py-2 outline-none focus:border-main-accent dark:border-dark-line-reply';
@@ -387,7 +387,7 @@ function Reports() {
     <div>
       <div className='flex gap-2 p-4'>
         {(['pending', 'dismissed'] as const).map((s) => (
-          <button key={s} onClick={() => setStatus(s)} className={cn(btn, 'capitalize', status === s && 'bg-light-primary text-main-background dark:bg-dark-primary')}>
+          <button key={s} onClick={() => setStatus(s)} className={cn(btn, 'capitalize', status !== s && 'opacity-60')}>
             {s === 'pending' ? 'Open' : s}
           </button>
         ))}

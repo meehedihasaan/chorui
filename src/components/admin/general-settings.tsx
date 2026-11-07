@@ -6,7 +6,7 @@ import { supabase } from '@/integrations/supabase/client';
 import logoAsset from '@/assets/chorui-logo.png.asset.json';
 import { refreshAppSettings, useAppSettings, type ButtonStyle } from '@lib/app-settings';
 
-const PRESETS = ['#000000', '#1d9bf0', '#00ba7c', '#f91880', '#7856ff', '#ff7a00', '#e0245e'];
+const PRESETS = ['#41a54d', '#000000', '#1d9bf0', '#00ba7c', '#f91880', '#7856ff', '#ff7a00', '#e0245e'];
 const STYLES: { id: ButtonStyle; label: string; radius: string }[] = [
   { id: 'pill', label: 'Pill', radius: '9999px' },
   { id: 'rounded', label: 'Rounded', radius: '0.75rem' },
@@ -69,7 +69,7 @@ export function GeneralSettings(): JSX.Element {
         <h3 className='text-lg font-bold'>Logo</h3>
         <div className='flex items-center gap-4'>
           <img src={resolveMediaUrl(logo || logoAsset.url)} alt='Logo preview' className='h-16 w-16 rounded-xl border border-light-border object-contain p-1 dark:border-dark-border' />
-          <label className='cursor-pointer rounded-full border border-light-line-reply px-4 py-1.5 text-sm font-bold dark:border-dark-line-reply'>
+          <label className='btn-mint cursor-pointer px-4 py-1.5 text-sm'>
             Upload logo
             <input type='file' accept='image/png,image/jpeg,image/webp,image/svg+xml,image/gif' className='hidden' onChange={(e) => pickLogo(e.target.files?.[0])} />
           </label>

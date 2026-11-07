@@ -369,9 +369,7 @@ export function UserEditProfile({ hide }: UserEditProfileProps): JSX.Element {
         </EditProfileModal>
       </Modal>
       <Button
-        className='dark-bg-tab self-start border border-light-line-reply px-4 py-1.5 font-bold
-                   hover:bg-light-primary/10 active:bg-light-primary/20 dark:border-light-secondary
-                   dark:hover:bg-dark-primary/10 dark:active:bg-dark-primary/20'
+        className='btn-mint self-start px-4 py-1.5'
         onClick={openModal}
       >
         Edit profile
