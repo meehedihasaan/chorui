@@ -1,7 +1,8 @@
 import { MobileSidebar } from "@components/sidebar/mobile-sidebar";
 import { ChoruiLogo } from "@components/ui/chorui-logo";
 import cn from "clsx";
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
+import { FeedWhoToFollow } from "@components/home/feed-who-to-follow";
 import { createFileRoute } from "@tanstack/react-router";
 import { AnimatePresence } from "framer-motion";
 import { useWindow } from "@lib/context/window-context";
@@ -132,8 +133,13 @@ function HomeFeed() {
         ) : (
           <>
             <AnimatePresence mode="popLayout">
-              {data.map((tweet) => (
-                <Tweet {...tweet} showFollow={!followingTab} key={tweet.id} />
+              {data.map((tweet, index) => (
+                <Fragment key={tweet.id}>
+                  <Tweet {...tweet} showFollow={!followingTab} />
+                  {!followingTab && index === Math.min(2, data.length - 1) && (
+                    <FeedWhoToFollow />
+                  )}
+                </Fragment>
               ))}
             </AnimatePresence>
             <LoadMore />
