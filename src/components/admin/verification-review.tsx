@@ -58,10 +58,10 @@ export function AdminReview() {
                 </a>
               )}
               <div className='flex gap-2'>
-                <button onClick={() => review(r.id, true)} className='rounded-full bg-accent-blue px-4 py-1.5 font-bold text-white'>
+                <button onClick={() => review(r.id, true)} className='btn-solid px-4 py-1.5'>
                   Approve
                 </button>
-                <button onClick={() => review(r.id, false)} className='rounded-full border border-light-line-reply px-4 py-1.5 font-bold dark:border-dark-line-reply'>
+                <button onClick={() => review(r.id, false)} className='btn-mint px-4 py-1.5'>
                   Reject
                 </button>
               </div>

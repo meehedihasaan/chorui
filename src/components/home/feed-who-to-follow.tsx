@@ -93,6 +93,7 @@ export function FeedWhoToFollow(): JSX.Element | null {
               alt={person.name}
               username={person.username}
               size={64}
+              className='!self-center'
             />
             <div className='flex w-full min-w-0 flex-col items-center'>
               <UserName

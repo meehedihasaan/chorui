@@ -79,6 +79,9 @@
   /* The Love reaction's red. */
   --color-like-red: #e0245e;
 
+  /* Verified badge green. */
+  --color-verified: #41a54d;
+
   /* Button style: pale mint default with an ink outline, solid green when active. */
   --color-btn-mint: #a3dcb1;
   --color-btn-green: #41a54d;
@@ -92,7 +95,7 @@
   --color-light-primary: #0f1419;
   --color-light-secondary: #536471;
   --color-dark-border: #2f3336;
-  --color-light-border: #eff3f4;
+  --color-light-border: #dfeae2;
   --color-dark-line-reply: #333639;
   --color-light-line-reply: #cfd9de;
   --color-twitter-icon: #d6d9db;
@@ -107,20 +110,21 @@
     --main-accent: var(--accent-mono);
     --main-accent-foreground: var(--accent-mono-foreground);
 
-    --accent-mono: 0 0 0;
+    /* Main accent: Chorui green (tabs, active icons, hashtags, links). */
+    --accent-mono: 65 165 77;
     --accent-mono-foreground: 255 255 255;
 
     --dark-background: 0 0 0;
     --dim-background: 22 33 44;
-    --light-background: 255 255 255;
+    --light-background: 244 250 245; /* greenish white */
 
     --dark-search-background: 32 35 39;
     --dim-search-background: 39 51 64;
-    --light-search-background: 239 243 244;
+    --light-search-background: 230 242 233;
 
     --dark-sidebar-background: 22 24 28;
     --dim-sidebar-background: 30 39 50;
-    --light-sidebar-background: 247 249 249;
+    --light-sidebar-background: 236 246 238;
 
     --accent-yellow: 255 213 0;
     --accent-blue: 29 155 240;
@@ -132,8 +136,8 @@
 
   /* Monochrome accent: black on light backgrounds, white on dark ones. */
   :root.dark {
-    --accent-mono: 255 255 255;
-    --accent-mono-foreground: 0 0 0;
+    --accent-mono: 65 165 77;
+    --accent-mono-foreground: 255 255 255;
   }
 
 

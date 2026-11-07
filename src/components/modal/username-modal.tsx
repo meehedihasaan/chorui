@@ -59,10 +59,7 @@ export function UsernameModal({
       </div>
       <div className='flex flex-col gap-3 [&>*]:py-2 [&>*]:font-bold'>
         <Button
-          className='bg-light-primary text-white transition focus-visible:bg-light-primary/90
-                     enabled:hover:bg-light-primary/90 enabled:active:bg-light-primary/80 
-                     dark:bg-light-border dark:text-light-primary dark:focus-visible:bg-light-border/90 
-                     dark:enabled:hover:bg-light-border/90 dark:enabled:active:bg-light-border/75'
+          className='btn-solid'
           type='submit'
           loading={loading}
           disabled={!available}
